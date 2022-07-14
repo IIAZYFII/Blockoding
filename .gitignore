@@ -21,3 +21,15 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+*.iml
+.idea/
+.idea/libraries
+/out/
+.idea_modules/
+# Default ignored files
+/shelf/
