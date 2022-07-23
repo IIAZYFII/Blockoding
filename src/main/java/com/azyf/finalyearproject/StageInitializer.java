@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 
 
 @Component
@@ -77,8 +78,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(tessButton);
         tessButton.setOnAction(e -> {
             textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
-            textExtractor.extractText(image);
+            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
+            try {
+                textExtractor.extractText(image);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
 
         return  root;

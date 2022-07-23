@@ -1,10 +1,19 @@
 package com.azyf.finalyearproject;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class TextExtractor {
 Tesseract tesseract;
@@ -24,8 +33,11 @@ Tesseract tesseract;
 
     }
 
-    public void extractText (File imageFile) {
-            try {
+    public void extractText (File imageFile) throws IOException {
+       processImage(imageFile);
+
+
+          /*  try {
                 String extractedText = tesseract.doOCR(imageFile);
                 System.out.println(extractedText);
             } catch (TesseractException e) {
@@ -33,12 +45,31 @@ Tesseract tesseract;
             }
 
 
+           */
+
+
     }
 
-    private void processImage(WritableImage imageFile) {
-        WritableImage editImage = imageFile;
-
-
+    private void processImage(File imageFile) throws IOException {
+        Image editImage = new Image(new FileInputStream(imageFile));
+        PixelReader pixelReader = editImage.getPixelReader();
+        int height = (int) editImage.getHeight();
+        int width = (int) editImage.getWidth();
+        WritableImage grayScaleImage = new WritableImage(width, height);
+        PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
+        for(int j = 0; j < height; j++) {
+            for(int i = 0; i < width; i++) {
+                double redVal = pixelReader.getColor(i,j).getRed();
+                double greenVal = pixelReader.getColor(i,j).getGreen();
+                double blueVal = pixelReader.getColor(i,j).getBlue();
+                double finalVal = (redVal + greenVal + blueVal) / 3;
+                Color color = Color.color(finalVal, finalVal, finalVal);
+                pixelWriter.setColor(i,j, color);
+            }
+        }
+        File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
+       BufferedImage image = SwingFXUtils.fromFXImage(grayScaleImage, null);
+        ImageIO.write(image, "png", saveImage);
 
     }
 
