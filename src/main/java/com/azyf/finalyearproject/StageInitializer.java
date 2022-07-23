@@ -10,10 +10,13 @@ import javafx.stage.Stage;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 
 @Component
 public class StageInitializer implements ApplicationListener<BlockApplication.StageReadyEvent> {
     private Canvas canvas;
+    private TextExtractor textExtractor = new TextExtractor();
     private Canvas blockCanvas;
     private Image playButtonImg;
     private Image stopButtonImg;
@@ -70,7 +73,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
        stopButton.setGraphic(stopButtonView);
        topBar.getChildren().add(stopButton);
 
-
+        Button tessButton = new Button();
+        topBar.getChildren().add(tessButton);
+        tessButton.setOnAction(e -> {
+            textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
+            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
+            textExtractor.extractText(image);
+        });
 
         return  root;
     }
