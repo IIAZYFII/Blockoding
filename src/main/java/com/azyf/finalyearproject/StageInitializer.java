@@ -78,7 +78,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(tessButton);
         tessButton.setOnAction(e -> {
             textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
+            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\zoomimg.png");
             try {
                 textExtractor.extractText(image);
             } catch (IOException ex) {
