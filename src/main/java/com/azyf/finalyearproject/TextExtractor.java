@@ -14,7 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 
 public class TextExtractor {
     Tesseract tesseract;
@@ -35,7 +34,8 @@ public class TextExtractor {
     }
 
     public void extractText(File imageFile) throws IOException {
-        //processImage(imageFile);
+        System.out.println("Processing Image");
+       imageFile = processImage(imageFile);
 
        try {
                 String extractedText = tesseract.doOCR(imageFile);
@@ -49,7 +49,17 @@ public class TextExtractor {
 
     }
 
-    private void processImage(File imageFile) throws IOException {
+
+    private File processImage(File imageFile) throws IOException {
+        System.out.println("Converting to Gray Scale");
+        convertToGrayScale(imageFile);
+        System.out.println("Zooming into image");
+        imageFile = zoomImage("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
+        return imageFile;
+    }
+
+
+    private void convertToGrayScale(File imageFile) throws IOException {
         Image editImage = new Image(new FileInputStream(imageFile));
         PixelReader pixelReader = editImage.getPixelReader();
         int height = (int) editImage.getHeight();
@@ -73,15 +83,15 @@ public class TextExtractor {
         File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
         image = SwingFXUtils.fromFXImage(grayScaleImage, null);
         ImageIO.write(image, "png", saveImage);
-        zoomImage("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
 
     }
 
 
-    private void zoomImage(String fileLocation) throws IOException {
+    private File zoomImage(String fileLocation) throws IOException {
         Image image = new Image(fileLocation, 1050, 1024, false, false);
         File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\zoomimg.png");
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(bufferedImage, "png", saveImage);
+        return saveImage;
     }
 }
