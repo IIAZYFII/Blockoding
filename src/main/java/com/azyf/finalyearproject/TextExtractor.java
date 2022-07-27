@@ -1,13 +1,11 @@
 package com.azyf.finalyearproject;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.Word;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,10 +15,14 @@ import java.io.IOException;
 
 public class TextExtractor {
     Tesseract tesseract;
+    WordProcessor wordProcessor;
 
 
     public TextExtractor() {
         tesseract = new Tesseract();
+        wordProcessor = new WordProcessor();
+        wordProcessor.addWordsToDictionary(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Words\\default.txt"));
+
     }
 
     public void setDataPath(String dataPath) {
@@ -35,18 +37,22 @@ public class TextExtractor {
 
     public void extractText(File imageFile) throws IOException {
         System.out.println("Processing Image");
-       imageFile = processImage(imageFile);
-
-       try {
-                String extractedText = tesseract.doOCR(imageFile);
-                System.out.println(extractedText);
-            } catch (TesseractException e) {
-                e.printStackTrace();
-            }
+      File finalImageFile = processImage(imageFile);
+        extractTextOnModified(finalImageFile);
 
 
 
 
+
+    }
+    private void extractTextOnModified(File imageFile){
+        String extractedText;
+        try {
+            extractedText   = tesseract.doOCR(imageFile);
+            System.out.println(extractedText);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        }
     }
 
 

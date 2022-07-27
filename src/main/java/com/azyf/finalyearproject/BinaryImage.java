@@ -11,6 +11,14 @@ public class BinaryImage {
         this.imageContent = imageContent;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public String getImageContent() {
         return imageContent;
     }
