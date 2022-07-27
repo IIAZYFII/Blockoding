@@ -14,6 +14,9 @@ public class WordProcessor {
 
 
     public void processWord(String extractedText) {
+        System.out.println("--------------------------");
+       extractedText = extractedText.replaceAll("[^A-Z\n \s]","");
+        System.out.println(extractedText);
 
     }
 
@@ -29,11 +32,12 @@ public class WordProcessor {
             System.exit(0);
         }
 
+        while(in.hasNextLine()) {
+            String word = in.nextLine();
+            dictionary.add(word);
+        }
         in.close();
 
-        for (int i = 0; i < dictionary.size(); i++) {
-            System.out.println(dictionary.get(i));
-        }
     }
 
 }
