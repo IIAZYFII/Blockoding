@@ -46,13 +46,14 @@ public class TextExtractor {
 
     }
     private void extractTextOnModified(File imageFile){
-        String extractedText;
+        String extractedText = null;
         try {
             extractedText   = tesseract.doOCR(imageFile);
             System.out.println(extractedText);
         } catch (TesseractException e) {
             e.printStackTrace();
         }
+        wordProcessor.processWord(extractedText);
     }
 
 
