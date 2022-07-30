@@ -13,6 +13,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Extracts the text from an image and processes the image.
+ * @author Hussain Asif
+ * @version 1.0
+ */
 public class TextExtractor {
     Tesseract tesseract;
     WordProcessor wordProcessor;

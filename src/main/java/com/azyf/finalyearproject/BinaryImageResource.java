@@ -1,6 +1,6 @@
 package com.azyf.finalyearproject;
 
-import javafx.scene.image.Image;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +12,19 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * The class is a resource for binary image which allows the user to send an image through a http request.
+ * @author Hussain Asif
+ * @version  1.0
+ */
 @RestController
 public class BinaryImageResource {
 
+    /**
+     * Allows the user to send an image through a http request.
+     * @param binaryImage The image the user wants to send
+     * @throws IOException An IOException maybe thrown if the image cannot be read or written to a file.
+     */
     @PostMapping(value = "sendImage", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void receiveBinaryImage(@RequestBody BinaryImage binaryImage) throws IOException {
         if (binaryImage != null) {

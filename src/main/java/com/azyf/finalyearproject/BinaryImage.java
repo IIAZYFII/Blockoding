@@ -1,27 +1,40 @@
 package com.azyf.finalyearproject;
 
+/**
+ * This class represents a byte representation of an image.
+ *
+ * @author  Hussain Asif
+ * @version 1.0
+ */
 public class BinaryImage {
     private int width;
     private int height;
     private String imageContent;
 
+    /**
+     * Creates a binary image with a specified width, height and image content.
+     * @param width        The width of the image.
+     * @param height       The height of the image.
+     * @param imageContent The actual image as a String.
+     */
     public BinaryImage(int width, int height, String imageContent) {
         this.width = width;
         this.height = height;
         this.imageContent = imageContent;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
+    /**
+     * Gets the content of the binary image.
+     * @return The content of the binary image.
+     */
     public String getImageContent() {
         return imageContent;
     }
+
+    /**
+     * Converts the binary image in a readable String format.
+     * @return The binary image in a String format.
+     */
     @Override
     public String toString() {
         return "BinaryImage{" +
