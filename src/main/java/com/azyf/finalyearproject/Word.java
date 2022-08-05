@@ -21,6 +21,14 @@ public class Word implements  Comparable<Word>{
         }
     }
 
+    public int getEditDistance() {
+        return editDistance;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
     @Override
     public String toString() {
         return word + ": " + editDistance;

@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class WordProcessor {
     PriorityQueue<Word> wordPriorityQueue;
     ArrayList<String> dictionary;
+    int ocrError = 0;
     int[][] matrix;
 
     public WordProcessor() {
@@ -53,10 +54,37 @@ public class WordProcessor {
             }
             System.out.println("-----------------------------------");
             System.out.println(firstWord);
+            stringBuilder = new StringBuilder();
             for(int i = 0; i <= wordPriorityQueue.size(); i++) {
-                System.out.println(wordPriorityQueue.remove().toString());
+                Word newWord = wordPriorityQueue.remove();
+                System.out.println(newWord.toString());
+                if(newWord.getWord().equals(firstWord)) {
+                    stringBuilder.append(firstWord);
+                    stringBuilder.append("\n");
+                    //Put word on stack
+                    wordPriorityQueue.clear();
+                } else if(newWord.getWord().length() >= firstWord.length()) {
+                    wordPriorityQueue.clear();
+                    ocrError = ocrError + 1;
+                    //predict word on stack
+                    stringBuilder.append("Error");
+                    stringBuilder.append("\n");
+                } else {
+                    stringBuilder.append(newWord.getWord());
+                    stringBuilder.append("\n");
+                   // put first word on stack
+                    //maybe do comparison thing
+                    wordPriorityQueue.clear();
+                }
+
+
+
             }
         }
+        in.close();
+        System.out.println("-------------------------------------");
+        System.out.println(stringBuilder.toString());
+
 
     }
 

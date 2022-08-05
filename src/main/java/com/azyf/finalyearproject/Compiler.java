@@ -1,4 +1,4 @@
 package com.azyf.finalyearproject;
 
-public class Blocks {
+public class Compiler {
 }
