@@ -1,6 +1,6 @@
 package com.azyf.finalyearproject;
 
-public abstract class Block {
+public  class Block {
    protected String name;
    protected Category category;
 
@@ -17,6 +17,5 @@ public abstract class Block {
         return category;
     }
 
-    public abstract void runCode();
 
 }
