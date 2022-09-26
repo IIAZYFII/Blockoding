@@ -41,6 +41,7 @@ public class BinaryImageResource {
             File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             ImageIO.write(imageFromBytes, "png", saveImage);
             System.out.println("done");
+            System.out.println();
 
         }
     }

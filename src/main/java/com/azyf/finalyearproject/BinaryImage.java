@@ -4,7 +4,7 @@ package com.azyf.finalyearproject;
  * This class represents a byte representation of an image.
  *
  * @author  Hussain Asif
- * @version 1.0
+ * @v+ersion 1.0
  */
 public class BinaryImage {
     private int width;
