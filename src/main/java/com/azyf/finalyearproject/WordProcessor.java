@@ -108,14 +108,14 @@ public class WordProcessor {
 
     }
 
-    private int editDistance(String firstWord, String secondWord) {  int[][] matrix = new int[firstWord.length() + 1][secondWord.length() + 1];
+    private int editDistance(String firstWord, String secondWord) {
+        int[][] matrix = new int[firstWord.length() + 1][secondWord.length() + 1];
         for (int i = 0; i < firstWord.length() + 1;  i++) {
             matrix[i][0] = i;
         }
         for (int j = 1; j < secondWord.length() + 1; j++) {
             matrix[0][j] = j;
         }
-
 
         for(int j = 1; j <  secondWord.length()+1; j++) {
             for (int i = 1; i < firstWord.length()+1; i++) {

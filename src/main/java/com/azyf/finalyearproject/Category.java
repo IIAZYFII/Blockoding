@@ -1,15 +1,15 @@
 package com.azyf.finalyearproject;
 
 public enum Category {
-    Action,
-    Command,
-    Condition,
-    Interaction,
-    Sound,
-    Visual,
-    Math,
+    Actions,
+    Commands,
+    Conditions,
+    Interactions,
+    Sounds,
+    Visuals,
+    Maths,
     Variable,
-    Additional
+    Misc
 
 
 }

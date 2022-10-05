@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,10 +34,15 @@ import java.net.UnknownHostException;
 @Component
 public class StageInitializer implements ApplicationListener<BlockApplication.StageReadyEvent> {
     private Canvas canvas;
+    private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
     private Canvas blockCanvas;
     private Image playButtonImg;
     private Image stopButtonImg;
+
+    public StageInitializer() throws FileNotFoundException {
+    }
+
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
         BorderPane root = (BorderPane) buildGUI();
