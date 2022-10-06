@@ -36,6 +36,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Canvas canvas;
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
+    private ImageProcessor imageProcessor = new ImageProcessor();
     private Canvas blockCanvas;
     private Image playButtonImg;
     private Image stopButtonImg;
@@ -102,13 +103,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
             File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             try {
-                textExtractor.extractText(image);
+                image = imageProcessor.processImage(image);
+                //textExtractor.extractText(image);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+
         });
 
-        /*
+        /*x
         MenuBar menuBar = new MenuBar();
         Menu file = new Menu("File");
         MenuItem settings = new MenuItem("Settings");
