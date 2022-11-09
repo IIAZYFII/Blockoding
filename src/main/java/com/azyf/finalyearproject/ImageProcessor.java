@@ -1,6 +1,7 @@
 package com.azyf.finalyearproject;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ImageProcessor {
@@ -22,7 +24,7 @@ public class ImageProcessor {
         System.out.println("Converting to Gray Scale");
         convertToGrayScale(imageFile);
         System.out.println("Zooming into image");
-        imageFile = zoomImage("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png");
+        imageFile = zoomImage("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\rotateimg.png");
         return imageFile;
     }
 
@@ -51,6 +53,11 @@ public class ImageProcessor {
         image = SwingFXUtils.fromFXImage(grayScaleImage, null);
         ImageIO.write(image, "png", saveImage);
 
+        if(grayScaleImage.getWidth() > grayScaleImage.getHeight()) {
+            rotateImage(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\imgGrayScale.png"));
+        }
+
+
     }
 
 
@@ -61,4 +68,32 @@ public class ImageProcessor {
         ImageIO.write(bufferedImage, "png", saveImage);
         return saveImage;
     }
+
+    public static void rotateImage(File imageFile) throws IOException {
+        javafx.scene.image.Image rotateImage =  new javafx.scene.image.Image(new FileInputStream(imageFile));
+        double yB = rotateImage.getWidth(); //rotated height
+        double xB = rotateImage.getHeight(); //rotated width
+        double xA = rotateImage.getWidth();
+        double yA = rotateImage.getHeight();
+
+        WritableImage rotatedImage = new WritableImage((int)xB, (int)yB);
+        PixelReader pixelReader = rotateImage.getPixelReader();
+
+        for(int j = 0; j <= yB - 1; j++) {
+            for(int i = 0; i <= xB -1; i++) {
+                double scalingRatioX =  yA / xB;
+                double scalingRatioY =  xA / yB;
+
+                    double val = pixelReader.getColor(j,(int)(yA - i - 1)).getRed();
+                    Color color=Color.color(val,val,val);
+                    PixelWriter image_writer = rotatedImage.getPixelWriter();
+                    image_writer.setColor((int) i, (int)j, color);
+
+            }
+        }
+        File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\rotateimg.png");
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(rotatedImage, null);
+        ImageIO.write(bufferedImage, "png", saveImage);
+    }
 }
+

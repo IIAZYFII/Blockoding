@@ -7,6 +7,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -49,16 +50,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         BorderPane root = (BorderPane) buildGUI();
 
         Stage stage = event.getStage();
-        stage.setScene(new Scene(root, 800, 500));
+        stage.setScene(new Scene(root, 800, 800));
         stage.show();
+
     }
 
     private Pane buildGUI() {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #96ffa1;");
 
-        canvas = new Canvas(600,400);
+        canvas = new Canvas(1200,800);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0,0,1200,800);
         root.setCenter(canvas);
+
 
         HBox sceneBox = new HBox();
         root.setLeft(sceneBox);
@@ -104,7 +110,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
-                //textExtractor.extractText(image);
+                textExtractor.extractText(image);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -121,8 +127,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
          */
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
-        ImageView settingButtonView = new ImageView(settingButtonImg);
-        settingButton.setGraphic(settingButtonView);
+       // ImageView settingButtonView = new ImageView(settingButtonImg);
+        //settingButton.setGraphic(settingButtonView);
         topBar.getChildren().add(settingButton);
         settingButton.setOnAction(e -> {
             drawSettings();
