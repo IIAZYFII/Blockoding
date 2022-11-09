@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class TreeNode {
     private Block node;
-   private ArrayList<TreeNode> children;
+    private ArrayList<TreeNode> children;
 
     public TreeNode(Block node) {
         this.node = node;
