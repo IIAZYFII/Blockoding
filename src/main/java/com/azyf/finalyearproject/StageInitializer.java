@@ -50,19 +50,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         BorderPane root = (BorderPane) buildGUI();
 
         Stage stage = event.getStage();
-        stage.setScene(new Scene(root, 800, 800));
+        stage.setScene(new Scene(root, 1300, 800));
         stage.show();
 
     }
 
     private Pane buildGUI() {
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #96ffa1;");
+        root.setStyle("-fx-background-color: #FF5438;");
 
-        canvas = new Canvas(1200,800);
+        canvas = new Canvas(728,597);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
-        gc.fillRect(0,0,1200,800);
+        gc.setFill(Color.rgb(255,253,208));
+        gc.fillRoundRect(0,0,728,597,20.0,20.0);
+        //gc.setLineWidth(20.0);
+        gc.strokeRoundRect(0,0,728,597,20.0,20.0);
+
         root.setCenter(canvas);
 
 
@@ -80,7 +83,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AnchorPane.setRightAnchor(tabBar,10d);
 
       HBox topBar = new HBox();
-        root.setTop(topBar);
+      topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
+      root.setTop(topBar);
 
         HBox rightPane = new HBox();
         VBox spriteBox = new VBox();
