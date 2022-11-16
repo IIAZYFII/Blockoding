@@ -17,5 +17,8 @@ public class Block {
         return category;
     }
 
-
+    @Override
+    public String toString() {
+        return "block: " + name + " category: " + category;
+    }
 }
