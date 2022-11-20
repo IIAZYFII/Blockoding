@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class  ParseTree {
     public TreeNode root = null;
     private final static int NUMBER_OF_BLOCKS = 51;
+    private TreeNode currentNode = null;
     private HashMap<String,Block> Blocks = new HashMap<>();
 
     public ParseTree() throws FileNotFoundException {
@@ -58,7 +59,6 @@ public class  ParseTree {
         System.out.println(parseTree);
         in = new Scanner(parseTree);
         int currentBlockIndex  = 0;
-        TreeNode currentNode = null;
         while(in.hasNext()) {
             String data = in.next();
             if(root == null) {
@@ -78,14 +78,14 @@ public class  ParseTree {
                     throw new UnsupportedEncodingException("expected [" + "actually encoded: " + childNotation);
                 }
             } else if (data.equals("]")) {
-                currentNode = findParent(currentNode,root);
+                 findParent(currentNode,root);
                 System.out.println("no more children for " +  currentNode.getNode().getName());
 
 
             }  else {
                 Block currentBlock = Blocks.get(data);
                 TreeNode newNode =  new TreeNode(currentBlock);
-                currentNode = findParent(currentNode,root);
+                 findParent(currentNode,root);
                 currentNode.getChildren().add(newNode);
                 currentNode = newNode;
             }
@@ -93,22 +93,32 @@ public class  ParseTree {
 
     }
 
-    private TreeNode findParent(TreeNode checkNode, TreeNode position) {
+    private void findParent(TreeNode checkNode, TreeNode position) {
         if(checkNode == root) {
-            return  root;
+            currentNode = root;
         } else {
             for(int i = 0; i < position.getChildren().size(); i++) {
                TreeNode treeNode = position.getChildren().get(i);
                if(checkNode == treeNode) {
-                    return position;
+                     currentNode = position;
                 } else if (treeNode.getChildren().size() != 0) {
                     findParent(checkNode, treeNode);
                 }
             }
         }
-        return position;
     }
 
+    public void printTree(TreeNode position, int c) {
+        c++;
+        System.out.println(position.getNode().getName());
+        System.out.println("Children of " + position.getNode().getName() + " " + c ) ;
+        if(position.getChildren().size() == 0) {
+            System.out.println(position.getNode().getName() + " has no children") ;
+        }
+        for (int i = 0; i < position.getChildren().size(); i++) {
+            printTree(position.getChildren().get(i), c);
+        }
+    }
 /*
     private void insertNodeIntoParseTree(TreeNode blockNode) {
         Category NodeCategory =  blockNode.getNode().getCategory();
