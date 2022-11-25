@@ -5,25 +5,30 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.checkerframework.checker.units.qual.N;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +46,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Canvas blockCanvas;
     private Image playButtonImg;
     private Image stopButtonImg;
+    private Image defaultSprite;
+    private ImageView defaultSpriteViewer = new ImageView();
+
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -48,16 +56,19 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
         BorderPane root = (BorderPane) buildGUI();
-
+        int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+        int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
         Stage stage = event.getStage();
-        stage.setScene(new Scene(root, 1300, 800));
+        stage.setScene(new Scene(root, screenWidth, screenHeight));
         stage.show();
 
     }
 
     private Pane buildGUI() {
+
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #FF5438;");
+        root.setStyle("-fx-background-color: #FF5438; ");
+
 
         canvas = new Canvas(728,597);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -65,33 +76,101 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         gc.fillRoundRect(0,0,728,597,20.0,20.0);
         //gc.setLineWidth(20.0);
         gc.strokeRoundRect(0,0,728,597,20.0,20.0);
-
         root.setCenter(canvas);
 
 
         HBox sceneBox = new HBox();
+        sceneBox.setStyle("-fx-background-color: #FFFDD0");
         root.setLeft(sceneBox);
 
+
+
         AnchorPane bottomBar = new AnchorPane();
-        root.setBottom(bottomBar);
+       root.setBottom(bottomBar);
 
         VBox ioBar = new VBox();
-        VBox tabBar = new VBox();
+        TextArea textArea = new TextArea();
+        textArea.setPrefSize(700,100);
+        textArea.setMinHeight(Region.USE_COMPUTED_SIZE);
+        textArea.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        textArea.setMinWidth(Region.USE_COMPUTED_SIZE);
+        textArea.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        textArea.setStyle("-fx-border-color: black;" + "text-area-background: black;" );
+        ioBar.setPadding(new Insets(0,0,100,400));
+        ioBar.getChildren().add(textArea);
+
         bottomBar.getChildren().add(ioBar);
-        bottomBar.getChildren().add(tabBar);
-        AnchorPane.setLeftAnchor(ioBar, 10d);
-        AnchorPane.setRightAnchor(tabBar,10d);
 
-      HBox topBar = new HBox();
-      topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
-      root.setTop(topBar);
+        HBox topBar = new HBox();
+        topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
+        root.setTop(topBar);
 
-        HBox rightPane = new HBox();
-        VBox spriteBox = new VBox();
+        VBox rightPane = new VBox();
+        HBox spriteBox = new HBox();
 
-        blockCanvas = new Canvas(100,200);
+        rightPane.setPadding(new Insets(50,10,50,0));
+        rightPane.setSpacing(60);
+        spriteBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;" );
+
+        spriteBox.setPadding(new Insets(0, 0, 200, 350));
+        defaultSprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default-sprite.png");
+        defaultSpriteViewer.setImage(defaultSprite);
+
+        spriteBox.getChildren().add(defaultSpriteViewer);
+
+        defaultSpriteViewer.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                Dragboard db = defaultSpriteViewer.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString("Hello");
+                db.setContent(content);
+                event.consume();
+            }
+        });
+
+
+        canvas.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() == defaultSpriteViewer)  {
+                    event.acceptTransferModes(TransferMode.ANY);
+                    event.consume();
+                }
+            }
+        });
+
+
+        canvas.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                // We call this method which is where the bulk of the behaviour takes place.
+                canvasDragDroppedOccured(event, defaultSprite);
+
+                event.consume();
+            }
+        });
+
+
         rightPane.getChildren().add(spriteBox);
-        rightPane.getChildren().add(blockCanvas);
+        HBox stageBox = new HBox();
+        Text stageText = new Text();
+        stageText.setText("stage");
+        stageBox.getChildren().add(stageText);
+        stageBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        stageBox.setPadding(new Insets(0, 0, 200, 350));
+        rightPane.getChildren().add(stageBox);
+        root.setRight(rightPane);
+
+        VBox leftPane = new VBox();
+        HBox programBox = new HBox();
+        Text programText = new Text();
+        programText.setText("Program Box");
+        programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        programBox.getChildren().add(programText);
+        programBox.setPadding(new Insets(0,100,600,100));
+        leftPane.setPadding(new Insets(50,50,10,50));
+        leftPane.getChildren().add(programBox);
+        root.setLeft(leftPane);
+
+
 
        Button playButton = new Button();
        //playButton.setStyle("-fx-background-color: transparent;");
@@ -100,12 +179,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
        playButton.setGraphic(playButtonView);
        topBar.getChildren().add(playButton);
 
+
        Button stopButton = new Button();
        //stopButton.setStyle("-fx-background-color: transparent;");
        stopButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
        ImageView stopButtonView = new ImageView(stopButtonImg);
        stopButton.setGraphic(stopButtonView);
        topBar.getChildren().add(stopButton);
+
 
         Button tessButton = new Button();
         topBar.getChildren().add(tessButton);
@@ -121,22 +202,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
 
-        /*x
-        MenuBar menuBar = new MenuBar();
-        Menu file = new Menu("File");
-        MenuItem settings = new MenuItem("Settings");
-        file.getItems().add(settings);
-        menuBar.getMenus().add(file);
-        root.getChildren().add(menuBar);
-         */
-        Button settingButton = new Button();
+       // Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
        // ImageView settingButtonView = new ImageView(settingButtonImg);
         //settingButton.setGraphic(settingButtonView);
-        topBar.getChildren().add(settingButton);
-        settingButton.setOnAction(e -> {
+        //topBar.getChildren().add(settingButton);
+
+       /* settingButton.setOnAction(e -> {
             drawSettings();
         });
+
+        */
         return  root;
     }
 
@@ -144,7 +220,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Stage settingStage = new Stage();
         BorderPane root = new BorderPane();
 
-        root.setStyle("-fx-background-color: #96ffa1;");
+        root.setStyle("-fx-background-color: #FF5438;");
 
 
         Button linkAppButton = new Button();
@@ -196,5 +272,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
 
+    }
+
+    public void canvasDragDroppedOccured(DragEvent event, Image sprite) {
+        double x = event.getX();
+        double y = event.getY();
+
+        // Print a string showing the location.
+        String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
+        System.out.println(s);
+
+        // Draw an icon at the dropped location.
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+         gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
     }
 }
