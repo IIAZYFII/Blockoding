@@ -4,6 +4,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,6 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.checkerframework.checker.units.qual.N;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -35,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 
 @Component
@@ -49,7 +54,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
 
-
     public StageInitializer() throws FileNotFoundException {
     }
 
@@ -63,6 +67,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stage.show();
 
     }
+
 
     private Pane buildGUI() {
 
@@ -271,23 +276,28 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        canvas.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                double x = event.getX();
-                double y = event.getY();
 
-                // Print a string showing the location.
-                String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
-                System.out.println(s);
+            canvas.setOnDragDropped(new EventHandler<DragEvent>() {
+                public void handle(DragEvent event) {
+                    double x = event.getX();
+                    double y = event.getY();
 
-                // Draw an icon at the dropped location.
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
+                    // Print a string showing the location.
+                    String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
+                    System.out.println(s);
+
+                    // Draw an icon at the dropped location.
+                    GraphicsContext gc = canvas.getGraphicsContext2D();
+                    gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
 
 
-                event.consume();
-            }
-        });
+                    event.consume();
+                    imageView.setOnDragDetected(null);
+                }
+            });
+
+
+
 
     }
 
