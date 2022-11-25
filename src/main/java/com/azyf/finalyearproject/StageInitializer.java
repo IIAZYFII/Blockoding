@@ -118,35 +118,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         spriteBox.getChildren().add(defaultSpriteViewer);
 
-        defaultSpriteViewer.setOnDragDetected(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                Dragboard db = defaultSpriteViewer.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putString("Hello");
-                db.setContent(content);
-                event.consume();
-            }
-        });
+        dragAndDrop(defaultSpriteViewer, defaultSprite);
 
 
-        canvas.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                if (event.getGestureSource() == defaultSpriteViewer)  {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    event.consume();
-                }
-            }
-        });
-
-
-        canvas.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                // We call this method which is where the bulk of the behaviour takes place.
-                canvasDragDroppedOccured(event, defaultSprite);
-
-                event.consume();
-            }
-        });
 
 
         rightPane.getChildren().add(spriteBox);
@@ -274,16 +248,51 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
-    public void canvasDragDroppedOccured(DragEvent event, Image sprite) {
-        double x = event.getX();
-        double y = event.getY();
+    private void dragAndDrop(ImageView imageView, Image sprite) {
 
-        // Print a string showing the location.
-        String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
-        System.out.println(s);
+            imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString("Hello");
+                db.setContent(content);
+                event.consume();
+            }
+        });
 
-        // Draw an icon at the dropped location.
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-         gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
+
+        canvas.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() ==   imageView)  {
+                    event.acceptTransferModes(TransferMode.ANY);
+                    event.consume();
+                }
+            }
+        });
+
+
+        canvas.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                double x = event.getX();
+                double y = event.getY();
+
+                // Print a string showing the location.
+                String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
+                System.out.println(s);
+
+                // Draw an icon at the dropped location.
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
+
+
+                event.consume();
+            }
+        });
+
     }
+
+
+
+
+
 }
