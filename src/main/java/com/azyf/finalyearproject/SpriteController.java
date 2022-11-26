@@ -1,6 +1,10 @@
 package com.azyf.finalyearproject;
 
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ExecutionException;
 
 public class SpriteController {
    private ArrayList<Sprite> sprites;
@@ -13,9 +17,32 @@ public class SpriteController {
        return sprites.get(i);
     }
 
-    public void addSprite(Sprite sprite) {
-        sprites.add(sprite);
+    public void addSprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
+        Sprite spriteObject = new Sprite("default",xPos, yPos,defaultOutfit);
+        sprites.add(spriteObject);
+
     }
 
+    public int findSprite(double xPos, double yPos) {
+        for(int i = 0; i < sprites.size(); i++) {
+           double x =  sprites.get(i).getXPos();
+           double y = sprites.get(i).getYPos();
+
+           double xDifference = Math.abs(x - xPos);
+           double yDifference = Math.abs(y - yPos);
+
+           if(xDifference <= 40 && yDifference <= 40) {
+              return i;
+           }
+        }
+        return -1;
+    }
+
+
+
+
+    public int size() {
+        return  sprites.size();
+    }
 
 }

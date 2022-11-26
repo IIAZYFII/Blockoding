@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class Sprite {
     private String spriteName;
-    private int xPos;
-    private int yPos;
+    private double xPos;
+    private double yPos;
     private ArrayList<Image> spriteOutfits = new ArrayList<Image>();
 
-    public Sprite(String spriteName, int xPos, int yPos, Image defaultOutfit) {
+    public Sprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
         this.spriteName = spriteName;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -29,19 +29,19 @@ public class Sprite {
         this.spriteName = spriteName;
     }
 
-    public int getXPos() {
+    public double getXPos() {
         return xPos;
     }
 
-    public void setXPos(int xPos) {
+    public void setXPos(double xPos) {
         this.xPos = xPos;
     }
 
-    public int getTPos() {
+    public double getYPos() {
         return yPos;
     }
 
-    public void setYPos(int yPos) {
+    public void setYPos(double yPos) {
         this.yPos = yPos;
     }
 

@@ -13,7 +13,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -27,19 +26,16 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.checkerframework.checker.units.qual.N;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Component
@@ -53,6 +49,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image stopButtonImg;
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
+    private SpriteController spriteController = new SpriteController();
+    private Timeline clock;
+
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -60,13 +59,85 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
         BorderPane root = (BorderPane) buildGUI();
+
+        clock = new Timeline(new KeyFrame(Duration.millis(500), e -> tick(root)));
+        clock.setCycleCount(Animation.INDEFINITE);
+
+       AtomicInteger spriteIndex = new AtomicInteger(-1);
+
+        canvas.setOnMousePressed( e -> {
+
+            int index = (spriteController.findSprite(e.getX(), e.getY()));
+            if(index != -1) {
+                spriteIndex.set(index);
+
+            }
+
+        });
+
+
+
+        canvas.setOnMouseReleased(e -> {
+            if(spriteIndex.get() != -1) {
+                System.out.println("----------------------------------------");
+                System.out.println("x: " + e.getX());
+                System.out.println("y: " + e.getY());
+
+
+                spriteController.getSprite(spriteIndex.get()).setXPos(e.getX());
+                spriteController.getSprite(spriteIndex.get()).setYPos(e.getY());
+                spriteIndex.set(-1);
+
+            }
+
+
+
+            drawScene();
+
+
+
+        });
+
+
+
+
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
         Stage stage = event.getStage();
         stage.setScene(new Scene(root, screenWidth, screenHeight));
         stage.show();
 
+
     }
+
+
+    private void tick(BorderPane root) {
+        System.out.println("test");
+
+    }
+
+    private void drawScene() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        gc.setFill(Color.rgb(255,253,208));
+        gc.fillRoundRect(0,0,728,597,20.0,20.0);
+        //gc.setLineWidth(20.0);
+        gc.strokeRoundRect(0,0,728,597,20.0,20.0);
+
+        if(spriteController.size() != 0 ) {
+            for(int i = 0; i < spriteController.size(); i ++) {
+                double xPos  = spriteController.getSprite(i).getXPos();
+                double yPos  = spriteController.getSprite(i).getYPos();
+                Image sprite =  spriteController.getSprite(i).defaultOutfit();
+                gc.drawImage(sprite, xPos , yPos);
+
+            }
+        }
+
+
+    }
+
 
 
     private Pane buildGUI() {
@@ -151,6 +222,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
+
        Button playButton = new Button();
        //playButton.setStyle("-fx-background-color: transparent;");
        playButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Playbutton.png");
@@ -226,6 +298,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         settingStage.setScene(scene);
         settingStage.showAndWait();
 
+
+
+
     }
 
     private void generateQRCode() throws WriterException, IOException {
@@ -250,6 +325,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\qrcode.png");
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
+
 
     }
 
@@ -279,16 +355,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             canvas.setOnDragDropped(new EventHandler<DragEvent>() {
                 public void handle(DragEvent event) {
-                    double x = event.getX();
-                    double y = event.getY();
+                    double x = event.getX() - sprite.getWidth() / 2.0;
+                    double y = event.getY() - sprite.getHeight() / 2.0;
 
                     // Print a string showing the location.
                     String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
                     System.out.println(s);
 
+
+
                     // Draw an icon at the dropped location.
                     GraphicsContext gc = canvas.getGraphicsContext2D();
-                    gc.drawImage(sprite, x - sprite.getWidth() / 2.0, y - sprite.getHeight() / 2.0);
+                    spriteController.addSprite("default",x, y, sprite);
+                    gc.drawImage(sprite, x , y);
+
+
 
 
                     event.consume();
