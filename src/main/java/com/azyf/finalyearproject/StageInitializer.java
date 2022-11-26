@@ -189,7 +189,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         spriteBox.getChildren().add(defaultSpriteViewer);
 
-        dragAndDrop(defaultSpriteViewer, defaultSprite);
+
 
 
 
@@ -259,8 +259,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         */
+        dragAndDrop(defaultSpriteViewer, defaultSprite, programBox);
         return  root;
+
     }
+
+
 
     private void drawSettings(){
         Stage settingStage = new Stage();
@@ -324,7 +328,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
-    private void dragAndDrop(ImageView imageView, Image sprite) {
+    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox) {
 
             imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -364,13 +368,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     spriteController.addSprite("default",x, y, sprite);
                     gc.drawImage(sprite, x , y);
 
-
-
+                    imageView.setOnDragDetected(null);
+                    programBox.getChildren().clear();
+                    Text programText = new Text();
+                    programText.setText("default's Sprite Program Box");
+                    programBox.getChildren().add(programText);
 
                     event.consume();
-                    imageView.setOnDragDetected(null);
                 }
             });
+
+
 
 
 
