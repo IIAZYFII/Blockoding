@@ -22,61 +22,22 @@ import java.util.List;
  * @version 1.0
  */
 public class TextExtractor {
-    //Tesseract tesseract;
     WordProcessor wordProcessor;
 
 
     public TextExtractor() {
-        //tesseract = new Tesseract();
+
         wordProcessor = new WordProcessor();
         wordProcessor.addWordsToDictionary(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Words\\default.txt"));
 
     }
-/*
-
-
-    public void setDataPath(String dataPath) {
-        try {
-            tesseract.setDatapath(dataPath);
-        } catch (Exception e) {
-            System.out.println("Cannot set data path to" + dataPath);
-            System.exit(0);
-        }
-
-    }
-*/
     public void extractText(File imageFile) throws IOException {
-        //System.out.println("Processing Image");
-     // File finalImageFile = processImage(imageFile);
-        //extractTextOnModified(finalImageFile);
         String extractedText = performOCR(imageFile.getPath());
-        wordProcessor.processWord(extractedText);
-
-
-
-
-
+        System.out.println(extractedText);
+      //  wordProcessor.processWord(extractedText);
 
     }
 
-    /*
-
-
-    private void extractTextOnModified(File imageFile) throws IOException {
-
-        String extractedText = performOCR(imageFile.getPath());
-
-         try {
-            extractedText   = tesseract.doOCR(imageFile);
-            System.out.println(extractedText);
-        } catch (TesseractException e) {
-            e.printStackTrace();
-        }
-
-
-        wordProcessor.processWord(extractedText);
-    }
-*/
 
     private static String performOCR(String imageFilePath) throws IOException {
         System.out.println("Extracting text");
