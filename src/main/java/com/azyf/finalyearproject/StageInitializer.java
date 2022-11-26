@@ -96,6 +96,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 spriteIndex.set(index);
                 scene.setCursor(Cursor.CLOSED_HAND);
             }
+            e.consume();
         });
 
         canvas.setOnMouseReleased(e -> {
@@ -107,7 +108,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
             drawScene();
-
+            e.consume();
         });
     }
 
