@@ -10,6 +10,7 @@ import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,14 +64,23 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         clock = new Timeline(new KeyFrame(Duration.millis(500), e -> tick(root)));
         clock.setCycleCount(Animation.INDEFINITE);
 
-       AtomicInteger spriteIndex = new AtomicInteger(-1);
+
+
+
+
+        int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+        int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
+        Stage stage = event.getStage();
+        Scene scene = new Scene(root, screenWidth, screenHeight);
+        stage.setScene(scene);
+        AtomicInteger spriteIndex = new AtomicInteger(-1);
 
         canvas.setOnMousePressed( e -> {
 
             int index = (spriteController.findSprite(e.getX(), e.getY()));
             if(index != -1) {
                 spriteIndex.set(index);
-
+                scene.setCursor(Cursor.CLOSED_HAND);
             }
 
         });
@@ -86,6 +96,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
                 spriteController.getSprite(spriteIndex.get()).setXPos(e.getX());
                 spriteController.getSprite(spriteIndex.get()).setYPos(e.getY());
+                scene.setCursor(Cursor.DEFAULT);
                 spriteIndex.set(-1);
 
             }
@@ -98,14 +109,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
 
-
-
-
-        int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
-        int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
-        Stage stage = event.getStage();
-        stage.setScene(new Scene(root, screenWidth, screenHeight));
         stage.show();
+
+
 
 
     }
