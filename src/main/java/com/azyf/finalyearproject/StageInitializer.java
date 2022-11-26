@@ -73,42 +73,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Stage stage = event.getStage();
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
-        AtomicInteger spriteIndex = new AtomicInteger(-1);
-
-        canvas.setOnMousePressed( e -> {
-
-            int index = (spriteController.findSprite(e.getX(), e.getY()));
-            if(index != -1) {
-                spriteIndex.set(index);
-                scene.setCursor(Cursor.CLOSED_HAND);
-            }
-
-        });
-
-
-
-        canvas.setOnMouseReleased(e -> {
-            if(spriteIndex.get() != -1) {
-                System.out.println("----------------------------------------");
-                System.out.println("x: " + e.getX());
-                System.out.println("y: " + e.getY());
-
-
-                spriteController.getSprite(spriteIndex.get()).setXPos(e.getX());
-                spriteController.getSprite(spriteIndex.get()).setYPos(e.getY());
-                scene.setCursor(Cursor.DEFAULT);
-                spriteIndex.set(-1);
-
-            }
-
-
-
-            drawScene();
-
-
-
-        });
-
+        dragSpriteOnCanvas(scene);
         stage.show();
 
 
@@ -120,6 +85,30 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void tick(BorderPane root) {
         System.out.println("test");
 
+    }
+
+    private void dragSpriteOnCanvas(Scene scene) {
+        AtomicInteger spriteIndex = new AtomicInteger(-1);
+        canvas.setOnMousePressed( e -> {
+
+            int index = (spriteController.findSprite(e.getX(), e.getY()));
+            if(index != -1) {
+                spriteIndex.set(index);
+                scene.setCursor(Cursor.CLOSED_HAND);
+            }
+        });
+
+        canvas.setOnMouseReleased(e -> {
+            if(spriteIndex.get() != -1) {
+                spriteController.getSprite(spriteIndex.get()).setXPos(e.getX());
+                spriteController.getSprite(spriteIndex.get()).setYPos(e.getY());
+                scene.setCursor(Cursor.DEFAULT);
+                spriteIndex.set(-1);
+
+            }
+            drawScene();
+
+        });
     }
 
     private void drawScene() {
