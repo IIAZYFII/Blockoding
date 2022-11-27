@@ -14,8 +14,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -37,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Component
@@ -260,6 +260,31 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawSettings();
         });
 
+        AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
+        spriteBox.setOnMouseClicked(e -> {
+            if (contextMenu.get() !=null) {
+                contextMenu.get().hide();
+                contextMenu.set(null);
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+
+                MenuItem menuItem1 = new MenuItem("Upload Sprite");
+                contextMenu.set(new ContextMenu());
+                contextMenu.get().getItems().add(menuItem1);
+
+                spriteBox.setOnContextMenuRequested(event-> {
+                    contextMenu.get().hide();
+                    event.consume();
+                });
+
+                spriteBox.setOnContextMenuRequested(event-> {
+                    contextMenu.get().show(spriteBox, e.getScreenX(), e.getScreenY());
+                    event.consume();
+                });
+                e.consume();
+            }
+        });
+
 
         dragAndDrop(defaultSpriteViewer, defaultSprite, programBox);
         return  root;
@@ -298,7 +323,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Scene scene = new Scene(root, 350,350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
-
 
 
 
