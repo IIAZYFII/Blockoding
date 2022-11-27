@@ -31,10 +31,11 @@ public class TextExtractor {
         wordProcessor.addWordsToDictionary(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Words\\default.txt"));
 
     }
-    public void extractText(File imageFile) throws IOException {
+    public String extractText(File imageFile) throws IOException {
         String extractedText = performOCR(imageFile.getPath());
         System.out.println(extractedText);
-      //  wordProcessor.processWord(extractedText);
+        return extractedText;
+      //wordProcessor.processWord(extractedText);
 
     }
 

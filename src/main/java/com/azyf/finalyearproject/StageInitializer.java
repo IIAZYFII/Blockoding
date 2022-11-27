@@ -242,24 +242,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
-                textExtractor.extractText(image);
+               String text = textExtractor.extractText(image);
+               interpreter.textToBlocks(text);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
         });
 
-       // Button settingButton = new Button();
+        Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
        // ImageView settingButtonView = new ImageView(settingButtonImg);
         //settingButton.setGraphic(settingButtonView);
-        //topBar.getChildren().add(settingButton);
+        topBar.getChildren().add(settingButton);
 
-       /* settingButton.setOnAction(e -> {
+        settingButton.setOnAction(e -> {
             drawSettings();
         });
 
-        */
+
         dragAndDrop(defaultSpriteViewer, defaultSprite, programBox);
         return  root;
 

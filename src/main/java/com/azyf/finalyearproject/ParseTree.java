@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -34,17 +35,17 @@ public class  ParseTree {
         Scanner inLine = null;
         try {
             in = new Scanner(blockFile);
-            int index = 0;
             while (in.hasNextLine()) {
                 String blockLine = in.nextLine();
                 inLine = new Scanner(blockLine);
                 while(inLine.hasNext()) {
                     String blockName = inLine.next();
+                    blockName = blockName.toUpperCase(Locale.ROOT);
                     Category blockCategory = Category.valueOf(inLine.next());
                     Block newBlock = new Block(blockName, blockCategory);
                     Blocks.put(blockName, newBlock);
                 }
-                index++;
+
             }
         } catch (FileNotFoundException e) {
             throw new FileNotFoundException("cannot find file:" + blockFile.getName());
@@ -124,10 +125,9 @@ public class  ParseTree {
         }
     }
 
-
-
-
-
+    public HashMap<String, Block> getBlocks() {
+        return Blocks;
+    }
 }
 
 
