@@ -23,6 +23,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -59,7 +60,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
-        BorderPane root = (BorderPane) buildGUI();
+        Stage stage = event.getStage();
+        BorderPane root = (BorderPane) buildGUI(stage);
 
         clock = new Timeline(new KeyFrame(Duration.millis(500), e -> tick(root)));
         clock.setCycleCount(Animation.INDEFINITE);
@@ -70,7 +72,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
-        Stage stage = event.getStage();
+
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         dragSpriteOnCanvas(scene);
@@ -136,7 +138,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-    private Pane buildGUI() {
+    private Pane buildGUI(Stage stage) {
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FF5438; ");
@@ -269,6 +271,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             if (e.getButton() == MouseButton.SECONDARY) {
 
                 MenuItem menuItem1 = new MenuItem("Upload Sprite");
+                menuItem1.setOnAction(actionEvent -> {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Upload Sprite");
+                    FileChooser.ExtensionFilter extFilter =
+                            new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
+                    fileChooser.getExtensionFilters().add(extFilter);
+                   File file = fileChooser.showOpenDialog(stage);
+                   if (file != null) {
+                       Image createdSprite = new Image(file.getPath());
+                       ImageView imageView = new ImageView();
+                       imageView.setImage(createdSprite);
+                       spriteBox.getChildren().add(imageView);
+                       dragAndDrop(imageView, createdSprite, programBox);
+                   }
+
+                });
                 contextMenu.set(new ContextMenu());
                 contextMenu.get().getItems().add(menuItem1);
 
@@ -363,46 +381,51 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 content.putString("Hello");
                 db.setContent(content);
                 event.consume();
+
+                canvas.setOnDragOver(new EventHandler<DragEvent>() {
+                    public void handle(DragEvent event) {
+                        if (event.getGestureSource() ==   imageView)  {
+                            event.acceptTransferModes(TransferMode.ANY);
+                            event.consume();
+                        }
+                    }
+                });
+                canvas.setOnDragDropped(new EventHandler<DragEvent>() {
+                    public void handle(DragEvent event) {
+                        double x = event.getX() - sprite.getWidth() / 2.0;
+                        double y = event.getY() - sprite.getHeight() / 2.0;
+
+                        // Print a string showing the location.
+                        String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
+                        System.out.println(s);
+
+
+
+                        // Draw an icon at the dropped location.
+                        GraphicsContext gc = canvas.getGraphicsContext2D();
+                        spriteController.addSprite("default",x, y, sprite);
+                        gc.drawImage(sprite, x , y);
+
+                        imageView.setOnDragDetected(null);
+                        programBox.getChildren().clear();
+                        Text programText = new Text();
+                        programText.setText("default's Sprite Program Box");
+                        programBox.getChildren().add(programText);
+
+                        event.consume();
+                    }
+                });
+
+
             }
+
         });
 
 
-        canvas.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                if (event.getGestureSource() ==   imageView)  {
-                    event.acceptTransferModes(TransferMode.ANY);
-                    event.consume();
-                }
-            }
-        });
 
 
 
-            canvas.setOnDragDropped(new EventHandler<DragEvent>() {
-                public void handle(DragEvent event) {
-                    double x = event.getX() - sprite.getWidth() / 2.0;
-                    double y = event.getY() - sprite.getHeight() / 2.0;
 
-                    // Print a string showing the location.
-                    String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
-                    System.out.println(s);
-
-
-
-                    // Draw an icon at the dropped location.
-                    GraphicsContext gc = canvas.getGraphicsContext2D();
-                    spriteController.addSprite("default",x, y, sprite);
-                    gc.drawImage(sprite, x , y);
-
-                    imageView.setOnDragDetected(null);
-                    programBox.getChildren().clear();
-                    Text programText = new Text();
-                    programText.setText("default's Sprite Program Box");
-                    programBox.getChildren().add(programText);
-
-                    event.consume();
-                }
-            });
 
 
 
