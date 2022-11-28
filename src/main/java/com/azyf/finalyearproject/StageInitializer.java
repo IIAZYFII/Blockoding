@@ -411,7 +411,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
     private void clickOnLabel(Event e, VBox spriteContainer) {
         System.out.println("Detected Click");
-        TextField enterSpriteNameField = new TextField();
+        Label currentLabel  = (Label) spriteContainer.getChildren().get(1);
+
+        TextField enterSpriteNameField = new TextField(currentLabel.getText());
+        enterSpriteNameField.setPrefSize(50,20);
         enterSpriteNameField.setOnKeyPressed(event -> {
             System.out.println(event.getCode());
             String inputText = enterSpriteNameField.getText();
