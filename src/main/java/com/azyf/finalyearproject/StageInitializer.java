@@ -8,8 +8,10 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -160,7 +162,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         AnchorPane bottomBar = new AnchorPane();
-       root.setBottom(bottomBar);
+        root.setBottom(bottomBar);
 
         VBox ioBar = new VBox();
         TextArea textArea = new TextArea();
@@ -189,8 +191,45 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
         defaultSprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default-sprite.png");
         defaultSpriteViewer.setImage(defaultSprite);
+        VBox spriteContainer = new VBox();
+        Label spriteLabel = new Label("Default Sprite");
 
-        spriteBox.getChildren().add(defaultSpriteViewer);
+
+
+        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
+    /*(e-> {
+
+
+            System.out.println("Detected Clicked");
+            TextField enterSpriteNameField = new TextField();
+            enterSpriteNameField.setOnKeyPressed(event -> {
+                System.out.println(event.getCode());
+                if (event.getCode() == KeyCode.ENTER) {
+                    System.out.println("detected enter");
+                    String inputText = enterSpriteNameField.getText();
+                    Label newSpriteLabel = new Label(inputText);
+                    spriteContainer.getChildren().remove(1);
+                    spriteContainer.getChildren().add(newSpriteLabel);
+                }
+
+
+
+
+
+            });
+            spriteContainer.getChildren().get(1);
+            spriteContainer.getChildren().add(enterSpriteNameField);
+
+
+
+        });*/
+
+        spriteContainer.getChildren().add(defaultSpriteViewer);
+        spriteContainer.getChildren().add(spriteLabel);
+
+
+
+        spriteBox.getChildren().add(spriteContainer);
 
 
 
@@ -221,20 +260,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-       Button playButton = new Button();
-       //playButton.setStyle("-fx-background-color: transparent;");
-       playButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Playbutton.png");
-       ImageView playButtonView = new ImageView(playButtonImg);
-       playButton.setGraphic(playButtonView);
-       topBar.getChildren().add(playButton);
+        Button playButton = new Button();
+        //playButton.setStyle("-fx-background-color: transparent;");
+        playButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Playbutton.png");
+        ImageView playButtonView = new ImageView(playButtonImg);
+        playButton.setGraphic(playButtonView);
+        topBar.getChildren().add(playButton);
 
 
-       Button stopButton = new Button();
-       //stopButton.setStyle("-fx-background-color: transparent;");
-       stopButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
-       ImageView stopButtonView = new ImageView(stopButtonImg);
-       stopButton.setGraphic(stopButtonView);
-       topBar.getChildren().add(stopButton);
+        Button stopButton = new Button();
+        //stopButton.setStyle("-fx-background-color: transparent;");
+        stopButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
+        ImageView stopButtonView = new ImageView(stopButtonImg);
+        stopButton.setGraphic(stopButtonView);
+        topBar.getChildren().add(stopButton);
 
 
         Button tessButton = new Button();
@@ -244,8 +283,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
-               String text = textExtractor.extractText(image);
-               interpreter.textToBlocks(text);
+                String text = textExtractor.extractText(image);
+                interpreter.textToBlocks(text);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -254,7 +293,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
-       // ImageView settingButtonView = new ImageView(settingButtonImg);
+        // ImageView settingButtonView = new ImageView(settingButtonImg);
         //settingButton.setGraphic(settingButtonView);
         topBar.getChildren().add(settingButton);
 
@@ -277,14 +316,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     FileChooser.ExtensionFilter extFilter =
                             new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
                     fileChooser.getExtensionFilters().add(extFilter);
-                   File file = fileChooser.showOpenDialog(stage);
-                   if (file != null) {
-                       Image createdSprite = new Image(file.getPath());
-                       ImageView imageView = new ImageView();
-                       imageView.setImage(createdSprite);
-                       spriteBox.getChildren().add(imageView);
-                       dragAndDrop(imageView, createdSprite, programBox);
-                   }
+                    File file = fileChooser.showOpenDialog(stage);
+                    if (file != null) {
+                        Image createdSprite = new Image(file.getPath());
+                        ImageView imageView = new ImageView();
+                        imageView.setImage(createdSprite);
+                        spriteBox.getChildren().add(imageView);
+                        dragAndDrop(imageView, createdSprite, programBox);
+                    }
 
                 });
                 contextMenu.set(new ContextMenu());
@@ -371,10 +410,31 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
     }
+    private void clickOnLabel(Event e, VBox spriteContainer) {
+        System.out.println("Detected Click");
+        TextField enterSpriteNameField = new TextField();
+        enterSpriteNameField.setOnKeyPressed(event -> {
+            System.out.println(event.getCode());
+            if (event.getCode() == KeyCode.ENTER) {
+                System.out.println("detected enter");
+                String inputText = enterSpriteNameField.getText();
+                Label newSpriteLabel = new Label(inputText);
+                spriteContainer.getChildren().remove(1);
+                spriteContainer.getChildren().add(newSpriteLabel);
+                newSpriteLabel.setOnMouseClicked(labelEvent->clickOnLabel(labelEvent, spriteContainer));
+
+            }
+
+
+        });
+        spriteContainer.getChildren().remove(1);
+        spriteContainer.getChildren().add(enterSpriteNameField);
+    }
+
 
     private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox) {
 
-            imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
