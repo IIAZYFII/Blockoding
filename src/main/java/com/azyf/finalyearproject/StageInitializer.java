@@ -11,6 +11,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -225,6 +226,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         spriteContainer.getChildren().add(defaultSpriteViewer);
         spriteContainer.getChildren().add(spriteLabel);
+        spriteContainer.setAlignment(Pos.CENTER);
 
 
 
