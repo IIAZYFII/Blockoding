@@ -11,7 +11,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -415,9 +414,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         TextField enterSpriteNameField = new TextField();
         enterSpriteNameField.setOnKeyPressed(event -> {
             System.out.println(event.getCode());
-            if (event.getCode() == KeyCode.ENTER) {
+            String inputText = enterSpriteNameField.getText();
+            if (event.getCode() == KeyCode.ENTER && !(inputText.equals(""))) {
                 System.out.println("detected enter");
-                String inputText = enterSpriteNameField.getText();
+
                 Label newSpriteLabel = new Label(inputText);
                 spriteContainer.getChildren().remove(1);
                 spriteContainer.getChildren().add(newSpriteLabel);
@@ -480,17 +480,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
 
         });
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
