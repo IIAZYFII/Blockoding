@@ -1,4 +1,3 @@
-Action Actions
 Flip Actions
 Horizontal Actions
 Vertical Actions
@@ -17,7 +16,6 @@ Once Commands
 PressesKey Commands
 ClicksSprite Commands
 Continue Commands
-Condition Conditions
 Whenever Conditions
 Then Conditions
 Or Conditions
@@ -25,12 +23,10 @@ Always Conditions
 During Conditions
 And  Conditions
 Loop Conditions
-Interaction Interactions
 Pressed Interactions
 Touches Interactions
 atXY Interactions
 Equals Interactions
-Visual Visuals
 Change Visuals
 Outfit Visuals
 Scene Visuals
@@ -52,8 +48,6 @@ Sprite Misc
 Visual Misc
 Interaction Misc
 Variable Misc
-Misc Misc
-Sound Sounds
 Increase Sounds
 Decrease Sounds
 Volume Sounds
