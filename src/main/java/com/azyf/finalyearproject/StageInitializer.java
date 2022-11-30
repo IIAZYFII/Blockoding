@@ -37,7 +37,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -79,8 +81,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stage.setScene(scene);
         dragSpriteOnCanvas(scene);
         stage.show();
-
-
+        try {
+            interpreter.loadTree(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -285,7 +290,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 image = imageProcessor.processImage(image);
                 String text = textExtractor.extractText(image);
-                interpreter.textToBlocks(text);
+                Queue<Block> blocks =  interpreter.textToBlocks(text);
+                interpreter.compile(blocks);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

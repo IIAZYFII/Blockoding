@@ -1,5 +1,7 @@
 package com.azyf.finalyearproject;
 
+import org.apache.pdfbox.debugger.ui.Tree;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -72,16 +74,16 @@ public class  ParseTree {
         System.out.println(parseTree);
         in = new Scanner(parseTree);
         while(in.hasNext()) {
-            String data = in.next();
+            String data = in.next().toUpperCase(Locale.ROOT);
             if(root == null) {
                 Block rootBlock = Blocks.get(data);
                 TreeNode rootNode = new TreeNode(rootBlock);
                 root = rootNode;
                 currentParentNode = root;
             } else if (data.equals("->")) {
-               String childNotation = in.next();
+               String childNotation = in.next().toUpperCase(Locale.ROOT);
                 if(childNotation.equals("[")) {
-                    String  blockData = in.next();
+                    String  blockData = in.next().toUpperCase(Locale.ROOT);
                     Block currentBlock = Blocks.get(blockData);
                     TreeNode newNode =  new TreeNode(currentBlock);
                     currentParentNode.getChildren().add(newNode);
@@ -128,6 +130,38 @@ public class  ParseTree {
     public HashMap<String, Block> getBlocks() {
         return Blocks;
     }
-}
+
+    public TreeNode compileProgram(Block block, TreeNode position) {
+        if(position.getNode().getName().equals(block.getName())) {
+            System.out.println("correct position");
+            return  root;
+        } else  if(position.getChildren().size() != 0) {
+            for (int i = 0; i < position.getChildren().size(); i++) {
+                String blockName = position.getChildren().get(i).getNode().name;
+
+
+                if(blockName.equals(block.getName())) {
+                    System.out.println("Correct");
+                    if(position.getChildren().get(i).getChildren().size() != 0) {
+                        return position.getChildren().get(i);
+                    } else {
+                        return root;
+                    }
+
+                }
+
+
+            }
+            System.out.println("Syntax Error");
+
+
+        } else {
+            System.out.println("Syntax Error");
+        }
+        return null;
+    }
+  }
+
+
 
 

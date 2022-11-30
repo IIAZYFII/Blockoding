@@ -1,6 +1,8 @@
 package com.azyf.finalyearproject;
 
 import com.google.protobuf.compiler.PluginProtos;
+import org.apache.pdfbox.debugger.ui.Tree;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -75,6 +77,14 @@ public class Interpreter {
         }
         System.out.println(blocks.toString());
         return  blocks;
+    }
+
+    public void compile(Queue<Block> blocks) {
+        TreeNode position = parseTree.root;
+         for(int i = 0; i < blocks.size(); i++) {
+             Block block = blocks.remove();
+             position = parseTree.compileProgram(block, position);
+         }
     }
 
 
