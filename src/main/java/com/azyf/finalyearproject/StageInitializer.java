@@ -110,10 +110,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         canvas.setOnMouseReleased(e -> {
             if(spriteIndex.get() != -1) {
-                spriteController.getSprite(spriteIndex.get()).setXPos(e.getX());
-                spriteController.getSprite(spriteIndex.get()).setYPos(e.getY());
+                double xPos = e.getX();
+                double yPos = e.getY();
+                System.out.println("canvas height:" + canvas.getHeight());
+                System.out.println("canvas width" + canvas.getWidth());
+
+                System.out.println("X pos " + xPos);
+                System.out.println("Y pos " + yPos);
+
+                if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
+                    spriteController.getSprite(spriteIndex.get()).setXPos(xPos);
+                    spriteController.getSprite(spriteIndex.get()).setYPos(yPos);
+                }
                 scene.setCursor(Cursor.DEFAULT);
                 spriteIndex.set(-1);
+
 
             }
             drawScene();
@@ -360,10 +371,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawSettings(){
         Stage settingStage = new Stage();
         BorderPane root = new BorderPane();
-
         root.setStyle("-fx-background-color: #FF5438;");
-
-
         Button linkAppButton = new Button();
         linkAppButton.setMinSize(100,100);
         linkAppButton.setText("Link App");
@@ -387,9 +395,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Scene scene = new Scene(root, 350,350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
-
-
-
     }
 
     private void generateQRCode() throws WriterException, IOException {
@@ -414,9 +419,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\qrcode.png");
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
-
-
     }
+
     private void clickOnLabel(Event e, VBox spriteContainer) {
         System.out.println("Detected Click");
         Label currentLabel  = (Label) spriteContainer.getChildren().get(1);
@@ -433,18 +437,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 spriteContainer.getChildren().remove(1);
                 spriteContainer.getChildren().add(newSpriteLabel);
                 newSpriteLabel.setOnMouseClicked(labelEvent->clickOnLabel(labelEvent, spriteContainer));
-
             }
-
-
         });
         spriteContainer.getChildren().remove(1);
         spriteContainer.getChildren().add(enterSpriteNameField);
     }
 
 
-    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox) {
 
+    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox) {
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
@@ -466,13 +467,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         double x = event.getX() - sprite.getWidth() / 2.0;
                         double y = event.getY() - sprite.getHeight() / 2.0;
 
-                        // Print a string showing the location.
                         String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
                         System.out.println(s);
 
 
 
-                        // Draw an icon at the dropped location.
                         GraphicsContext gc = canvas.getGraphicsContext2D();
                         spriteController.addSprite("default",x, y, sprite);
                         gc.drawImage(sprite, x , y);
@@ -493,8 +492,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
     }
-
-
 
 
 
