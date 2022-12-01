@@ -340,7 +340,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         ImageView imageView = new ImageView();
                         imageView.setImage(createdSprite);
                         spriteBox.getChildren().add(imageView);
-                        dragAndDrop(imageView, createdSprite, programBox);
+                        //dragAndDrop(imageView, createdSprite, programBox);
                     }
 
                 });
@@ -361,10 +361,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        dragAndDrop(defaultSpriteViewer, defaultSprite, programBox);
+        Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
+        String spriteName = spriteLabelName.getText();
+        dragAndDrop(defaultSpriteViewer, defaultSprite, programBox, spriteName);
         return  root;
 
     }
+
+
 
 
 
@@ -445,7 +449,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox) {
+    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox, String spriteName) {
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
@@ -473,13 +477,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
                         GraphicsContext gc = canvas.getGraphicsContext2D();
-                        spriteController.addSprite("default",x, y, sprite);
+                        spriteController.addSprite(spriteName,x, y, sprite);
                         gc.drawImage(sprite, x , y);
 
                         imageView.setOnDragDetected(null);
                         programBox.getChildren().clear();
                         Text programText = new Text();
-                        programText.setText("default's Sprite Program Box");
+                        programText.setText(spriteName + "'s " +"Program Box");
                         programBox.getChildren().add(programText);
 
                         event.consume();
