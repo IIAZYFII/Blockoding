@@ -1,5 +1,6 @@
 package com.azyf.finalyearproject;
 
+import javafx.util.Pair;
 import org.apache.pdfbox.debugger.ui.Tree;
 
 import java.io.File;
@@ -131,10 +132,11 @@ public class  ParseTree {
         return Blocks;
     }
 
-    public TreeNode compileProgram(Block block, TreeNode position) {
+    public Pair<TreeNode, Boolean> compileProgram(Block block, TreeNode position) {
         if(position.getNode().getName().equals(block.getName())) {
             System.out.println("correct position");
-            return  root;
+            Pair pair = new Pair(root, true);
+            return  pair;
         } else  if(position.getChildren().size() != 0) {
             for (int i = 0; i < position.getChildren().size(); i++) {
                 String blockName = position.getChildren().get(i).getNode().name;
@@ -143,9 +145,11 @@ public class  ParseTree {
                 if(blockName.equals(block.getName())) {
                     System.out.println("Correct");
                     if(position.getChildren().get(i).getChildren().size() != 0) {
-                        return position.getChildren().get(i);
+                        Pair pair = new Pair(position.getChildren().get(i), true);
+                        return pair;
                     } else {
-                        return root;
+                        Pair pair = new Pair(root, true);
+                        return  pair;
                     }
 
                 }
@@ -153,12 +157,17 @@ public class  ParseTree {
 
             }
             System.out.println("Syntax Error");
+            Pair pair = new Pair(root, false);
+            return  pair;
+
 
 
         } else {
+
             System.out.println("Syntax Error");
+            Pair pair = new Pair(root, false);
+            return  pair;
         }
-        return null;
     }
   }
 

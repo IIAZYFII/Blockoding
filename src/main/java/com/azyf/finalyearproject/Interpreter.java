@@ -1,6 +1,7 @@
 package com.azyf.finalyearproject;
 
 import com.google.protobuf.compiler.PluginProtos;
+import javafx.util.Pair;
 import org.apache.pdfbox.debugger.ui.Tree;
 
 import java.io.File;
@@ -81,9 +82,10 @@ public class Interpreter {
 
     public void compile(Queue<Block> blocks) {
         TreeNode position = parseTree.root;
+        Pair pair = new Pair(position, true);
          for(int i = 0; i < blocks.size(); i++) {
              Block block = blocks.remove();
-             position = parseTree.compileProgram(block, position);
+             pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
          }
     }
 
