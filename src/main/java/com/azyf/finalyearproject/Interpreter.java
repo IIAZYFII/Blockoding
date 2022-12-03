@@ -27,34 +27,7 @@ public class Interpreter {
     public void loadTree(File treeData) throws UnsupportedEncodingException {
         parseTree.initialiseParseTree(treeData);
     }
-
-
-/*
-    public void loadTree(File treeData) {
-
-        Scanner in = null;
-        try {
-            in = new Scanner(treeData);
-            Boolean testBool = true;
-            while(in.hasNext()) {
-                String currentNode = in.next();
-                String subString = currentNode.substring(0,2);
-               // System.out.println(subString);
-
-                if(subString.equals("</")) {
-
-                } else {
-                   String blockName = currentNode.substring(1,currentNode.length() -1 );
-                    Block currentBlock = Blocks.get(blockName);
-                    parseTree.initialiseParseTree(currentBlock);
-                }
-
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found" + treeData.getName());
-        }
-    }
- */
+    
 
 
     public ParseTree getParseTree() {
@@ -79,7 +52,7 @@ public class Interpreter {
         return  blocks;
     }
 
-    public boolean compile(Queue<Block> blocks) {
+    public boolean checkSyntax(Queue<Block> blocks) {
         TreeNode position = parseTree.root;
         Pair pair = new Pair(position, true);
          for(int i = 0; i < blocks.size(); i++) {

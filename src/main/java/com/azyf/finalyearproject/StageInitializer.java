@@ -270,7 +270,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 image = imageProcessor.processImage(image);
                 String text = textExtractor.extractText(image);
                 Queue<Block> blocks =  interpreter.textToBlocks(text);
-                boolean compiled = interpreter.compile(blocks);
+                boolean compiled = interpreter.checkSyntax(blocks);
                 if (compiled == true) {
                     spriteController.addSpriteCode(blocks, 0);
                 }
