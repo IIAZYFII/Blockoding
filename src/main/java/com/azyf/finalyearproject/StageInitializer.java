@@ -4,9 +4,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -28,7 +25,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 public class StageInitializer implements ApplicationListener<BlockApplication.StageReadyEvent> {
+    private static final int NO_SPRITE_INDEX = -1;
     private Canvas canvas;
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
@@ -56,8 +53,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
     private SpriteController spriteController = new SpriteController();
-    private Timeline clock;
-
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -66,20 +61,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
         Stage stage = event.getStage();
         BorderPane root = (BorderPane) buildGUI(stage);
-
-        clock = new Timeline(new KeyFrame(Duration.millis(500), e -> tick(root)));
-        clock.setCycleCount(Animation.INDEFINITE);
-
-
-
-
-
+        
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
-        dragSpriteOnCanvas(scene);
+        dragSpriteAroundCanvas(scene);
         stage.show();
         try {
             interpreter.loadTree(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
@@ -91,17 +79,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
 
-    private void tick(BorderPane root) {
-        System.out.println("test");
-
-    }
-
-    private void dragSpriteOnCanvas(Scene scene) {
-        AtomicInteger spriteIndex = new AtomicInteger(-1);
+    /**
+     * ALlows the user the drag a sprite around the canvas
+     * @param scene
+     */
+    private void dragSpriteAroundCanvas(Scene scene) {
+        AtomicInteger spriteIndex = new AtomicInteger(NO_SPRITE_INDEX);
         canvas.setOnMousePressed( e -> {
 
             int index = (spriteController.findSprite(e.getX(), e.getY()));
-            if(index != -1) {
+            if(index != NO_SPRITE_INDEX) {
                 spriteIndex.set(index);
                 scene.setCursor(Cursor.CLOSED_HAND);
             }
@@ -109,7 +96,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         canvas.setOnMouseReleased(e -> {
-            if(spriteIndex.get() != -1) {
+            if(spriteIndex.get() != NO_SPRITE_INDEX) {
                 double xPos = e.getX();
                 double yPos = e.getY();
                 System.out.println("canvas height:" + canvas.getHeight());
@@ -123,7 +110,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     spriteController.getSprite(spriteIndex.get()).setYPos(yPos);
                 }
                 scene.setCursor(Cursor.DEFAULT);
-                spriteIndex.set(-1);
+                spriteIndex.set(NO_SPRITE_INDEX);
 
 
             }
@@ -132,13 +119,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
     }
 
+    /**
+     * Draws the scene for the canvas.
+     */
     private void drawScene() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         gc.setFill(Color.rgb(255,253,208));
         gc.fillRoundRect(0,0,728,597,20.0,20.0);
-        //gc.setLineWidth(20.0);
         gc.strokeRoundRect(0,0,728,597,20.0,20.0);
 
         if(spriteController.size() != 0 ) {
@@ -151,11 +140,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
         }
 
-
     }
 
 
-
+    /**
+     * Builds the Pane for the GUI.
+     * @param stage The stage which GUI is going to be placed on.
+     * @return The pane which contains the GUI.
+     */
     private Pane buildGUI(Stage stage) {
 
         BorderPane root = new BorderPane();
@@ -213,32 +205,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
-    /*(e-> {
 
-
-            System.out.println("Detected Clicked");
-            TextField enterSpriteNameField = new TextField();
-            enterSpriteNameField.setOnKeyPressed(event -> {
-                System.out.println(event.getCode());
-                if (event.getCode() == KeyCode.ENTER) {
-                    System.out.println("detected enter");
-                    String inputText = enterSpriteNameField.getText();
-                    Label newSpriteLabel = new Label(inputText);
-                    spriteContainer.getChildren().remove(1);
-                    spriteContainer.getChildren().add(newSpriteLabel);
-                }
-
-
-
-
-
-            });
-            spriteContainer.getChildren().get(1);
-            spriteContainer.getChildren().add(enterSpriteNameField);
-
-
-
-        });*/
 
         spriteContainer.getChildren().add(defaultSpriteViewer);
         spriteContainer.getChildren().add(spriteLabel);
@@ -368,11 +335,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
+    private void changeSpriteName() {
+
+    }
 
 
 
 
-    private void drawSettings(){
+
+    private void drawSettings() {
         Stage settingStage = new Stage();
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FF5438;");
@@ -425,6 +396,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         ImageIO.write(image, "png", saveImage);
     }
 
+    /**
+     * Allows the User to change the label text.
+     * @param e The current Event.
+     * @param spriteContainer The Container which contains the sprite label.
+     */
     private void clickOnLabel(Event e, VBox spriteContainer) {
         System.out.println("Detected Click");
         Label currentLabel  = (Label) spriteContainer.getChildren().get(1);
@@ -442,13 +418,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 spriteContainer.getChildren().add(newSpriteLabel);
                 newSpriteLabel.setOnMouseClicked(labelEvent->clickOnLabel(labelEvent, spriteContainer));
             }
+            event.consume();
         });
         spriteContainer.getChildren().remove(1);
         spriteContainer.getChildren().add(enterSpriteNameField);
     }
 
 
-
+    /**
+     * Allows the user to drag a sprite from the sprite box to the canvas.
+     * @param imageView The imageview of the sprite.
+     * @param sprite The image of the sprite.
+     * @param programBox The program box itself.
+     * @param spriteName The name of the sprite.
+     */
     private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox, String spriteName) {
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -473,9 +456,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
                         String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
                         System.out.println(s);
-
-
-
                         GraphicsContext gc = canvas.getGraphicsContext2D();
                         spriteController.addSprite(spriteName,x, y, sprite);
                         gc.drawImage(sprite, x , y);
