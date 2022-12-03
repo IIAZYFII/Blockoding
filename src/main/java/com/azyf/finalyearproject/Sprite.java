@@ -3,12 +3,14 @@ package com.azyf.finalyearproject;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class Sprite {
     private String spriteName;
     private double xPos;
     private double yPos;
     private ArrayList<Image> spriteOutfits = new ArrayList<Image>();
+    private ArrayList<Queue<Block>> spriteCode = new ArrayList();
 
     public Sprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
         this.spriteName = spriteName;
@@ -43,6 +45,10 @@ public class Sprite {
 
     public void setYPos(double yPos) {
         this.yPos = yPos;
+    }
+
+    public void addSpriteCode(Queue<Block> code) {
+        spriteCode.add(code);
     }
 
 }

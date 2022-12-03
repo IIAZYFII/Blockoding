@@ -79,13 +79,17 @@ public class Interpreter {
         return  blocks;
     }
 
-    public void compile(Queue<Block> blocks) {
+    public boolean compile(Queue<Block> blocks) {
         TreeNode position = parseTree.root;
         Pair pair = new Pair(position, true);
          for(int i = 0; i < blocks.size(); i++) {
              Block block = blocks.remove();
              pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
+             if( (boolean) pair.getValue() == false) {
+                 return false;
+             }
          }
+         return (boolean) pair.getValue();
     }
 
 

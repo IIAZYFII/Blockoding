@@ -43,6 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class StageInitializer implements ApplicationListener<BlockApplication.StageReadyEvent> {
     private static final int NO_SPRITE_INDEX = -1;
+    private int currentSpriteIndex = NO_SPRITE_INDEX;
     private Canvas canvas;
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
@@ -269,7 +270,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 image = imageProcessor.processImage(image);
                 String text = textExtractor.extractText(image);
                 Queue<Block> blocks =  interpreter.textToBlocks(text);
-                interpreter.compile(blocks);
+                boolean compiled = interpreter.compile(blocks);
+                if (compiled == true) {
+                    spriteController.addSpriteCode(blocks, 0);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

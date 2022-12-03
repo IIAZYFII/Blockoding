@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 
 public class SpriteController {
@@ -38,11 +39,26 @@ public class SpriteController {
         return -1;
     }
 
+    public void changeSpriteName(String newSpriteName, String oldSpriteName) {
+        for(int i = 0; i < sprites.size(); i++) {
+            Sprite sprite = sprites.get(i);
+            if(sprite.getSpriteName().equals(newSpriteName)) {
+                throw new UnsupportedOperationException();
+            } else if (sprite.getSpriteName().equals(oldSpriteName)) {
+                sprites.get(i).setSpriteName(newSpriteName);
+            }
+        }
+    }
+
 
 
 
     public int size() {
         return  sprites.size();
+    }
+
+    public  void addSpriteCode(Queue<Block> code, int i) {
+        sprites.get(i).addSpriteCode(code);
     }
 
 }
