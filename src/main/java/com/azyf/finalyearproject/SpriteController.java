@@ -18,6 +18,10 @@ public class SpriteController {
        return sprites.get(i);
     }
 
+    public void setSprite(int index, Sprite sprite) {
+        sprites.set(index, sprite);
+    }
+
     public void addSprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
         Sprite spriteObject = new Sprite("default",xPos, yPos,defaultOutfit);
         sprites.add(spriteObject);
@@ -60,5 +64,11 @@ public class SpriteController {
     public  void addSpriteCode(Queue<Block> code, int i) {
         sprites.get(i).addSpriteCode(code);
     }
+
+    public Queue<Block> getSpriteCodeBlocks(int i) {
+       return sprites.get(i).getCodeBlocks();
+    }
+
+
 
 }
