@@ -81,8 +81,7 @@ public class ImageProcessor {
 
         for(int j = 0; j <= yB - 1; j++) {
             for(int i = 0; i <= xB -1; i++) {
-                double scalingRatioX =  yA / xB;
-                double scalingRatioY =  xA / yB;
+
 
                     double val = pixelReader.getColor(j,(int)(yA - i - 1)).getRed();
                     Color color=Color.color(val,val,val);
