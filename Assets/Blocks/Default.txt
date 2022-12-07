@@ -8,6 +8,8 @@ Mouse Actions
 Rotate Actions
 Right Actions
 Left Actions
+Up Actions
+Down Actions
 Move Actions
 Start Commands
 Pause Commands
