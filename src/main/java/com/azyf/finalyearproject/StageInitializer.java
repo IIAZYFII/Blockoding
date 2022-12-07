@@ -123,7 +123,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     /**
      * Draws the scene for the canvas.
      */
-    private void drawScene() {
+    private  void drawScene() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -136,18 +136,23 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 double xPos  = spriteController.getSprite(i).getXPos();
                 double yPos  = spriteController.getSprite(i).getYPos();
                 Image sprite =  spriteController.getSprite(i).defaultOutfit();
+                /*
                 if (spriteController.getSprite(i).isFlipRight() == true) {
                     gc.drawImage(sprite, xPos, yPos, sprite.getWidth(), sprite.getHeight(),
                             sprite.getWidth(),0, -sprite.getWidth(), sprite.getHeight());
                 } else {
                     gc.drawImage(sprite, xPos , yPos);
                 }
-
+                 */
+                gc.drawImage(sprite, xPos , yPos);
 
             }
+            System.out.println("test");
         }
 
     }
+
+
 
 
     /**
@@ -269,22 +274,34 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         Button tessButton = new Button();
         topBar.getChildren().add(tessButton);
+        AtomicReference<String> text = new AtomicReference<>("");
         tessButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
             File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
-                String text = textExtractor.extractText(image);
-                Queue<Block> blocks =  interpreter.textToBlocks(text);
-                boolean compiled = interpreter.checkSyntax(blocks);
-                if (compiled == true) {
-                    spriteController.addSpriteCode(blocks, 0);
-                }
+                text.set(textExtractor.extractText(image));
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
         });
+
+        Button compileButton = new Button();
+        topBar.getChildren().add(compileButton);
+        compileButton.setOnAction(e -> {
+            Queue<Block> blocks =  interpreter.textToBlocks(text.get());
+            boolean compiled = interpreter.checkSyntax(blocks);
+            System.out.println("-----------------------------------------");
+            if (compiled == true) {
+                spriteController.addSpriteCode(blocks, 0);
+                interpreter.compileAndRun(spriteController);
+                drawScene();
+
+            }
+        });
+
 
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");

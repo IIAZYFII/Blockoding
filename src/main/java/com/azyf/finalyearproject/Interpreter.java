@@ -59,6 +59,7 @@ public class Interpreter {
             System.out.println("text stored for code is null");
         }
         System.out.println(blocks.toString());
+
         return  blocks;
     }
 
@@ -68,10 +69,12 @@ public class Interpreter {
      * @return A boolean value representing if the syntax is correct or not.
      */
     public boolean checkSyntax(Queue<Block> blocks) {
+        Queue<Block> syntaxBlocks = new LinkedList<>(blocks);
+        int numberOfLoops = syntaxBlocks.size();
         TreeNode position = parseTree.root;
         Pair pair = new Pair(position, true);
-         for(int i = 0; i < blocks.size(); i++) {
-             Block block = blocks.remove();
+         for(int i = 0; i < numberOfLoops; i++) {
+             Block block = syntaxBlocks.remove();
              pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
              if( (boolean) pair.getValue() == false) {
                  return false;
@@ -83,21 +86,31 @@ public class Interpreter {
     public void compileAndRun(SpriteController spriteController) {
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
-            for(int j = 0; j < spriteController.getSpriteCodeBlocks(i).size(); j ++) {
-                Block block = spriteController.getSpriteCodeBlocks(i).remove();
+            Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
+
+                while(blocks.size() > 0) {
+                Block block = blocks.remove();
                 String blockName = block.getName();
                 switch (blockName) {
                     case "MOVE":
-                        block = spriteController.getSpriteCodeBlocks(i).remove();
-                        blockName = block.getName();
-                       sprite = moveSprite(sprite, Integer.parseInt(blockName));
+                        block = blocks.remove();
+                        String direction = block.getName();
+
+                        block = blocks.remove();
+                        String steps = block.getName();
+
+                       sprite = moveSprite(sprite, direction , steps);
                        spriteController.setSprite(i, sprite);
                         break;
-                    case "FLIP":
-                        block = spriteController.getSpriteCodeBlocks(i).remove();
-                        blockName = block.getName();
-                        sprite = flipSprite(sprite, blockName);
-                        spriteController.setSprite(i, sprite);
+                    case "END":
+                        System.out.println("Program finished");
+                        break;
+                    case "START":
+                        System.out.println("Program starting");
+                        break;
+                    default:
+                        System.out.println("something went wrong");
+                        break;
                 }
 
 
@@ -107,9 +120,14 @@ public class Interpreter {
 
 
 
-    private Sprite moveSprite(Sprite sprite, int steps) {
-        steps = 20;
-        sprite.setXPos(sprite.getXPos() + steps);
+    private Sprite moveSprite(Sprite sprite, String direction, String number) {
+        int steps = 20;
+        if(direction.equals("RIGHT")) {
+            sprite.setXPos(sprite.getXPos() + steps);
+        } else if (direction.equals("LEFT")) {
+            sprite.setXPos(sprite.getXPos() - steps);
+        }
+
         return sprite;
     }
 
