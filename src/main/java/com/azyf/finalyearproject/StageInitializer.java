@@ -136,14 +136,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 double xPos  = spriteController.getSprite(i).getXPos();
                 double yPos  = spriteController.getSprite(i).getYPos();
                 Image sprite =  spriteController.getSprite(i).defaultOutfit();
-                /*
-                if (spriteController.getSprite(i).isFlipRight() == true) {
-                    gc.drawImage(sprite, xPos, yPos, sprite.getWidth(), sprite.getHeight(),
-                            sprite.getWidth(),0, -sprite.getWidth(), sprite.getHeight());
-                } else {
-                    gc.drawImage(sprite, xPos , yPos);
-                }
-                 */
                 gc.drawImage(sprite, xPos , yPos);
 
             }

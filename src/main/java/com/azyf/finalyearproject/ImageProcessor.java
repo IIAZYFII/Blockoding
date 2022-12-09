@@ -1,11 +1,11 @@
 package com.azyf.finalyearproject;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
+import javafx.scene.image.*;
 import javafx.scene.paint.Color;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,7 +17,8 @@ import java.io.IOException;
 public class ImageProcessor {
 
     public ImageProcessor() {
-
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        System.out.println(Core.VERSION);
     }
 
     File processImage(File imageFile) throws IOException {
@@ -93,6 +94,15 @@ public class ImageProcessor {
         File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\rotateimg.png");
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(rotatedImage, null);
         ImageIO.write(bufferedImage, "png", saveImage);
+    }
+
+    public static Image flipImage(Image sprite) {
+        Mat src = Imgcodecs.imread(sprite.getUrl());
+        Mat newSprite = new Mat();
+        Core.flip(src, newSprite, 1);
+        Imgcodecs.imwrite(sprite.getUrl(), newSprite);
+        sprite = new Image(sprite.getUrl());
+        return sprite;
     }
 }
 

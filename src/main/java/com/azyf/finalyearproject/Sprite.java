@@ -7,8 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Sprite {
-    private boolean flipRight = false;
-    private boolean flipLeft = false;
+    private boolean flip = false;
     private String spriteName;
     private double xPos;
     private double yPos;
@@ -60,6 +59,14 @@ public class Sprite {
         }
     }
 
+    public void setFlip(boolean flip) {
+        this.flip = flip;
+    }
+
+    public boolean isFlip() {
+        return flip;
+    }
+
     public  Queue<Block> getCodeBlocks() {
         return codeBlocks;
     }
@@ -68,19 +75,9 @@ public class Sprite {
         return spriteOutfits.get(i);
     }
 
-    public boolean isFlipLeft() {
-        return flipLeft;
+    public void setSpriteOutfit(int i, Image image) {
+        spriteOutfits.add(i,image);
     }
 
-    public boolean isFlipRight() {
-        return flipRight;
-    }
 
-    public void setFlipLeft(boolean flipLeft) {
-        this.flipLeft = flipLeft;
-    }
-
-    public void setFlipRight(boolean flipRight) {
-        this.flipRight = flipRight;
-    }
 }

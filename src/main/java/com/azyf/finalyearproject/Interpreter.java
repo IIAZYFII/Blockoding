@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+import static com.azyf.finalyearproject.ImageProcessor.flipImage;
+
 
 public class Interpreter {
     private ParseTree parseTree;
@@ -108,6 +110,10 @@ public class Interpreter {
                     case "START":
                         System.out.println("Program starting");
                         break;
+                    case "FLIP":
+                        sprite = flipSprite(sprite);
+                        spriteController.setSprite(i, sprite);
+                        break;
                     default:
                         System.out.println("something went wrong");
                         break;
@@ -131,12 +137,8 @@ public class Interpreter {
         return sprite;
     }
 
-    private Sprite flipSprite(Sprite sprite, String direction) {
-      if(direction.equals("RIGHT")) {
-          sprite.setFlipRight(true);
-      } else if (direction.equals("LEFT")) {
-          sprite.setFlipLeft(true);
-      }
+    private Sprite flipSprite(Sprite sprite) {
+      sprite.setSpriteOutfit(0, ImageProcessor.flipImage(sprite.getSpriteOutfit(0)) );
         return sprite;
     }
 
