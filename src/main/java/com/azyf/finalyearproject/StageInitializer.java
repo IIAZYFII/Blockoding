@@ -54,6 +54,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
     private SpriteController spriteController = new SpriteController();
+    private double currentMouseXPos = 0;
+    private double currentMouseYPos = 0;
+
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -67,6 +70,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 
         Scene scene = new Scene(root, screenWidth, screenHeight);
+
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
         stage.show();
@@ -164,6 +168,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         gc.fillRoundRect(0,0,728,597,20.0,20.0);
         //gc.setLineWidth(20.0);
         gc.strokeRoundRect(0,0,728,597,20.0,20.0);
+        canvas.setOnMouseMoved(e -> {
+            currentMouseXPos = e.getX();
+            currentMouseYPos = e.getY();
+        });
         root.setCenter(canvas);
 
 
@@ -288,7 +296,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             System.out.println("-----------------------------------------");
             if (compiled == true) {
                 spriteController.addSpriteCode(blocks, 0);
-                interpreter.compileAndRun(spriteController);
+                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos);
                 drawScene();
 
             }

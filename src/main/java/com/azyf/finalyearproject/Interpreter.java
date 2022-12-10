@@ -8,10 +8,7 @@ import org.apache.pdfbox.debugger.ui.Tree;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 import static com.azyf.finalyearproject.ImageProcessor.flipImage;
 
@@ -85,7 +82,7 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
-    public void compileAndRun(SpriteController spriteController) {
+    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY) {
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
@@ -114,6 +111,22 @@ public class Interpreter {
                         sprite = flipSprite(sprite);
                         spriteController.setSprite(i, sprite);
                         break;
+                    case "TELEPORT":
+                        blocks.remove();
+                        block = blocks.remove();
+                        String position = block.getName();
+                        if (position.equals("X")) {
+                            block = blocks.remove();
+                            String yCoord = block.getName();
+                            sprite =  teleportSprite(sprite, position, yCoord);
+                        } else if (position.equals("RANDOM")) {
+                            sprite =  teleportSprite(sprite);
+                        } else if (position.equals("Mouse")) {
+                            sprite = teleportSprite(sprite, mouseX, mouseY);
+                        }
+                        spriteController.setSprite(i, sprite);
+                        break;
+
                     default:
                         System.out.println("something went wrong");
                         break;
@@ -126,7 +139,7 @@ public class Interpreter {
 
 
 
-    private Sprite moveSprite(Sprite sprite, String direction, String number) {
+    private static Sprite moveSprite(Sprite sprite, String direction, String number) {
         int steps = 20;
         if(direction.equals("RIGHT")) {
             sprite.setXPos(sprite.getXPos() + steps);
@@ -137,10 +150,45 @@ public class Interpreter {
         return sprite;
     }
 
-    private Sprite flipSprite(Sprite sprite) {
+    private static Sprite flipSprite(Sprite sprite) {
       sprite.setSpriteOutfit(0, ImageProcessor.flipImage(sprite.getSpriteOutfit(0)) );
         return sprite;
     }
 
+    private static Sprite teleportSprite(Sprite sprite, String x, String y) {
+        sprite.setXPos(20.0);
+        sprite.setYPos(50.0);
+        return sprite;
+
+    }
+
+    private static Sprite teleportSprite(Sprite sprite) {
+            Random rand = new Random();
+            double  xPos = rand.nextDouble(728 - 50);
+            double yPos = rand.nextDouble(597 - 50);
+        sprite.setXPos(xPos);
+        sprite.setYPos(yPos);
+
+        return sprite;
+    }
+
+    private static Sprite teleportSprite(Sprite sprite, double xPos, double yPos) {
+        if(yPos < 0) {
+           yPos = 10;
+        } else if (yPos > 597) {
+            yPos = 550;
+        }
+
+        if(xPos < 0) {
+            xPos = 10;
+        } else if (xPos > 728) {
+            xPos = 690;
+        }
+        sprite.setXPos(xPos);
+        sprite.setYPos(yPos);
+        return sprite;
+    }
+
+    //add teleport spirte
 
 }
