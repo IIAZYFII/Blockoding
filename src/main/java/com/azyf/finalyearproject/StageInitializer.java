@@ -56,6 +56,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private SpriteController spriteController = new SpriteController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
+    private HBox programBox;
 
 
     public StageInitializer() throws FileNotFoundException {
@@ -243,7 +244,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setRight(rightPane);
 
         VBox leftPane = new VBox();
-        HBox programBox = new HBox();
+        programBox = new HBox();
         Text programText = new Text();
         programText.setText("Program Box");
         programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
@@ -362,9 +363,23 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
-    private void changeSpriteName() {
+  private void drawProgramBox(Queue<Block> blocks) {
+        programBox.getChildren().clear();
+        Text programText = new Text(spriteController.getSprite(currentSpriteIndex).getSpriteName() + " Program Box");
+        programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        programBox.getChildren().add(programText);
+        programBox.setPadding(new Insets(0,100,600,100));
 
-    }
+        while(blocks.size() > 0) {
+            Block block = blocks.remove();
+            String blockName = block.getName();
+
+            switch (blockName) {
+                
+            }
+        }
+
+  }
 
 
 
@@ -485,6 +500,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         System.out.println(s);
                         GraphicsContext gc = canvas.getGraphicsContext2D();
                         spriteController.addSprite(spriteName,x, y, sprite);
+                        currentSpriteIndex = spriteController.size() - 1;
                         gc.drawImage(sprite, x , y);
 
                         imageView.setOnDragDetected(null);
