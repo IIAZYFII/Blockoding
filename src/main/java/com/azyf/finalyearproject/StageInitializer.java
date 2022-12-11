@@ -22,6 +22,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
@@ -375,31 +376,62 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         //Rectangle rect = new Rectangle(30,40);
         //programBox.getChildren().add(rect);
 
-        /*
+
         while(blocks.size() > 0) {
             Block block = blocks.remove();
             String blockName = block.getName();
-
+            StackPane stackPane;
             switch (blockName) {
+                case "START":
+                    stackPane = drawBlock(blockName, 0, 255, 0);
+                    programBox.getChildren().add(stackPane);
+                    break;
+                case "FLIP":
+                    stackPane = drawBlock(blockName, 255, 95, 31);
+                    programBox.getChildren().add(stackPane);
+                    break;
+                case "END":
+                    stackPane = drawBlock(blockName, 255, 111, 0);
+                    programBox.getChildren().add(stackPane);
+                default:
+                    System.out.println("test");
+                    break;
+
 
             }
         }
 
-     */
+      /*
       StackPane stackPane = new StackPane();
 
-      Rectangle rectangle = new Rectangle(80,40);
+      Rectangle rectangle = new Rectangle(70,30);
       rectangle.setFill(Color.rgb(0,255,0));
 
-      Rectangle border = new Rectangle(90,50);
+      Rectangle border = new Rectangle(80,40);
 
-      Label start = new Label("Start");
+      Label start = new Label("START");
+      start.setFont(new Font("Arial", 20));
 
       stackPane.getChildren().add(border);
       stackPane.getChildren().add(rectangle);
       stackPane.getChildren().add(start);
       programBox.getChildren().add(stackPane);
 
+       */
+
+  }
+
+  private StackPane drawBlock (String blockName, int red, int green, int blue) {
+      StackPane stackPane = new StackPane();
+      Rectangle blockBox = new Rectangle(70,30);
+      blockBox.setFill(Color.rgb(red,green,blue));
+      Rectangle blockBorder = new Rectangle(80,40);
+      Label blockText = new Label(blockName);
+      stackPane.getChildren().add(blockBorder);
+      stackPane.getChildren().add(blockBox);
+      stackPane.getChildren().add(blockText);
+      blockText.setFont(new Font("Arial", 20));
+      return  stackPane;
   }
 
 
