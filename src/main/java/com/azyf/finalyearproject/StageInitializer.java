@@ -21,6 +21,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
@@ -35,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,7 +58,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private SpriteController spriteController = new SpriteController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
-    private HBox programBox;
+    private VBox programBox;
 
 
     public StageInitializer() throws FileNotFoundException {
@@ -244,7 +246,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setRight(rightPane);
 
         VBox leftPane = new VBox();
-        programBox = new HBox();
+        programBox = new VBox();
         Text programText = new Text();
         programText.setText("Program Box");
         programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
@@ -294,12 +296,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         compileButton.setOnAction(e -> {
             Queue<Block> blocks =  interpreter.textToBlocks(text.get());
             boolean compiled = interpreter.checkSyntax(blocks);
+            Queue<Block> programBlock = new LinkedList<>(blocks);
+            drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
             if (compiled == true) {
                 spriteController.addSpriteCode(blocks, 0);
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos);
                 drawScene();
-
             }
         });
 
@@ -358,7 +361,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
         String spriteName = spriteLabelName.getText();
-        dragAndDrop(defaultSpriteViewer, defaultSprite, programBox, spriteName);
+        dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
         return  root;
 
     }
@@ -368,16 +371,34 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Text programText = new Text(spriteController.getSprite(currentSpriteIndex).getSpriteName() + " Program Box");
         programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
-        programBox.setPadding(new Insets(0,100,600,100));
 
+        //Rectangle rect = new Rectangle(30,40);
+        //programBox.getChildren().add(rect);
+
+        /*
         while(blocks.size() > 0) {
             Block block = blocks.remove();
             String blockName = block.getName();
 
             switch (blockName) {
-                
+
             }
         }
+
+     */
+      StackPane stackPane = new StackPane();
+
+      Rectangle rectangle = new Rectangle(80,40);
+      rectangle.setFill(Color.rgb(0,255,0));
+
+      Rectangle border = new Rectangle(90,50);
+
+      Label start = new Label("Start");
+
+      stackPane.getChildren().add(border);
+      stackPane.getChildren().add(rectangle);
+      stackPane.getChildren().add(start);
+      programBox.getChildren().add(stackPane);
 
   }
 
@@ -471,10 +492,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      * Allows the user to drag a sprite from the sprite box to the canvas.
      * @param imageView The imageview of the sprite.
      * @param sprite The image of the sprite.
-     * @param programBox The program box itself.
      * @param spriteName The name of the sprite.
      */
-    private void dragAndDrop(ImageView imageView, Image sprite, HBox programBox, String spriteName) {
+    private void dragAndDrop(ImageView imageView, Image sprite, String spriteName) {
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
