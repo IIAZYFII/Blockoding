@@ -60,6 +60,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
     private VBox programBox;
+    boolean compiled = false;
 
 
     public StageInitializer() throws FileNotFoundException {
@@ -213,7 +214,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;" );
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        defaultSprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default-sprite.png");
+        defaultSprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
         Label spriteLabel = new Label("Default Sprite");
@@ -296,17 +297,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(compileButton);
         compileButton.setOnAction(e -> {
             Queue<Block> blocks =  interpreter.textToBlocks(text.get());
-            boolean compiled = interpreter.checkSyntax(blocks);
+            compiled = interpreter.checkSyntax(blocks);
             Queue<Block> programBlock = new LinkedList<>(blocks);
             drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
-            if (compiled == true) {
+            if(compiled == true) {
                 spriteController.addSpriteCode(blocks, 0);
+            }
+
+        });
+        playButton.setOnAction(e->{
+            if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos);
                 drawScene();
             }
         });
-
 
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
@@ -393,6 +398,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "END":
                     stackPane = drawBlock(blockName, 255, 111, 0);
                     programBox.getChildren().add(stackPane);
+                case "Rotate":
+                    stackPane = drawBlock(blockName, 255, 95, 31);
+                    programBox.getChildren().add(stackPane);
+                    block = blocks.remove();
+                    break;
                 default:
                     System.out.println("test");
                     break;
@@ -433,6 +443,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
       blockText.setFont(new Font("Arial", 20));
       return  stackPane;
   }
+
+
 
 
 
