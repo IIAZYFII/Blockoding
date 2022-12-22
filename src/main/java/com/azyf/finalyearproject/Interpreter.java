@@ -1,6 +1,7 @@
 package com.azyf.finalyearproject;
 
 import com.google.protobuf.compiler.PluginProtos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.util.Pair;
 import org.apache.pdfbox.debugger.ui.Tree;
@@ -82,11 +83,12 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
-    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY) {
+    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY, HashMap<String, String> comboBoxValues, ArrayList<String> comboBoxes) {
+        int comboBoxValueIndex = 0;
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
-
+                String comboBoxAsString = "";
                 while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
@@ -126,7 +128,13 @@ public class Interpreter {
                         }
                         spriteController.setSprite(i, sprite);
                         break;
-
+                    case "ROTATE":
+                        String orientation = blocks.remove().getName();
+                        comboBoxAsString = comboBoxes.get(comboBoxValueIndex);
+                        String amount = comboBoxValues.get(comboBoxAsString);
+                        sprite = rotateSprite(sprite, orientation, amount);
+                        comboBoxValueIndex++;
+                        break;
                     default:
                         System.out.println("something went wrong");
                         break;
@@ -189,6 +197,11 @@ public class Interpreter {
         return sprite;
     }
 
-    //add teleport spirte
+    private static Sprite rotateSprite(Sprite sprite, String orientation, String amount) {
+        sprite.setSpriteOutfit(0, ImageProcessor.rotateImage(sprite.getSpriteOutfit(0), orientation , amount));
+        return sprite;
+    }
+
+    //add teleport to spirte
 
 }

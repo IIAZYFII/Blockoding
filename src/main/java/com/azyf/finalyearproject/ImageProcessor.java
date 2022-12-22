@@ -104,5 +104,30 @@ public class ImageProcessor {
         sprite = new Image(sprite.getUrl());
         return sprite;
     }
+
+    public static Image rotateImage(Image sprite, String direction, String amount) {
+        Mat src = Imgcodecs.imread(sprite.getUrl());
+        Mat newSprite = new Mat(src.rows(), src.cols(), src.type());
+        if((direction.equals("RIGHT") && amount.equals("90")) || (direction.equals("LEFT") && amount.equals("270"))) {
+            Core.rotate(src,  newSprite,Core.ROTATE_90_CLOCKWISE);
+            Imgcodecs.imwrite(sprite.getUrl(), newSprite);
+            sprite = new Image(sprite.getUrl());
+            return sprite;
+        } else if (amount.equals("180")) {
+            Core.rotate(src,  newSprite,Core.ROTATE_180);
+            Imgcodecs.imwrite(sprite.getUrl(), newSprite);
+            sprite = new Image(sprite.getUrl());
+            return sprite;
+        } else if ((direction.equals("LEFT") && amount.equals("90"))  || (direction.equals("RIGHT") && amount.equals("270"))) {
+            Core.rotate(src,  newSprite,Core.ROTATE_90_COUNTERCLOCKWISE);
+            Imgcodecs.imwrite(sprite.getUrl(), newSprite);
+            sprite = new Image(sprite.getUrl());
+            return sprite;
+        }
+
+        Imgcodecs.imwrite(sprite.getUrl(), newSprite);
+        sprite = new Image(sprite.getUrl());
+        return sprite;
+    }
 }
 

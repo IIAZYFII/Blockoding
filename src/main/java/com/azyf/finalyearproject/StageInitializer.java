@@ -312,7 +312,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
         playButton.setOnAction(e->{
             if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, comboBoxesValues);
+                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, comboBoxesValues, comboBoxes);
                 drawScene();
             }
         });
@@ -498,6 +498,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             return testBox;
         }
         return  stackPane;
+    }
+
+    private StackPane createStackPane() {
+        
     }
 
 
