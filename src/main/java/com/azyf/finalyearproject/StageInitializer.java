@@ -4,12 +4,14 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -385,23 +387,26 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         while(blocks.size() > 0) {
             Block block = blocks.remove();
             String blockName = block.getName();
-            StackPane stackPane;
+            StackPane stackPane = new StackPane();
             switch (blockName) {
                 case "START":
-                    stackPane = drawBlock(blockName, 0, 255, 0);
+                    stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
                     programBox.getChildren().add(stackPane);
                     break;
                 case "FLIP":
-                    stackPane = drawBlock(blockName, 255, 95, 31);
+                    stackPane = (StackPane) drawBlock(blockName, 255, 95, 31);
                     programBox.getChildren().add(stackPane);
                     break;
                 case "END":
-                    stackPane = drawBlock(blockName, 255, 111, 0);
+                    stackPane = (StackPane) drawBlock(blockName, 255, 111, 0);
                     programBox.getChildren().add(stackPane);
-                case "Rotate":
-                    stackPane = drawBlock(blockName, 255, 95, 31);
-                    programBox.getChildren().add(stackPane);
+                    break;
+                case "ROTATE":
                     block = blocks.remove();
+                    String secondBlockName = block.getName();
+                    HBox hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    blocks.remove();
                     break;
                 default:
                     System.out.println("test");
@@ -431,7 +436,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
   }
 
-  private StackPane drawBlock (String blockName, int red, int green, int blue) {
+  private Node drawBlock (String blockName, int red, int green, int blue) {
       StackPane stackPane = new StackPane();
       Rectangle blockBox = new Rectangle(70,30);
       blockBox.setFill(Color.rgb(red,green,blue));
@@ -440,9 +445,49 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
       stackPane.getChildren().add(blockBorder);
       stackPane.getChildren().add(blockBox);
       stackPane.getChildren().add(blockText);
-      blockText.setFont(new Font("Arial", 20));
+      blockText.setFont(new Font("Arial", 15));
       return  stackPane;
   }
+
+    private Node drawBlock (String blockName, String direction, int red, int green, int blue) {
+        StackPane stackPane = new StackPane();
+        Rectangle blockBox = new Rectangle(70,30);
+        blockBox.setFill(Color.rgb(red,green,blue));
+        Rectangle blockBorder = new Rectangle(80,40);
+        Label blockText = new Label(blockName);
+        stackPane.getChildren().add(blockBorder);
+        stackPane.getChildren().add(blockBox);
+        stackPane.getChildren().add(blockText);
+        blockText.setFont(new Font("Arial", 15));
+        if(blockName.equals("ROTATE")) {
+            HBox testBox = new HBox();
+            testBox.getChildren().add(stackPane);
+
+            stackPane = new StackPane();
+            blockBox = new Rectangle(70,30);
+            blockBox.setFill(Color.rgb(red,green,blue));
+            blockBorder = new Rectangle(80,40);
+            blockText = new Label(direction);
+            blockText.setFont(new Font("Arial", 15));
+
+            stackPane.getChildren().add(blockBorder);
+            stackPane.getChildren().add(blockBox);
+            stackPane.getChildren().add(blockText);
+            testBox.getChildren().add(stackPane);
+
+
+            String options[] = {"90","180","270"};
+            ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+            testBox.getChildren().add(comboBox);
+            comboBox.setOnAction(e -> {
+                System.out.println(comboBox.getValue());
+            });
+
+
+            return testBox;
+        }
+        return  stackPane;
+    }
 
 
 
