@@ -83,12 +83,12 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
-    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY, HashMap<String, String> comboBoxValues, ArrayList<String> comboBoxes) {
-        int comboBoxValueIndex = 0;
+    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY, HashMap<String, String> inputBoxesValues, ArrayList<String> inputBoxes) {
+        int inputBoxValueIndex = 0;
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
-                String comboBoxAsString = "";
+                String inputBoxAsString = "";
                 while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
@@ -96,10 +96,9 @@ public class Interpreter {
                     case "MOVE":
                         block = blocks.remove();
                         String direction = block.getName();
-
-                        block = blocks.remove();
-                        String steps = block.getName();
-
+                        inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                        String steps = inputBoxesValues.get(inputBoxAsString);
+                        inputBoxValueIndex++;
                        sprite = moveSprite(sprite, direction , steps);
                        spriteController.setSprite(i, sprite);
                         break;
@@ -130,10 +129,10 @@ public class Interpreter {
                         break;
                     case "ROTATE":
                         String orientation = blocks.remove().getName();
-                        comboBoxAsString = comboBoxes.get(comboBoxValueIndex);
-                        String amount = comboBoxValues.get(comboBoxAsString);
+                        inputBoxAsString = inputBoxesValues.get(inputBoxes);
+                        String amount = inputBoxesValues.get(inputBoxAsString);
                         sprite = rotateSprite(sprite, orientation, amount);
-                        comboBoxValueIndex++;
+                        inputBoxValueIndex++;
                         break;
                     default:
                         System.out.println("something went wrong");
@@ -148,11 +147,15 @@ public class Interpreter {
 
 
     private static Sprite moveSprite(Sprite sprite, String direction, String number) {
-        int steps = 20;
+        int steps = Integer.parseInt(number);
         if(direction.equals("RIGHT")) {
             sprite.setXPos(sprite.getXPos() + steps);
         } else if (direction.equals("LEFT")) {
             sprite.setXPos(sprite.getXPos() - steps);
+        } else if (direction.equals("UP")) {
+            sprite.setYPos(sprite.getYPos() + steps);
+        } else if (direction.equals("DOWN")) {
+            sprite.setYPos(sprite.getYPos() - steps);
         }
 
         return sprite;

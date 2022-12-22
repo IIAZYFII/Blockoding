@@ -485,6 +485,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             String textFieldAsString = textField.toString();
             textField.setOnAction(e -> {
                 if(getInputBoxIndex(textFieldAsString) == - 1) {
+                    System.out.println(textField.getText());
                     inputBoxesValues.put(textFieldAsString, (String) textField.getText());
                     inputBoxes.add(textFieldAsString);
                 } else {
