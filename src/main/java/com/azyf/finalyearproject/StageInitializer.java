@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,7 +54,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
     private ImageProcessor imageProcessor = new ImageProcessor();
-    private Canvas blockCanvas;
+    private HashMap<Integer, String> comboBoxValues = new HashMap<>();
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image defaultSprite;
@@ -63,6 +64,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private double currentMouseYPos = 0;
     private VBox programBox;
     boolean compiled = false;
+    int numberOfComboBoxes = 0;
 
 
     public StageInitializer() throws FileNotFoundException {
@@ -478,9 +480,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             String options[] = {"90","180","270"};
             ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+            numberOfComboBoxes++;
             testBox.getChildren().add(comboBox);
             comboBox.setOnAction(e -> {
-                System.out.println(comboBox.getValue());
+                comboBoxValues.put(numberOfComboBoxes, (String) comboBox.getValue());
             });
 
 
