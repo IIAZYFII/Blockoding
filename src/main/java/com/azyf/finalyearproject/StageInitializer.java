@@ -439,48 +439,23 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
   }
 
   private Node drawBlock (String blockName, int red, int green, int blue) {
-      StackPane stackPane = new StackPane();
-      Rectangle blockBox = new Rectangle(70,30);
-      blockBox.setFill(Color.rgb(red,green,blue));
-      Rectangle blockBorder = new Rectangle(80,40);
-      Label blockText = new Label(blockName);
-      stackPane.getChildren().add(blockBorder);
-      stackPane.getChildren().add(blockBox);
-      stackPane.getChildren().add(blockText);
-      blockText.setFont(new Font("Arial", 15));
+      StackPane stackPane = createStackPane(blockName, red, green, blue);
       return  stackPane;
   }
 
     private Node drawBlock (String blockName, String direction, int red, int green, int blue) {
-        StackPane stackPane = new StackPane();
-        Rectangle blockBox = new Rectangle(70,30);
-        blockBox.setFill(Color.rgb(red,green,blue));
-        Rectangle blockBorder = new Rectangle(80,40);
-        Label blockText = new Label(blockName);
-        stackPane.getChildren().add(blockBorder);
-        stackPane.getChildren().add(blockBox);
-        stackPane.getChildren().add(blockText);
-        blockText.setFont(new Font("Arial", 15));
+        StackPane stackPane = createStackPane(blockName, red, green, blue);
         if(blockName.equals("ROTATE")) {
-            HBox testBox = new HBox();
-            testBox.getChildren().add(stackPane);
-
-            stackPane = new StackPane();
-            blockBox = new Rectangle(70,30);
-            blockBox.setFill(Color.rgb(red,green,blue));
-            blockBorder = new Rectangle(80,40);
-            blockText = new Label(direction);
-            blockText.setFont(new Font("Arial", 15));
-
-            stackPane.getChildren().add(blockBorder);
-            stackPane.getChildren().add(blockBox);
-            stackPane.getChildren().add(blockText);
-            testBox.getChildren().add(stackPane);
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            stackPane = createStackPane(direction, red, green, blue);
+            hBox.getChildren().add(stackPane);
 
 
             String options[] = {"90","180","270"};
             ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
-            testBox.getChildren().add(comboBox);
+            hBox.getChildren().add(comboBox);
+
             String comboBoxAsString = comboBox.toString();
             System.out.println(comboBoxAsString);
             comboBox.setOnAction(e -> {
@@ -495,13 +470,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             });
 
 
-            return testBox;
+            return hBox;
         }
         return  stackPane;
     }
 
-    private StackPane createStackPane() {
-        
+    private StackPane createStackPane( String blockName, int red, int green, int blue){
+        StackPane stackPane = new StackPane();
+        Rectangle blockBox = new Rectangle(70,30);
+        blockBox.setFill(Color.rgb(red,green,blue));
+        Rectangle blockBorder = new Rectangle(80,40);
+        Label blockText = new Label(blockName);
+        stackPane.getChildren().add(blockBorder);
+        stackPane.getChildren().add(blockBox);
+        stackPane.getChildren().add(blockText);
+        blockText.setFont(new Font("Arial", 15));
+        return  stackPane;
     }
 
 
