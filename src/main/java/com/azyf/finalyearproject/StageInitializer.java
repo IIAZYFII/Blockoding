@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -54,7 +55,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
     private ImageProcessor imageProcessor = new ImageProcessor();
-    private HashMap<Integer, String> comboBoxValues = new HashMap<>();
+    private HashMap<String, String> comboBoxesValues = new HashMap<>();
+    private ArrayList<String> comboBoxes = new ArrayList<>();
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image defaultSprite;
@@ -64,8 +66,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private double currentMouseYPos = 0;
     private VBox programBox;
     boolean compiled = false;
-    int numberOfComboBoxes = 0;
-
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -312,7 +312,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
         playButton.setOnAction(e->{
             if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos);
+                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, comboBoxesValues);
                 drawScene();
             }
         });
@@ -480,10 +480,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             String options[] = {"90","180","270"};
             ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
-            numberOfComboBoxes++;
             testBox.getChildren().add(comboBox);
+            String comboBoxAsString = comboBox.toString();
+            System.out.println(comboBoxAsString);
             comboBox.setOnAction(e -> {
-                comboBoxValues.put(numberOfComboBoxes, (String) comboBox.getValue());
+                if(getComboBoxIndex(comboBoxAsString) == - 1) {
+                    comboBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
+                    comboBoxes.add(comboBoxAsString);
+                } else {
+                    comboBoxesValues.remove(comboBoxAsString);
+                    comboBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
+                }
+
             });
 
 
@@ -630,6 +638,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
 
+    }
+
+    private int getComboBoxIndex(String comboBox) {
+        for (int i = 0; i < comboBoxes.size(); i++) {
+            if(comboBoxes.get(i).equals(comboBox)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
 
