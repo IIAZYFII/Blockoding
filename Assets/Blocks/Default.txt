@@ -1,11 +1,11 @@
 Flip Actions
 Horizontal Actions
 Vertical Actions
-Teleport Actions
+Telport Actions
 To Actions
 X Actions
 Y Actions
-RandomArea Actions
+Random Actions
 Mouse Actions
 Rotate Actions
 Right Actions

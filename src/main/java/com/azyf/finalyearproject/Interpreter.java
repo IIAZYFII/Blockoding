@@ -88,14 +88,15 @@ public class Interpreter {
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
-                String inputBoxAsString = "";
+            String direction = "";
+            String inputBoxAsString = "";
                 while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
                 switch (blockName) {
                     case "MOVE":
                         block = blocks.remove();
-                        String direction = block.getName();
+                        direction = block.getName();
                         inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                         String steps = inputBoxesValues.get(inputBoxAsString);
                         inputBoxValueIndex++;
@@ -109,20 +110,27 @@ public class Interpreter {
                         System.out.println("Program starting");
                         break;
                     case "FLIP":
-                        sprite = flipSprite(sprite);
+                        direction = blocks.remove().getName();
+                        sprite = flipSprite(sprite, direction);
                         spriteController.setSprite(i, sprite);
                         break;
-                    case "TELEPORT":
+                    case "TELPORT":
                         blocks.remove();
                         block = blocks.remove();
                         String position = block.getName();
                         if (position.equals("X")) {
                             block = blocks.remove();
-                            String yCoord = block.getName();
-                            sprite =  teleportSprite(sprite, position, yCoord);
+                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                            String xCoord = inputBoxesValues.get(inputBoxAsString);
+                            inputBoxValueIndex++;
+
+                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                            String yCoord = inputBoxesValues.get(inputBoxAsString);
+                            inputBoxValueIndex++;
+                            sprite =  teleportSprite(sprite, xCoord, yCoord);
                         } else if (position.equals("RANDOM")) {
                             sprite =  teleportSprite(sprite);
-                        } else if (position.equals("Mouse")) {
+                        } else if (position.equals("MOUSE")) {
                             sprite = teleportSprite(sprite, mouseX, mouseY);
                         }
                         spriteController.setSprite(i, sprite);
@@ -161,14 +169,17 @@ public class Interpreter {
         return sprite;
     }
 
-    private static Sprite flipSprite(Sprite sprite) {
-      sprite.setSpriteOutfit(0, ImageProcessor.flipImage(sprite.getSpriteOutfit(0)) );
+    private static Sprite flipSprite(Sprite sprite, String direction) {
+      sprite.setSpriteOutfit(0, ImageProcessor.flipImage(sprite.getSpriteOutfit(0), direction));
         return sprite;
     }
 
     private static Sprite teleportSprite(Sprite sprite, String x, String y) {
-        sprite.setXPos(20.0);
-        sprite.setYPos(50.0);
+        System.out.println(x);
+        int xCoord = Integer.parseInt(x);
+        int yCoord = Integer.parseInt(y);
+        sprite.setXPos(xCoord);
+        sprite.setYPos(yCoord);
         return sprite;
 
     }
@@ -184,6 +195,7 @@ public class Interpreter {
     }
 
     private static Sprite teleportSprite(Sprite sprite, double xPos, double yPos) {
+        System.out.println("---mouse--");
         if(yPos < 0) {
            yPos = 10;
         } else if (yPos > 597) {

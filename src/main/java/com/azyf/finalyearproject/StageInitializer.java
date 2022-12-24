@@ -397,10 +397,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
                     programBox.getChildren().add(stackPane);
                     break;
-                case "FLIP":
-                    stackPane = (StackPane) drawBlock(blockName, 255, 95, 31);
-                    programBox.getChildren().add(stackPane);
-                    break;
                 case "END":
                     stackPane = (StackPane) drawBlock(blockName, 255, 111, 0);
                     programBox.getChildren().add(stackPane);
@@ -413,6 +409,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     programBox.getChildren().add(hBox);
                     blocks.remove();
                     break;
+                case "FLIP":
+                    block = blocks.remove();
+                    secondBlockName = block.getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    break;
+                case "TELPORT":
+                    blockName = "TELPORT";
+                    blocks.remove();
+                    block =  blocks.remove();
+                    secondBlockName = block.getName();
+
+
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    if(secondBlockName.equals("X")) {
+                        blocks.remove();
+                    }
+                    break;
 
                 default:
                     System.out.println("test");
@@ -421,25 +436,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
         }
-
-      /*
-      StackPane stackPane = new StackPane();
-
-      Rectangle rectangle = new Rectangle(70,30);
-      rectangle.setFill(Color.rgb(0,255,0));
-
-      Rectangle border = new Rectangle(80,40);
-
-      Label start = new Label("START");
-      start.setFont(new Font("Arial", 20));
-
-      stackPane.getChildren().add(border);
-      stackPane.getChildren().add(rectangle);
-      stackPane.getChildren().add(start);
-      programBox.getChildren().add(stackPane);
-
-       */
-
   }
 
   private Node drawBlock (String blockName, int red, int green, int blue) {
@@ -447,12 +443,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
       return  stackPane;
   }
 
-    private Node drawBlock (String blockName, String direction, int red, int green, int blue) {
+    private Node drawBlock (String blockName, String secondBlockName, int red, int green, int blue) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
         if(blockName.equals("ROTATE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(direction, red, green, blue);
+            stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
 
@@ -478,22 +474,50 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if(blockName.equals("MOVE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(direction, red, green, blue);
+            stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
-            TextField textField = new TextField();
-            String textFieldAsString = textField.toString();
-            textField.setOnAction(e -> {
-                if(getInputBoxIndex(textFieldAsString) == - 1) {
-                    System.out.println(textField.getText());
-                    inputBoxesValues.put(textFieldAsString, (String) textField.getText());
-                    inputBoxes.add(textFieldAsString);
-                } else {
-                    inputBoxesValues.remove(textFieldAsString);
-                    inputBoxesValues.put(textFieldAsString, (String) textField.getText());
-                }
-            });
+            TextField textField = createTextField();
             hBox.getChildren().add(textField);
+            return hBox;
+
+        } else if (blockName.equals("TELPORT")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            if (secondBlockName.equals("X")) {
+                stackPane = createStackPane(secondBlockName, red, green, blue);
+                hBox.getChildren().add(stackPane);
+                TextField textField = createTextField();
+                hBox.getChildren().add(textField);
+
+                stackPane = createStackPane("Y", red, green, blue);
+                hBox.getChildren().add(stackPane);
+                textField = createTextField();
+                hBox.getChildren().add(textField);
+
+                return hBox;
+            } else if (secondBlockName.equals("MOUSE")) {
+                stackPane = createStackPane(secondBlockName, red, green, blue);
+                hBox.getChildren().add(stackPane);
+                return hBox;
+            } else if (secondBlockName.equals("SPRITE")) {
+                stackPane = createStackPane(secondBlockName, red, green, blue);
+                hBox.getChildren().add(stackPane);
+                String options[] = {"no options"};
+                ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+                hBox.getChildren().add(comboBox);
+                return hBox;
+            } else if (secondBlockName.equals("RANDOM")) {
+                stackPane = createStackPane(secondBlockName, red, green, blue);
+                hBox.getChildren().add(stackPane);
+                return hBox;
+            }
+
+        }else if (blockName.equals("FLIP")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
             return hBox;
 
         }
@@ -511,6 +535,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stackPane.getChildren().add(blockText);
         blockText.setFont(new Font("Arial", 15));
         return  stackPane;
+    }
+
+    private TextField createTextField() {
+        TextField textField = new TextField();
+        String textFieldAsString = textField.toString();
+        textField.setOnAction(e -> {
+            if(getInputBoxIndex(textFieldAsString) == - 1) {
+                System.out.println(textField.getText());
+                inputBoxesValues.put(textFieldAsString, (String) textField.getText());
+                inputBoxes.add(textFieldAsString);
+            } else {
+                inputBoxesValues.remove(textFieldAsString);
+                inputBoxesValues.put(textFieldAsString, (String) textField.getText());
+            }
+        });
+        return  textField;
     }
 
 

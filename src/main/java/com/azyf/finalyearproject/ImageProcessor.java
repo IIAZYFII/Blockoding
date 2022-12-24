@@ -96,10 +96,15 @@ public class ImageProcessor {
         ImageIO.write(bufferedImage, "png", saveImage);
     }
 
-    public static Image flipImage(Image sprite) {
+    public static Image flipImage(Image sprite, String direction) {
         Mat src = Imgcodecs.imread(sprite.getUrl());
         Mat newSprite = new Mat();
-        Core.flip(src, newSprite, 1);
+        if(direction.equals("VERTICAL")){
+            Core.flip(src, newSprite, 1);
+        } else if (direction.equals("HORIZONTAL")) {
+            Core.flip(src, newSprite, 0);
+        }
+
         Imgcodecs.imwrite(sprite.getUrl(), newSprite);
         sprite = new Image(sprite.getUrl());
         return sprite;
