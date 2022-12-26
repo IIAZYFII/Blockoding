@@ -17,8 +17,10 @@ Start Commands
 Pause Commands
 End Commands
 Once Commands
-PressesKey Commands
-ClicksSprite Commands
+Presses Commands
+Key Commands
+Clicks Commands
+Sprite Commands
 Continue Commands
 Whenever Conditions
 Then Conditions
