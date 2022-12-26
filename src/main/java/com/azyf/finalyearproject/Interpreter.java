@@ -170,7 +170,12 @@ public class Interpreter {
                 inputBoxValueIndex++;
                 pauseProgram(amount);
                 break;
-
+            case "WHENEVER":
+               spriteController =  wheneverStatement(blocks, sprite, spriteController,i);
+               break;
+            case "CONDITION":
+                blocks.remove();
+                return  spriteController;
             default:
                 System.out.println("something went wrong");
                 break;
@@ -256,7 +261,7 @@ public class Interpreter {
 
     }
 
-    private void wheneverStatement(Queue<Block> blocks,  HashMap<String, String> inputBoxesValues, ArrayList<String> inputBoxes, int inputValueIndex) {
+    private SpriteController wheneverStatement(Queue<Block> blocks, Sprite sprite, SpriteController spriteController,int i) {
         String condition = blocks.remove().getName();
         String inputBoxAsString = "";
         switch (condition) {
@@ -267,12 +272,21 @@ public class Interpreter {
                 String key = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
+                System.out.println(keyCondition.getName());
                 if(keyCondition == StageInitializer.getCurrentKey()) {
-
+                    System.out.println("Switch Active");
+                    String blockName = blocks.remove().getName();
+                   spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    return spriteController;
+                } else {
+                    String blockName = "";
+                    while (!(blockName.equals("FINISHED"))) {
+                        blockName = blocks.remove().getName();
+                    }
                 }
 
         }
-
+        return  spriteController;
     }
 
 }

@@ -745,10 +745,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     public static KeyCode getCurrentKey() {
-        AtomicReference<KeyCode> pressedKey = null;
+        AtomicReference<KeyCode> pressedKey = new AtomicReference<>();
         scene.setOnKeyPressed(e -> {
            pressedKey.set(e.getCode());
         });
+        if (pressedKey.get() !=  null) {
+            System.out.println(pressedKey.get());
+        }
+        
         return pressedKey.get();
     }
 
