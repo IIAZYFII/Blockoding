@@ -3,6 +3,7 @@ package com.azyf.finalyearproject;
 import com.google.protobuf.compiler.PluginProtos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.util.Pair;
 import org.apache.pdfbox.debugger.ui.Tree;
 
@@ -16,6 +17,13 @@ import static com.azyf.finalyearproject.ImageProcessor.flipImage;
 
 public class Interpreter {
     private ParseTree parseTree;
+    private int inputBoxValueIndex = 0;
+    private HashMap<String, String> inputBoxesValues;
+    private ArrayList<String> inputBoxes;
+    private double mouseX;
+    private double mouseY;
+
+
 
     /**
      * An empty constructor to create an Interpreter.
@@ -83,81 +91,91 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
-    public void compileAndRun(SpriteController spriteController, double mouseX, double mouseY, HashMap<String, String> inputBoxesValues, ArrayList<String> inputBoxes) {
-        int inputBoxValueIndex = 0;
+    public void compileAndRun(SpriteController spriteController, double xMouse, double yMouse, HashMap<String, String> inputBxsVls, ArrayList<String> inputBxs) {
+        inputBoxValueIndex = 0;
+        inputBoxesValues = inputBxsVls;
+        inputBoxes = inputBxs;
+        mouseX = xMouse;
+        mouseY = yMouse;
         for(int i = 0; i < spriteController.size(); i++) {
             Sprite sprite = spriteController.getSprite(i);
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
-            String direction = "";
-            String inputBoxAsString = "";
-            String amount = "";
             while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
-                switch (blockName) {
-                    case "MOVE":
-                        block = blocks.remove();
-                        direction = block.getName();
-                        inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                        String steps = inputBoxesValues.get(inputBoxAsString);
-                        inputBoxValueIndex++;
-                       sprite = moveSprite(sprite, direction , steps);
-                       spriteController.setSprite(i, sprite);
-                        break;
-                    case "END":
-                        System.out.println("Program finished");
-                        break;
-                    case "START":
-                        System.out.println("Program starting");
-                        break;
-                    case "FLIP":
-                        direction = blocks.remove().getName();
-                        sprite = flipSprite(sprite, direction);
-                        spriteController.setSprite(i, sprite);
-                        break;
-                    case "TELPORT":
-                        blocks.remove();
-                        block = blocks.remove();
-                        String position = block.getName();
-                        if (position.equals("X")) {
-                            block = blocks.remove();
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String xCoord = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String yCoord = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-                            sprite =  teleportSprite(sprite, xCoord, yCoord);
-                        } else if (position.equals("RANDOM")) {
-                            sprite =  teleportSprite(sprite);
-                        } else if (position.equals("MOUSE")) {
-                            sprite = teleportSprite(sprite, mouseX, mouseY);
-                        }
-                        spriteController.setSprite(i, sprite);
-                        break;
-                    case "ROTATE":
-                        String orientation = blocks.remove().getName();
-                        inputBoxAsString = inputBoxesValues.get(inputBoxValueIndex);
-                        amount = inputBoxesValues.get(inputBoxAsString);
-                        sprite = rotateSprite(sprite, orientation, amount);
-                        inputBoxValueIndex++;
-                        break;
-                    case "PAUSE":
-                        inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                        amount = inputBoxesValues.get(inputBoxAsString);
-                        inputBoxValueIndex++;
-                        pauseProgram(amount);
-                        break;
-
-                    default:
-                        System.out.println("something went wrong");
-                        break;
-                }
-
-
+                spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
             }
         }
+    }
+
+
+    private SpriteController switchStatement(String blockName, Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
+        String direction = "";
+        String inputBoxAsString = "";
+        String amount = "";
+        Block block;
+        switch (blockName) {
+            case "MOVE":
+                block = blocks.remove();
+                direction = block.getName();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                String steps = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+                sprite = moveSprite(sprite, direction , steps);
+                spriteController.setSprite(i, sprite);
+                break;
+            case "END":
+                System.out.println("Program finished");
+                break;
+            case "START":
+                System.out.println("Program starting");
+                break;
+            case "FLIP":
+                direction = blocks.remove().getName();
+                sprite = flipSprite(sprite, direction);
+                spriteController.setSprite(i, sprite);
+                break;
+            case "TELPORT":
+                blocks.remove();
+                block = blocks.remove();
+                String position = block.getName();
+                if (position.equals("X")) {
+                    block = blocks.remove();
+                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                    String xCoord = inputBoxesValues.get(inputBoxAsString);
+                    inputBoxValueIndex++;
+
+                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                    String yCoord = inputBoxesValues.get(inputBoxAsString);
+                    inputBoxValueIndex++;
+                    sprite =  teleportSprite(sprite, xCoord, yCoord);
+                } else if (position.equals("RANDOM")) {
+                    sprite =  teleportSprite(sprite);
+                } else if (position.equals("MOUSE")) {
+                    sprite = teleportSprite(sprite, mouseX, mouseY);
+                }
+                spriteController.setSprite(i, sprite);
+                break;
+            case "ROTATE":
+                String orientation = blocks.remove().getName();
+                inputBoxAsString = inputBoxesValues.get(inputBoxValueIndex);
+                amount = inputBoxesValues.get(inputBoxAsString);
+                sprite = rotateSprite(sprite, orientation, amount);
+                spriteController.setSprite(i, sprite);
+                inputBoxValueIndex++;
+                break;
+            case "PAUSE":
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                amount = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+                pauseProgram(amount);
+                break;
+
+            default:
+                System.out.println("something went wrong");
+                break;
+        }
+        return spriteController;
     }
 
 
@@ -227,12 +245,32 @@ public class Interpreter {
 
     //add teleport to spirte
 
-    private static void pauseProgram (String number) {
+    private static void pauseProgram(String number) {
         int delay = (Integer.parseInt(number) * 1000);
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
             e.printStackTrace();
+
+        }
+
+    }
+
+    private void wheneverStatement(Queue<Block> blocks,  HashMap<String, String> inputBoxesValues, ArrayList<String> inputBoxes, int inputValueIndex) {
+        String condition = blocks.remove().getName();
+        String inputBoxAsString = "";
+        switch (condition) {
+            case "PRESSES":
+                blocks.remove();
+                blocks.remove();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                String key = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+                KeyCode keyCondition = KeyCode.getKeyCode(key);
+                if(keyCondition == StageInitializer.getCurrentKey()) {
+
+                }
+
         }
 
     }
