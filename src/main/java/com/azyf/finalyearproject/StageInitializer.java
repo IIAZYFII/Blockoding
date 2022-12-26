@@ -66,6 +66,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private double currentMouseYPos = 0;
     private VBox programBox;
     boolean compiled = false;
+    private static Scene scene;
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -78,7 +79,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 
-        Scene scene = new Scene(root, screenWidth, screenHeight);
+         scene = new Scene(root, screenWidth, screenHeight);
 
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
@@ -539,7 +540,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 stackPane = createStackPane("KEY", red, green, blue);
                 hBox.getChildren().add(stackPane);
                 String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
-                        "UP ARROW", "DOWN ARROW", "LEFT ARROW", "RIGHT ARROW", "SPACE BAR"};
+                        "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
                 ComboBox comboBox = createComboBox(keys);
                 hBox.getChildren().add(comboBox);
             }
@@ -742,6 +743,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         }
         return -1;
     }
+
+    public static KeyCode getCurrentKey() {
+        AtomicReference<KeyCode> pressedKey = null;
+        scene.setOnKeyPressed(e -> {
+           pressedKey.set(e.getCode());
+        });
+        return pressedKey.get();
+    }
+
+
 
 
 }
