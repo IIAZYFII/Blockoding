@@ -407,6 +407,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     blocks.remove();
                     break;
                 case "FLIP":
+                case "CONDITION":
                     block = blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
@@ -521,7 +522,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 return hBox;
             }
 
-        }else if (blockName.equals("FLIP")) {
+        }else if (blockName.equals("FLIP") || blockName.equals("CONDITION")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
