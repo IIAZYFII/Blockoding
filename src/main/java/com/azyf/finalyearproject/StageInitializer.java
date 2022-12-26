@@ -415,6 +415,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
                     programBox.getChildren().add(hBox);
                     break;
+                case "PAUSE":
+                    block = blocks.remove();
+                    hBox = (HBox) drawBlock(blockName, 255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    break;
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
@@ -440,6 +445,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
   private Node drawBlock (String blockName, int red, int green, int blue) {
       StackPane stackPane = createStackPane(blockName, red, green, blue);
+      if(blockName.equals("PAUSE")) {
+          HBox hBox = new HBox();
+          hBox.getChildren().add(stackPane);
+          TextField textField = createTextField();
+          hBox.getChildren().add(textField);
+
+          return hBox;
+      }
       return  stackPane;
   }
 

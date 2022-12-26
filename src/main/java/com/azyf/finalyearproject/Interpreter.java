@@ -90,7 +90,8 @@ public class Interpreter {
             Queue<Block> blocks = new LinkedList<>(spriteController.getSpriteCodeBlocks(0));
             String direction = "";
             String inputBoxAsString = "";
-                while(blocks.size() > 0) {
+            String amount = "";
+            while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
                 switch (blockName) {
@@ -137,11 +138,18 @@ public class Interpreter {
                         break;
                     case "ROTATE":
                         String orientation = blocks.remove().getName();
-                        inputBoxAsString = inputBoxesValues.get(inputBoxes);
-                        String amount = inputBoxesValues.get(inputBoxAsString);
+                        inputBoxAsString = inputBoxesValues.get(inputBoxValueIndex);
+                        amount = inputBoxesValues.get(inputBoxAsString);
                         sprite = rotateSprite(sprite, orientation, amount);
                         inputBoxValueIndex++;
                         break;
+                    case "PAUSE":
+                        inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                        amount = inputBoxesValues.get(inputBoxAsString);
+                        inputBoxValueIndex++;
+                        pauseProgram(amount);
+                        break;
+
                     default:
                         System.out.println("something went wrong");
                         break;
@@ -218,5 +226,15 @@ public class Interpreter {
     }
 
     //add teleport to spirte
+
+    private static void pauseProgram (String number) {
+        int delay = (Integer.parseInt(number) * 1000);
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
