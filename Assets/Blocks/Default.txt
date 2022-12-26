@@ -25,6 +25,8 @@ Continue Commands
 Whenever Conditions
 Then Conditions
 Or Conditions
+Condition Conditions
+Finished Conditions
 Always Conditions
 During Conditions
 And  Conditions
