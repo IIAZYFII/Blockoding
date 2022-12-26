@@ -394,11 +394,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             String secondBlockName = "";
             switch (blockName) {
                 case "START":
-                    stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
-                    programBox.getChildren().add(stackPane);
-                    break;
                 case "END":
-                    stackPane = (StackPane) drawBlock(blockName, 255, 111, 0);
+                    stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
                     programBox.getChildren().add(stackPane);
                     break;
                 case "ROTATE":
@@ -433,7 +430,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         blocks.remove();
                     }
                     break;
-
+                case "WHENEVER":
+                    block = blocks.remove();
+                    secondBlockName = block.getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    if(secondBlockName.equals("PRESSES")) {
+                        blocks.remove();
+                        blocks.remove();
+                    }
+                    break;
                 default:
                     System.out.println("test");
                     break;
@@ -465,22 +471,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
 
 
-            String options[] = {"90","180","270"};
-            ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+            String dropDown[] = {"90","180","270"};
+            ComboBox comboBox = createComboBox(dropDown);
             hBox.getChildren().add(comboBox);
 
-            String comboBoxAsString = comboBox.toString();
-            System.out.println(comboBoxAsString);
-            comboBox.setOnAction(e -> {
-                if(getInputBoxIndex(comboBoxAsString) == - 1) {
-                    inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
-                    inputBoxes.add(comboBoxAsString);
-                } else {
-                    inputBoxesValues.remove(comboBoxAsString);
-                    inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
-                }
 
-            });
 
 
             return hBox;
@@ -533,6 +528,24 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             return hBox;
 
+        } else if (blockName.equals("WHENEVER")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            if(secondBlockName.equals("PRESSES")) {
+                stackPane = createStackPane(secondBlockName, red, green, blue);
+                hBox.getChildren().add(stackPane);
+
+                stackPane = createStackPane("KEY", red, green, blue);
+                hBox.getChildren().add(stackPane);
+                String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
+                        "UP ARROW", "DOWN ARROW", "LEFT ARROW", "RIGHT ARROW", "SPACE BAR"};
+                ComboBox comboBox = createComboBox(keys);
+                hBox.getChildren().add(comboBox);
+            }
+            stackPane = createStackPane("THEN", red, green, blue);
+            hBox.getChildren().add(stackPane);
+            return hBox;
+
         }
         return  stackPane;
     }
@@ -566,7 +579,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return  textField;
     }
 
+    private ComboBox createComboBox(String[] dropDown) {
+        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown ));
+        String comboBoxAsString = comboBox.toString();
+        comboBox.setOnAction(e -> {
+            if(getInputBoxIndex(comboBoxAsString) == - 1) {
+                inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
+                inputBoxes.add(comboBoxAsString);
+            } else {
+                inputBoxesValues.remove(comboBoxAsString);
+                inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
+            }
 
+        });
+        return  comboBox;
+    }
 
 
 
@@ -714,7 +741,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         }
         return -1;
     }
-
 
 
 }
