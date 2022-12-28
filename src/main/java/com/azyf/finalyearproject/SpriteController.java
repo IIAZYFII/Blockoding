@@ -1,7 +1,5 @@
 package com.azyf.finalyearproject;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -71,10 +69,10 @@ public class SpriteController {
         return sprites;
     }
 
-    public ObservableList<String>getSpriteNameAsList() {
-        ObservableList<String>  spriteNames = FXCollections.observableArrayList();
+    public String[] getSpriteNameAsArray() {
+        String[] spriteNames = new String[this.getSprites().size()];
         for(int i= 0; i < this.getSprites().size(); i++) {
-            spriteNames.add(this.getSprite(i).getSpriteName()) ;
+            spriteNames[i] = this.getSprite(i).getSpriteName();
         }
         return spriteNames;
     }

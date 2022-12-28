@@ -551,7 +551,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }  else if(secondBlockName.equals("CLICKS")) {
                 hBox = new HBox();
                 hBox.getChildren().add(stackPane);
-                ComboBox comboBox = new ComboBox(spriteController.getSpriteNameAsList());
+                ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
             }
             stackPane = createStackPane("THEN", red, green, blue);

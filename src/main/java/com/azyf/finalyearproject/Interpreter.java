@@ -287,6 +287,32 @@ public class Interpreter {
                 break;
             case "CLICKS":
                 blocks.remove();
+                double[] mousePosition = StageInitializer.getMousePosition();
+                mouseX = mousePosition[0];
+                mouseY = mousePosition [1];
+                int spriteIndex = spriteController.findSprite(mouseX, mouseY);
+                String tmpSpriteName = "";
+                if(spriteIndex != -1) {
+                    tmpSpriteName = spriteController.getSprite(spriteIndex).getSpriteName();
+                }
+
+
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                String spriteName = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+
+                if(tmpSpriteName.equals(spriteName)) {
+                    System.out.println("Active");
+                    String blockName = blocks.remove().getName();
+                    spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    return spriteController;
+                } else {
+                    String blockName = "";
+                    while (!(blockName.equals("FINISHED"))) {
+                        blockName = blocks.remove().getName();
+                    }
+                }
+                break;
 
             default:
                 System.out.println("something went wrong within condition");
