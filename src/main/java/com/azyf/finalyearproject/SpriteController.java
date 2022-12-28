@@ -1,5 +1,7 @@
 package com.azyf.finalyearproject;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -63,6 +65,18 @@ public class SpriteController {
 
     public  void addSpriteCode(Queue<Block> code, int i) {
         sprites.get(i).addSpriteCode(code);
+    }
+
+    public ArrayList<Sprite> getSprites() {
+        return sprites;
+    }
+
+    public ObservableList<String>getSpriteNameAsList() {
+        ObservableList<String>  spriteNames = FXCollections.observableArrayList();
+        for(int i= 0; i < this.getSprites().size(); i++) {
+            spriteNames.add(this.getSprite(i).getSpriteName()) ;
+        }
+        return spriteNames;
     }
 
     public Queue<Block> getSpriteCodeBlocks(int i) {

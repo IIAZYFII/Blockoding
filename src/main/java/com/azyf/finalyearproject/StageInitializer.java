@@ -5,6 +5,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -421,11 +422,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
                     break;
-                case "CLICKS":
-                    block = blocks.remove();
-                    hBox = (HBox) drawBlock(blockName, 215, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
@@ -447,6 +443,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     if(secondBlockName.equals("PRESSES")) {
                         blocks.remove();
                         blocks.remove();
+                    } else if (secondBlockName.equals("CLICKS")) {
+                        blocks.remove();
                     }
                     break;
                 default:
@@ -465,13 +463,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
           hBox.getChildren().add(stackPane);
           TextField textField = createTextField();
           hBox.getChildren().add(textField);
-
-          return hBox;
-      } else if(blockName.equals("CLICKS")) {
-          HBox hBox = new HBox();
-          hBox.getChildren().add(stackPane);
-          stackPane = createStackPane("SPRITE", red, green, blue);
-          hBox.getChildren().add(stackPane);
 
           return hBox;
       }
@@ -556,6 +547,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
                         "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
                 ComboBox comboBox = createComboBox(keys);
+                hBox.getChildren().add(comboBox);
+            }  else if(secondBlockName.equals("CLICKS")) {
+                hBox = new HBox();
+                hBox.getChildren().add(stackPane);
+                ComboBox comboBox = new ComboBox(spriteController.getSpriteNameAsList());
                 hBox.getChildren().add(comboBox);
             }
             stackPane = createStackPane("THEN", red, green, blue);
