@@ -284,6 +284,9 @@ public class Interpreter {
                         blockName = blocks.remove().getName();
                     }
                 }
+                break;
+            default:
+                System.out.println("something went wrong within condition");
 
         }
         return  spriteController;
