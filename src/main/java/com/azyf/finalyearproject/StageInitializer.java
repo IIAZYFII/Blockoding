@@ -101,12 +101,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void dragSpriteAroundCanvas(Scene scene) {
         AtomicInteger spriteIndex = new AtomicInteger(NO_SPRITE_INDEX);
         canvas.setOnMousePressed( e -> {
-
-            int index = (spriteController.findSprite(e.getX(), e.getY()));
-            if(index != NO_SPRITE_INDEX) {
-                spriteIndex.set(index);
-                scene.setCursor(Cursor.CLOSED_HAND);
+            if(e.getButton() == MouseButton.SECONDARY) {
+                int index = (spriteController.findSprite(e.getX(), e.getY()));
+                if(index != NO_SPRITE_INDEX) {
+                    spriteIndex.set(index);
+                    scene.setCursor(Cursor.CLOSED_HAND);
+                }   
             }
+
             e.consume();
         });
 
@@ -752,7 +754,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         if (pressedKey.get() !=  null) {
             System.out.println(pressedKey.get());
         }
-        
+
         return pressedKey.get();
     }
 
