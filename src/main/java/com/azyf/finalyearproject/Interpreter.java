@@ -285,8 +285,12 @@ public class Interpreter {
                     }
                 }
                 break;
+            case "CLICKS":
+                blocks.remove();
+
             default:
                 System.out.println("something went wrong within condition");
+                break;
 
         }
         return  spriteController;

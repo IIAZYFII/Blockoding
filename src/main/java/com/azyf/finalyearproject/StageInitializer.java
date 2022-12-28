@@ -106,7 +106,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 if(index != NO_SPRITE_INDEX) {
                     spriteIndex.set(index);
                     scene.setCursor(Cursor.CLOSED_HAND);
-                }   
+                }
             }
 
             e.consume();
@@ -421,6 +421,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
                     break;
+                case "CLICKS":
+                    block = blocks.remove();
+                    hBox = (HBox) drawBlock(blockName, 215, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    break;
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
@@ -460,6 +465,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
           hBox.getChildren().add(stackPane);
           TextField textField = createTextField();
           hBox.getChildren().add(textField);
+
+          return hBox;
+      } else if(blockName.equals("CLICKS")) {
+          HBox hBox = new HBox();
+          hBox.getChildren().add(stackPane);
+          stackPane = createStackPane("SPRITE", red, green, blue);
+          hBox.getChildren().add(stackPane);
 
           return hBox;
       }
@@ -758,6 +770,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return pressedKey.get();
     }
 
+    public static double[] getMousePosition() {
+        double x = scene.getX();
+        double y = scene .getY();
+        double[] mousePosition = {x,y};
+        return mousePosition;
+    }
 
 
 
