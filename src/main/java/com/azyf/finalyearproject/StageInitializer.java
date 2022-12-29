@@ -443,7 +443,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     if(secondBlockName.equals("PRESSES")) {
                         blocks.remove();
                         blocks.remove();
-                    } else if (secondBlockName.equals("CLICKS")) {
+                    } else if (secondBlockName.equals("HOVERS")) {
                         blocks.remove();
                     }
                     break;
@@ -548,7 +548,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
                 ComboBox comboBox = createComboBox(keys);
                 hBox.getChildren().add(comboBox);
-            }  else if(secondBlockName.equals("CLICKS")) {
+            }  else if(secondBlockName.equals("HOVERS")) {
                 hBox = new HBox();
                 hBox.getChildren().add(stackPane);
                 ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());

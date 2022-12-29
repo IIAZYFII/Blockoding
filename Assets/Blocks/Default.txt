@@ -21,6 +21,7 @@ Presses Commands
 Key Commands
 Clicks Commands
 Sprite Commands
+Hovers Commands
 Continue Commands
 Whenever Conditions
 Then Conditions

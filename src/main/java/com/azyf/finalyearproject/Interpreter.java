@@ -285,7 +285,7 @@ public class Interpreter {
                     }
                 }
                 break;
-            case "CLICKS":
+            case "HOVERS":
                 blocks.remove();
                 double[] mousePosition = StageInitializer.getMousePosition();
                 mouseX = mousePosition[0];
