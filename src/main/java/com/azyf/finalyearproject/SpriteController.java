@@ -36,7 +36,7 @@ public class SpriteController {
            double xDifference = Math.abs(x - xPos);
            double yDifference = Math.abs(y - yPos);
 
-           if(xDifference <= 50 && yDifference <= 50) {
+           if(xDifference <= 40 && yDifference <= 40) {
               return i;
            }
         }

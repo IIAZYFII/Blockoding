@@ -8,6 +8,7 @@ import java.util.Queue;
 
 public class Sprite {
     private boolean flip = false;
+    private boolean clicked = false;
     private String spriteName;
     private double xPos;
     private double yPos;
@@ -79,5 +80,11 @@ public class Sprite {
         spriteOutfits.add(i,image);
     }
 
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
 
+    public boolean isClicked() {
+        return clicked;
+    }
 }

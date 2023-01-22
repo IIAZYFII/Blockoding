@@ -102,37 +102,47 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void dragSpriteAroundCanvas(Scene scene) {
         AtomicInteger spriteIndex = new AtomicInteger(NO_SPRITE_INDEX);
         canvas.setOnMousePressed( e -> {
-            if(e.getButton() == MouseButton.SECONDARY) {
                 int index = (spriteController.findSprite(e.getX(), e.getY()));
                 if(index != NO_SPRITE_INDEX) {
                     spriteIndex.set(index);
-                    scene.setCursor(Cursor.CLOSED_HAND);
+                    if(e.getButton() == MouseButton.SECONDARY) {
+                        scene.setCursor(Cursor.CLOSED_HAND);
+                    }
                 }
-            }
 
             e.consume();
         });
 
         canvas.setOnMouseReleased(e -> {
             if(spriteIndex.get() != NO_SPRITE_INDEX) {
-                double xPos = e.getX();
-                double yPos = e.getY();
-                System.out.println("canvas height:" + canvas.getHeight());
-                System.out.println("canvas width" + canvas.getWidth());
+                if (e.getButton() == MouseButton.SECONDARY) {
+                    double xPos = e.getX();
+                    double yPos = e.getY();
+                    System.out.println("canvas height:" + canvas.getHeight());
+                    System.out.println("canvas width" + canvas.getWidth());
 
-                System.out.println("X pos " + xPos);
-                System.out.println("Y pos " + yPos);
+                    System.out.println("X pos " + xPos);
+                    System.out.println("Y pos " + yPos);
 
-                if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
-                    spriteController.getSprite(spriteIndex.get()).setXPos(xPos);
-                    spriteController.getSprite(spriteIndex.get()).setYPos(yPos);
+                    if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
+                        spriteController.getSprite(spriteIndex.get()).setXPos(xPos);
+                        spriteController.getSprite(spriteIndex.get()).setYPos(yPos);
+                    }
+                    scene.setCursor(Cursor.DEFAULT);
+                    spriteIndex.set(NO_SPRITE_INDEX);
+
+                    drawScene();
+                } else if (e.getButton() == MouseButton.PRIMARY) {
+                    double xPos = e.getX();
+                    double yPos = e.getY();
+                    if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
+                        spriteController.getSprite(spriteIndex.get()).setClicked(true);
+                        System.out.println("set clicked to true");
+                    }
                 }
-                scene.setCursor(Cursor.DEFAULT);
-                spriteIndex.set(NO_SPRITE_INDEX);
-
 
             }
-            drawScene();
+
             e.consume();
         });
     }
@@ -724,6 +734,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
                         System.out.println(s);
                         GraphicsContext gc = canvas.getGraphicsContext2D();
+
                         spriteController.addSprite(spriteName,x, y, sprite);
                         currentSpriteIndex = spriteController.size() - 1;
                         gc.drawImage(sprite, x , y);
