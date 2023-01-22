@@ -86,7 +86,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         dragSpriteAroundCanvas(scene);
         stage.show();
         try {
-            interpreter.loadTree(new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
+            interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -232,7 +232,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;" );
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        defaultSprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
+        defaultSprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
         Label spriteLabel = new Label("Default Sprite");
@@ -281,7 +281,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         Button playButton = new Button();
         //playButton.setStyle("-fx-background-color: transparent;");
-        playButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Playbutton.png");
+        playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
         topBar.getChildren().add(playButton);
@@ -289,7 +289,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         Button stopButton = new Button();
         //stopButton.setStyle("-fx-background-color: transparent;");
-        stopButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
+        stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
@@ -300,7 +300,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         tessButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image =   new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\img.png");
+            File image =   new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
@@ -332,7 +332,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         Button settingButton = new Button();
-        Image settingButtonImg = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
+        Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
         // ImageView settingButtonView = new ImageView(settingButtonImg);
         //settingButton.setGraphic(settingButtonView);
         topBar.getChildren().add(settingButton);
@@ -632,7 +632,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 generateQRCode();
                 root.getChildren().clear();
-                Image qrCode = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache");
+                Image qrCode = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache");
                 ImageView qrCodeViewer = new ImageView(qrCode);
                 root.getChildren().add(qrCodeViewer);
 
@@ -669,7 +669,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
         }
-        File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\qrcode.png");
+        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
     }

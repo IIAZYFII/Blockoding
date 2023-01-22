@@ -52,7 +52,7 @@ public class javaFXTest extends Application {
         BorderPane root = new BorderPane();
         canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
         root.setCenter(canvas);
-        Image sprite = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default-sprite.png");
+        Image sprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default-sprite.png");
 /*
         Mat src = Imgcodecs.imread(sprite.getUrl());
         Mat newSprite = new Mat();
@@ -85,7 +85,7 @@ public class javaFXTest extends Application {
 
 
         /*
-        String file = "C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png";
+        String file = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png";
         Mat src = Imgcodecs.imread(file);
         Mat dest = new Mat(src.rows() + 100 , src.cols() +100, src.type());
         Point point = new Point(src.cols() / 2.0, src.rows() / 2.0);
@@ -94,7 +94,7 @@ public class javaFXTest extends Application {
         Imgproc.warpAffine(src, dest, rotationMatrix, size);
 
         BufferedImage img = (BufferedImage) HighGui.toBufferedImage(dest);
-        File saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\before.png");
+        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\before.png");
         ImageIO.write(img, "png", saveImage);
 
         Mat dst = new Mat(dest.rows(), dest.cols(), dest.type());
@@ -111,28 +111,28 @@ public class javaFXTest extends Application {
         size = new Size(dst.cols(), dst.cols());
         Imgproc.warpAffine(dest, dst, tranformMatrix, size);
         img = (BufferedImage) HighGui.toBufferedImage(dst);
-        saveImage = new File("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\test.png");
+        saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\test.png");
         ImageIO.write(img, "png", saveImage);
 /*
         src =  Imgcodecs.imread(saveImage.getPath());
         dst = new Mat();
         Imgproc.cvtColor(src, dst, Imgproc.COLOR_RGB2GRAY);
-        Imgcodecs.imwrite("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\gray.png", dst);
-        src =  Imgcodecs.imread("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\gray.png");
+        Imgcodecs.imwrite("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\gray.png", dst);
+        src =  Imgcodecs.imread("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\gray.png");
         dst = new Mat();
         Imgproc.adaptiveThreshold(src, dst, 120, Imgproc.ADAPTIVE_THRESH_MEAN_C,  Imgproc.THRESH_BINARY, 11, 12);
-        Imgcodecs.imwrite("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\threshold.png", dst);
+        Imgcodecs.imwrite("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\threshold.png", dst);
         return root;
 
  */
         /*
-        String file = "C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png";
+        String file = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png";
         Mat src = Imgcodecs.imread(file);
         Mat dst = new Mat(src.rows(), src.cols(), src.type());
         Core.rotate(src,  dst,Core.ROTATE_90_CLOCKWISE);
         Mat dest = new Mat(src.rows(), src.cols(), src.type());
         Core.flip(dst, dest, 1);
-        Imgcodecs.imwrite("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Cache\\3.png", dest);
+        Imgcodecs.imwrite("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\3.png", dest);
          */
 return root;
     }
