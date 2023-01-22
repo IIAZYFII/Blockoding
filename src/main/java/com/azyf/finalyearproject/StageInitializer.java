@@ -623,6 +623,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private void drawSettings() {
         Stage settingStage = new Stage();
+        HBox hBox = new HBox();
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FF5438;");
         Button linkAppButton = new Button();
@@ -631,10 +632,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         linkAppButton.setOnAction(e -> {
             try {
                 generateQRCode();
-                root.getChildren().clear();
-                Image qrCode = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache");
+                hBox.getChildren().clear();
+                Image qrCode = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
                 ImageView qrCodeViewer = new ImageView(qrCode);
-                root.getChildren().add(qrCodeViewer);
+                qrCodeViewer.setFitHeight(120);
+                qrCodeViewer.setFitWidth(120);
+                hBox.getChildren().add(qrCodeViewer);
 
             } catch (WriterException ex) {
                 ex.printStackTrace();
@@ -642,9 +645,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 ex.printStackTrace();
             }
         });
-        HBox hBox = new HBox();
+
+        hBox.setPadding(new Insets(100,0,0,120));
         hBox.getChildren().add(linkAppButton);
         root.getChildren().add(hBox);
+
+        settingStage.setResizable(false);
         Scene scene = new Scene(root, 350,350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
