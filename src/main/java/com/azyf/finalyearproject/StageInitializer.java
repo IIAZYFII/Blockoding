@@ -558,8 +558,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
                 ComboBox comboBox = createComboBox(keys);
                 hBox.getChildren().add(comboBox);
-            }  else if(secondBlockName.equals("HOVERS")) {
+            }  else if(secondBlockName.equals("HOVERS") || secondBlockName.equals("CLICKS")) {
                 hBox = new HBox();
+                hBox.getChildren().add(stackPane);
+                stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
                 ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
