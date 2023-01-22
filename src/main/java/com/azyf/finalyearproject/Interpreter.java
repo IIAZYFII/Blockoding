@@ -263,6 +263,7 @@ public class Interpreter {
 
     private SpriteController wheneverStatement(Queue<Block> blocks, Sprite sprite, SpriteController spriteController,int i) {
         String condition = blocks.remove().getName();
+        String spriteName = "";
         String inputBoxAsString = "";
         switch (condition) {
             case "PRESSES":
@@ -298,7 +299,7 @@ public class Interpreter {
 
 
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                String spriteName = inputBoxesValues.get(inputBoxAsString);
+                spriteName = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
                 if(tmpSpriteName.equals(spriteName)) {
@@ -315,6 +316,36 @@ public class Interpreter {
                 break;
             case "CLICKS":
                 blocks.remove();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                spriteName = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+                Sprite tmpSprite = null;
+                boolean found = false;
+                int j = 0;
+                while(found == false) {
+                    if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
+                        tmpSprite = spriteController.getSprite(j);
+                        if(tmpSprite.isClicked() == true) {
+                            blocks.remove().getName();
+                            String blockName = blocks.remove().getName();
+                            spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                            tmpSprite.setClicked(false);
+                            spriteController.setSprite(j,tmpSprite);
+                            return spriteController;
+                        } else {
+                            String blockName = "";
+                            while (!(blockName.equals("FINISHED"))) {
+                                blockName = blocks.remove().getName();
+                            }
+
+                        }
+                        found = true;
+                    }
+                    j++;
+
+                }
+
+                break;
 
             default:
                 System.out.println("something went wrong within condition");
