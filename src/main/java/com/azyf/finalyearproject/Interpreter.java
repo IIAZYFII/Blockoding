@@ -178,6 +178,9 @@ public class Interpreter {
             case "CONDITION":
                 blocks.remove();
                 return  spriteController;
+            case "ELSE":
+                checkConditionFinished(blocks);
+                break;
             default:
                 System.out.println("something went wrong");
                 break;
@@ -282,10 +285,7 @@ public class Interpreter {
                    spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                     return spriteController;
                 } else {
-                    String blockName = "";
-                    while (!(blockName.equals("FINISHED"))) {
-                        blockName = blocks.remove().getName();
-                    }
+                  checkConditionFinished(blocks);
                 }
                 break;
             case "HOVERS":
@@ -310,10 +310,7 @@ public class Interpreter {
                     spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                     return spriteController;
                 } else {
-                    String blockName = "";
-                    while (!(blockName.equals("FINISHED"))) {
-                        blockName = blocks.remove().getName();
-                    }
+                    checkConditionFinished(blocks);
                 }
                 break;
             case "CLICKS":
@@ -335,10 +332,7 @@ public class Interpreter {
                             spriteController.setSprite(j,tmpSprite);
                             return spriteController;
                         } else {
-                            String blockName = "";
-                            while (!(blockName.equals("FINISHED"))) {
-                                blockName = blocks.remove().getName();
-                            }
+                           checkConditionFinished(blocks);
 
                         }
                         found = true;
@@ -355,6 +349,14 @@ public class Interpreter {
 
         }
         return  spriteController;
+    }
+
+    private void checkConditionFinished(Queue<Block> blocks) {
+        String blockName = "";
+        while ((!(blockName.equals("FINISHED"))) && (!(blockName.equals("ELSE"))) ) {
+            blockName = blocks.remove().getName();
+        }
+
     }
 
 }
