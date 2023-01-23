@@ -8,11 +8,11 @@ import java.net.UnknownHostException;
 
 public class MainTest {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, UnknownHostException {
-        String localIP = InetAddress.getLocalHost().getHostAddress();
-        System.out.println(localIP);
-       // Interpreter interpreter = new Interpreter();
-        //interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
-        //System.out.println(interpreter.getParseTree().root);
+        //String localIP = InetAddress.getLocalHost().getHostAddress();
+        //System.out.println(localIP);
+        Interpreter interpreter = new Interpreter();
+        interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
+        System.out.println(interpreter.getParseTree().root);
         //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0));
 
     }

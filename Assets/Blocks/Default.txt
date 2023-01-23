@@ -24,6 +24,7 @@ Sprite Commands
 Hovers Commands
 Continue Commands
 Whenever Conditions
+Else Conditions
 Then Conditions
 Or Conditions
 Condition Conditions
