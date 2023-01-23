@@ -5,7 +5,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -60,6 +59,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private ArrayList<String> inputBoxes = new ArrayList<>();
     private Image playButtonImg;
     private Image stopButtonImg;
+    private Image compileButtonImg;
+    
+    private Image OCRButtonImg;
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
     private SpriteController spriteController = new SpriteController();
@@ -282,24 +284,30 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         //playButton.setStyle("-fx-background-color: transparent;");
-        playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
-        ImageView playButtonView = new ImageView(playButtonImg);
-        playButton.setGraphic(playButtonView);
-        topBar.getChildren().add(playButton);
+
 
 
 
         //stopButton.setStyle("-fx-background-color: transparent;");
-        stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
-        ImageView stopButtonView = new ImageView(stopButtonImg);
-        stopButton.setGraphic(stopButtonView);
-        topBar.getChildren().add(stopButton);
+
+
 
         Button compileButton = new Button();
-        Button tessButton = new Button();
-        topBar.getChildren().add(tessButton);
+        compileButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\CompileButton.png");
+        ImageView compileButtonView = new ImageView(compileButtonImg);
+        compileButtonView.setFitHeight(50);
+        compileButtonView.setFitWidth(50);
+        compileButton.setGraphic(compileButtonView);
+        
+        Button OCRButton = new Button();
+        OCRButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\OCRButton.png");
+        ImageView OCRButtonView = new ImageView(OCRButtonImg);
+        OCRButtonView.setFitHeight(50);
+        OCRButtonView.setFitWidth(50);
+        OCRButton.setGraphic(OCRButtonView);
+        topBar.getChildren().add(OCRButton);
         AtomicReference<String> text = new AtomicReference<>("");
-        tessButton.setOnAction(e -> {
+        OCRButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
             File image =   new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
             try {
@@ -312,8 +320,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
 
         });
+        topBar.setMargin(OCRButton, new Insets(0,20,0,40));
 
-
+    
         compileButton.setDisable(true);
         topBar.getChildren().add(compileButton);
         compileButton.setOnAction(e -> {
@@ -328,27 +337,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             playButton.setDisable(false);
 
         });
-        playButton.setDisable(true);
-        stopButton.setDisable(true);
-        playButton.setOnAction(e->{
-            playButton.setDisable(true);
-            stopButton.setDisable(false);
-            if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues, inputBoxes);
-                drawScene();
-            }
 
-        });
 
-        Button settingButton = new Button();
-        Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
-        // ImageView settingButtonView = new ImageView(settingButtonImg);
-        //settingButton.setGraphic(settingButtonView);
-        topBar.getChildren().add(settingButton);
 
-        settingButton.setOnAction(e -> {
-            drawSettings();
-        });
+
 
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
         spriteBox.setOnMouseClicked(e -> {
@@ -389,6 +381,46 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 });
                 e.consume();
             }
+        });
+
+        playButton.setDisable(true);
+        playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
+        ImageView playButtonView = new ImageView(playButtonImg);
+        playButton.setGraphic(playButtonView);
+        topBar.getChildren().add(playButton);
+        topBar.setMargin(playButton, new Insets(0,0,0,700));
+
+
+
+        playButton.setOnAction(e->{
+            playButton.setDisable(true);
+            stopButton.setDisable(false);
+            if (compiled == true) {
+                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues, inputBoxes);
+                drawScene();
+            }
+
+        });
+
+        stopButton.setDisable(true);
+        stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
+        ImageView stopButtonView = new ImageView(stopButtonImg);
+        stopButton.setGraphic(stopButtonView);
+        topBar.getChildren().add(stopButton);
+
+
+
+        Button settingButton = new Button();
+        Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
+        ImageView settingButtonView = new ImageView(settingButtonImg);
+        settingButtonView.setFitHeight(50);
+        settingButtonView.setFitWidth(50);
+        settingButton.setGraphic(settingButtonView);
+        topBar.getChildren().add(settingButton);
+        topBar.setMargin(settingButton, new Insets(0,20,0,830));
+
+        settingButton.setOnAction(e -> {
+            drawSettings();
         });
 
 
