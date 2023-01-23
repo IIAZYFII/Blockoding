@@ -68,6 +68,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private VBox programBox;
     boolean compiled = false;
     private static Scene scene;
+    public static Button playButton = new Button();
+   public static Button stopButton = new Button();
 
     public StageInitializer() throws FileNotFoundException {
     }
@@ -279,7 +281,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-        Button playButton = new Button();
         //playButton.setStyle("-fx-background-color: transparent;");
         playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
         ImageView playButtonView = new ImageView(playButtonImg);
@@ -287,14 +288,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(playButton);
 
 
-        Button stopButton = new Button();
+
         //stopButton.setStyle("-fx-background-color: transparent;");
         stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
 
-
+        Button compileButton = new Button();
         Button tessButton = new Button();
         topBar.getChildren().add(tessButton);
         AtomicReference<String> text = new AtomicReference<>("");
@@ -304,6 +305,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
+                compileButton.setDisable(false);
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -311,7 +313,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
 
-        Button compileButton = new Button();
+
+        compileButton.setDisable(true);
         topBar.getChildren().add(compileButton);
         compileButton.setOnAction(e -> {
             Queue<Block> blocks =  interpreter.textToBlocks(text.get());
@@ -322,13 +325,19 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             if(compiled == true) {
                 spriteController.addSpriteCode(blocks, 0);
             }
+            playButton.setDisable(false);
 
         });
+        playButton.setDisable(true);
+        stopButton.setDisable(true);
         playButton.setOnAction(e->{
+            playButton.setDisable(true);
+            stopButton.setDisable(false);
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues, inputBoxes);
                 drawScene();
             }
+
         });
 
         Button settingButton = new Button();

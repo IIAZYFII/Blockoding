@@ -106,6 +106,8 @@ public class Interpreter {
                 spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
             }
         }
+        StageInitializer.playButton.setDisable(false);
+        StageInitializer.stopButton.setDisable(true);
     }
 
 
