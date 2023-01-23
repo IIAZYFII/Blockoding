@@ -498,6 +498,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         blocks.remove();
                     }
                     break;
+                case "ELSE":
+                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
+                    programBox.getChildren().add(stackPane);
+                    break;
                 default:
                     System.out.println("test");
                     break;
