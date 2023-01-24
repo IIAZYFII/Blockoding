@@ -509,6 +509,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "HOVERS":
                 case "PRESSES":
                 case  "CLICKS":
+                    blocks.remove();
                     secondBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName,192, 240, 22);
                     programBox.getChildren().add(hBox);
