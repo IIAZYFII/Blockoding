@@ -509,10 +509,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "HOVERS":
                 case "PRESSES":
                 case  "CLICKS":
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
-                    thirdBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName,192, 240, 22);
+                    secondBlockName = blocks.remove().getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName,192, 240, 22);
                     programBox.getChildren().add(hBox);
                     break;
                 default:
@@ -603,17 +601,39 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             return hBox;
 
+        } else if (blockName.equals("PRESSES")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
+            stackPane = createStackPane("KEY", red, green, blue);
+            hBox.getChildren().add(stackPane);
+            String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
+                    "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
+            ComboBox comboBox = createComboBox(keys);
+            hBox.getChildren().add(comboBox);
+            return hBox;
+        } else if (blockName.equals("CLICKS") || blockName.equals("HOVERS")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+
+            return hBox;
         }
         return  stackPane;
     }
 
     private Node drawBlock (String blockName, String secondBlockName, String thirdBlockName, int red, int green, int blue) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
+        HBox hBox = null;
         if(blockName.equals("WHENEVER")) {
-            HBox hBox = new HBox();
+            hBox = new HBox();
             hBox.getChildren().add(stackPane);
             if(secondBlockName.equals("PRESSES")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
 
                 stackPane = createStackPane("KEY", red, green, blue);
@@ -629,20 +649,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 hBox.getChildren().add(stackPane);
                 ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
+
             }
             stackPane = createStackPane(thirdBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
             return hBox;
 
-        } else if (blockName.equals("PRESSES") || blockName.equals("CLICKS") || blockName.equals("HOVERS")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(thirdBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-            return hBox;
         }
 
         return  stackPane;

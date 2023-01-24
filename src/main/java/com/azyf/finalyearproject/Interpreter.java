@@ -173,6 +173,7 @@ public class Interpreter {
                 pauseProgram(amount);
                 break;
             case "WHENEVER":
+            case "AND":
                spriteController =  wheneverStatement(blocks, sprite, spriteController,i);
                break;
             case "CONDITION":
@@ -305,7 +306,7 @@ public class Interpreter {
                 spriteName = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
-                if((tmpSpriteName.equals(spriteName))) {
+                if(!(tmpSpriteName.equals(spriteName))) {
                     System.out.println("Active");
                     String blockName = blocks.remove().getName();
                     spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
@@ -325,13 +326,19 @@ public class Interpreter {
                 while(found == false) {
                     if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
                         tmpSprite = spriteController.getSprite(j);
-                        if(tmpSprite.isClicked() == true) {
-                            blocks.remove().getName();
+                        if(tmpSprite.isClicked()) {
                             String blockName = blocks.remove().getName();
-                            spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                             tmpSprite.setClicked(false);
-                            spriteController.setSprite(j,tmpSprite);
-                            return spriteController;
+                            if(blockName.equals("THEN")) {
+                                blockName = blocks.remove().getName();
+                                spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+
+                                spriteController.setSprite(j,tmpSprite);
+                                return spriteController;
+                            } else {
+                                spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                            }
+
                         } else {
                            checkConditionFinished(blocks);
 
