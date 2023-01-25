@@ -302,6 +302,7 @@ public class Interpreter {
                 break;
             case "HOVERS":
                 blocks.remove();
+                blockName = blocks.remove().getName();
                 double[] mousePosition = StageInitializer.getMousePosition();
                 mouseX = mousePosition[0];
                 mouseY = mousePosition [1];
@@ -318,15 +319,18 @@ public class Interpreter {
 
                 if((tmpSpriteName.equals(spriteName))) {
                     System.out.println("Active");
-                    blockName = blocks.remove().getName();
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                         return spriteController;
                     } else if(blockName.equals("AND")) {
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    } else if (blockName.equals("OR")) {
+                        spriteController = ORCondition(blocks,sprite, spriteController, i);
                     }
 
+                } else if(blockName.equals("OR")) {
+                    spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                 } else {
                     checkConditionFinished(blocks);
                 }
