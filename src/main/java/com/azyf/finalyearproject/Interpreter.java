@@ -274,16 +274,21 @@ public class Interpreter {
         switch (condition) {
             case "PRESSES":
                 blocks.remove();
-                blocks.remove();
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 String key = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition.getName());
-                if(keyCondition == StageInitializer.getCurrentKey()) {
+                if((keyCondition == StageInitializer.getCurrentKey())) {
                     System.out.println("Switch Active");
                     String blockName = blocks.remove().getName();
-                   spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    if(blockName.equals("THEN")) {
+                        blockName = blocks.remove().getName();
+                        spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    } else if (blockName.equals("AND")) {
+                        spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    }
+
                     return spriteController;
                 } else {
                   checkConditionFinished(blocks);

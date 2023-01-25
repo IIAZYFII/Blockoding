@@ -605,8 +605,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("PRESSES")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
-
-            stackPane = createStackPane("KEY", red, green, blue);
+            stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
             String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
                     "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
@@ -632,12 +631,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StackPane stackPane = createStackPane(blockName, red, green, blue);
         HBox hBox = null;
         if(blockName.equals("WHENEVER")) {
-            hBox = new HBox();
-            hBox.getChildren().add(stackPane);
             if(secondBlockName.equals("PRESSES")) {
+                hBox = new HBox();
                 hBox.getChildren().add(stackPane);
-
-                stackPane = createStackPane("KEY", red, green, blue);
+                stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
                 String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
                         "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
