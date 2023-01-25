@@ -282,7 +282,6 @@ public class Interpreter {
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition.getName());
-                keyCondition = KeyCode.N;
                 if((keyCondition == StageInitializer.getCurrentKey())) {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {
@@ -291,7 +290,7 @@ public class Interpreter {
                     } else if (blockName.equals("AND")) {
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                     } else if(blockName.equals("OR")) {
-                       ORCondition(blocks,sprite, spriteController, i);
+                       spriteController = ORCondition(blocks,sprite, spriteController, i);
                     }
 
                     return spriteController;
@@ -334,6 +333,7 @@ public class Interpreter {
                 break;
             case "CLICKS":
                 blocks.remove();
+                blockName = blocks.remove().getName();
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 spriteName = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
@@ -344,7 +344,6 @@ public class Interpreter {
                     if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
                         tmpSprite = spriteController.getSprite(j);
                         if(tmpSprite.isClicked()) {
-                            blockName = blocks.remove().getName();
                             tmpSprite.setClicked(false);
                             if(blockName.equals("THEN")) {
                                 blockName = blocks.remove().getName();
@@ -354,8 +353,12 @@ public class Interpreter {
                                 return spriteController;
                             } else if(blockName.equals("AND")){
                                 spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                            } else if (blockName.equals("OR")) {
+                                spriteController = ORCondition(blocks,sprite, spriteController, i);
                             }
 
+                        } else if(blockName.equals("OR")) {
+                            spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                         } else {
                            checkConditionFinished(blocks);
 
@@ -384,14 +387,14 @@ public class Interpreter {
 
     }
 
-    private void ORCondition(Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
+    private SpriteController ORCondition(Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
        String blockName = "PRESSES";
         while(blockName.equals("PRESSES") || blockName.equals("KEY") || blockName.equals("CLICKS")
                 || blockName.equals("SPRITE") || blockName.equals("HOVERS") || blockName.equals("NOT") || blockName.equals("THEN")) {
             blockName = blocks.remove().getName();
         }
         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
-
+        return spriteController;
     }
 
 }

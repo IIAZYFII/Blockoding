@@ -605,12 +605,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("PRESSES")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
             String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
                     "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
             ComboBox comboBox = createComboBox(keys);
             hBox.getChildren().add(comboBox);
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+
             return hBox;
         } else if (blockName.equals("CLICKS") || blockName.equals("HOVERS")) {
             HBox hBox = new HBox();
