@@ -32,6 +32,7 @@ Finished Conditions
 Always Conditions
 During Conditions
 And  Conditions
+Not Conditions
 Loop Conditions
 Pressed Interactions
 Touches Interactions
