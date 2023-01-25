@@ -174,6 +174,7 @@ public class Interpreter {
                 break;
             case "WHENEVER":
             case "AND":
+            case "OR":
                spriteController =  wheneverStatement(blocks, sprite, spriteController,i);
                break;
             case "CONDITION":
@@ -271,26 +272,32 @@ public class Interpreter {
         String condition = blocks.remove().getName();
         String spriteName = "";
         String inputBoxAsString = "";
+        String blockName = "";
         switch (condition) {
             case "PRESSES":
                 blocks.remove();
+                blockName = blocks.remove().getName();
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 String key = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition.getName());
+                keyCondition = KeyCode.N;
                 if((keyCondition == StageInitializer.getCurrentKey())) {
                     System.out.println("Switch Active");
-                    String blockName = blocks.remove().getName();
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                     } else if (blockName.equals("AND")) {
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                    } else if(blockName.equals("OR")) {
+                       ORCondition(blocks,sprite, spriteController, i);
                     }
 
                     return spriteController;
-                } else {
+                } else if(blockName.equals("OR")) {
+                    spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
+                }else {
                   checkConditionFinished(blocks);
                 }
                 break;
@@ -312,7 +319,7 @@ public class Interpreter {
 
                 if((tmpSpriteName.equals(spriteName))) {
                     System.out.println("Active");
-                    String blockName = blocks.remove().getName();
+                    blockName = blocks.remove().getName();
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
                         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
@@ -337,7 +344,7 @@ public class Interpreter {
                     if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
                         tmpSprite = spriteController.getSprite(j);
                         if(tmpSprite.isClicked()) {
-                            String blockName = blocks.remove().getName();
+                            blockName = blocks.remove().getName();
                             tmpSprite.setClicked(false);
                             if(blockName.equals("THEN")) {
                                 blockName = blocks.remove().getName();
@@ -374,6 +381,16 @@ public class Interpreter {
         while ((!(blockName.equals("FINISHED"))) && (!(blockName.equals("ELSE"))) ) {
             blockName = blocks.remove().getName();
         }
+
+    }
+
+    private void ORCondition(Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
+       String blockName = "PRESSES";
+        while(blockName.equals("PRESSES") || blockName.equals("KEY") || blockName.equals("CLICKS")
+                || blockName.equals("SPRITE") || blockName.equals("HOVERS") || blockName.equals("NOT") || blockName.equals("THEN")) {
+            blockName = blocks.remove().getName();
+        }
+        spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
 
     }
 
