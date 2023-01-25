@@ -4,6 +4,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
@@ -29,6 +32,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -72,12 +76,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static Scene scene;
     public static Button playButton = new Button();
    public static Button stopButton = new Button();
+   public static Timeline frameTimeline;
+   public static Queue<Block> emptyLoopBlocks;
 
     public StageInitializer() throws FileNotFoundException {
     }
 
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
+        frameTimeline = new Timeline(new KeyFrame(Duration.millis(10000), e -> frame()));
+        frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
         BorderPane root = (BorderPane) buildGUI(stage);
         
@@ -97,6 +105,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
     }
+
+    private void frame() {
+        System.out.println("frame");
+    }
+
 
 
     /**
@@ -503,6 +516,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
                     break;
                 case "ELSE":
+                case "LOOP":
                     stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
                     programBox.getChildren().add(stackPane);
                     break;

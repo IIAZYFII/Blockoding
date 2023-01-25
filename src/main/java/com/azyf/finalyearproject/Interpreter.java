@@ -183,6 +183,9 @@ public class Interpreter {
             case "ELSE":
                 checkConditionFinished(blocks);
                 break;
+            case "LOOP":
+                StageInitializer.frameTimeline.playFromStart();
+                break;
             default:
                 System.out.println(blockName + " something went wrong");
                 break;
