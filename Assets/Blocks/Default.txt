@@ -23,8 +23,8 @@ Clicks Commands
 Sprite Commands
 Hovers Commands
 Continue Commands
-Terminate Conditions
 Whenever Conditions
+Terminate Conditions
 Else Conditions
 Then Conditions
 Or Conditions

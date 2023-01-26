@@ -64,7 +64,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image compileButtonImg;
-    
+
     private Image OCRButtonImg;
     private Image defaultSprite;
     private ImageView defaultSpriteViewer = new ImageView();
@@ -75,24 +75,30 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     boolean compiled = false;
     private static Scene scene;
     public static Button playButton = new Button();
-   public static Button stopButton = new Button();
-   public static Timeline frameTimeline;
-   public static Queue<Block> emptyLoopBlocks;
+    public static Button stopButton = new Button();
+    public static Timeline frameTimeline;
+    private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
+
+    private static Sprite loopSprite;
+    private static int loopInt;
+
+    public static String test = "jfc";
+
 
     public StageInitializer() throws FileNotFoundException {
     }
 
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
-        frameTimeline = new Timeline(new KeyFrame(Duration.millis(10000), e -> frame()));
+        frameTimeline = new Timeline(new KeyFrame(Duration.millis(16.67), e -> frame()));
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
         BorderPane root = (BorderPane) buildGUI(stage);
-        
+
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 
-         scene = new Scene(root, screenWidth, screenHeight);
+        scene = new Scene(root, screenWidth, screenHeight);
 
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
@@ -107,31 +113,43 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     private void frame() {
+        int tempIndexValue = interpreter.getInputBoxValueIndex();
         System.out.println("frame");
-    }
+        System.out.println(getEmptyLoopBlocks());
+        Queue<Block> loopBlocks = new LinkedList<>(emptyLoopBlocks);
+        String blockName = "";
+        while (interpreter.isTerminated() == false) {
+            blockName = loopBlocks.remove().getName();
+            interpreter.switchStatement(blockName, loopBlocks, loopSprite, spriteController, loopInt);
+        }
+        interpreter.setTerminated(false);
+        interpreter.setInputBoxValueIndex(tempIndexValue);
+        drawScene();
 
+    }
 
 
     /**
      * ALlows the user the drag a sprite around the canvas
+     *
      * @param scene
      */
     private void dragSpriteAroundCanvas(Scene scene) {
         AtomicInteger spriteIndex = new AtomicInteger(NO_SPRITE_INDEX);
-        canvas.setOnMousePressed( e -> {
-                int index = (spriteController.findSprite(e.getX(), e.getY()));
-                if(index != NO_SPRITE_INDEX) {
-                    spriteIndex.set(index);
-                    if(e.getButton() == MouseButton.SECONDARY) {
-                        scene.setCursor(Cursor.CLOSED_HAND);
-                    }
+        canvas.setOnMousePressed(e -> {
+            int index = (spriteController.findSprite(e.getX(), e.getY()));
+            if (index != NO_SPRITE_INDEX) {
+                spriteIndex.set(index);
+                if (e.getButton() == MouseButton.SECONDARY) {
+                    scene.setCursor(Cursor.CLOSED_HAND);
                 }
+            }
 
             e.consume();
         });
 
         canvas.setOnMouseReleased(e -> {
-            if(spriteIndex.get() != NO_SPRITE_INDEX) {
+            if (spriteIndex.get() != NO_SPRITE_INDEX) {
                 if (e.getButton() == MouseButton.SECONDARY) {
                     double xPos = e.getX();
                     double yPos = e.getY();
@@ -141,7 +159,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     System.out.println("X pos " + xPos);
                     System.out.println("Y pos " + yPos);
 
-                    if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
+                    if (yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
                         spriteController.getSprite(spriteIndex.get()).setXPos(xPos);
                         spriteController.getSprite(spriteIndex.get()).setYPos(yPos);
                     }
@@ -152,7 +170,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 } else if (e.getButton() == MouseButton.PRIMARY) {
                     double xPos = e.getX();
                     double yPos = e.getY();
-                    if(yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
+                    if (yPos >= 0 && yPos <= canvas.getHeight() && xPos >= 0 && xPos <= canvas.getWidth()) {
                         spriteController.getSprite(spriteIndex.get()).setClicked(true);
                         System.out.println("set clicked to true");
                     }
@@ -167,20 +185,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     /**
      * Draws the scene for the canvas.
      */
-    private  void drawScene() {
+    private void drawScene() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        gc.setFill(Color.rgb(255,253,208));
-        gc.fillRoundRect(0,0,728,597,20.0,20.0);
-        gc.strokeRoundRect(0,0,728,597,20.0,20.0);
+        gc.setFill(Color.rgb(255, 253, 208));
+        gc.fillRoundRect(0, 0, 728, 597, 20.0, 20.0);
+        gc.strokeRoundRect(0, 0, 728, 597, 20.0, 20.0);
 
-        if(spriteController.size() != 0 ) {
-            for(int i = 0; i < spriteController.size(); i ++) {
-                double xPos  = spriteController.getSprite(i).getXPos();
-                double yPos  = spriteController.getSprite(i).getYPos();
-                Image sprite =  spriteController.getSprite(i).defaultOutfit();
-                gc.drawImage(sprite, xPos , yPos);
+        if (spriteController.size() != 0) {
+            for (int i = 0; i < spriteController.size(); i++) {
+                double xPos = spriteController.getSprite(i).getXPos();
+                double yPos = spriteController.getSprite(i).getYPos();
+                Image sprite = spriteController.getSprite(i).defaultOutfit();
+                gc.drawImage(sprite, xPos, yPos);
 
             }
             System.out.println("test");
@@ -189,10 +207,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
 
-
-
     /**
      * Builds the Pane for the GUI.
+     *
      * @param stage The stage which GUI is going to be placed on.
      * @return The pane which contains the GUI.
      */
@@ -202,12 +219,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setStyle("-fx-background-color: #FF5438; ");
 
 
-        canvas = new Canvas(728,597);
+        canvas = new Canvas(728, 597);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.rgb(255,253,208));
-        gc.fillRoundRect(0,0,728,597,20.0,20.0);
+        gc.setFill(Color.rgb(255, 253, 208));
+        gc.fillRoundRect(0, 0, 728, 597, 20.0, 20.0);
         //gc.setLineWidth(20.0);
-        gc.strokeRoundRect(0,0,728,597,20.0,20.0);
+        gc.strokeRoundRect(0, 0, 728, 597, 20.0, 20.0);
         canvas.setOnMouseMoved(e -> {
             currentMouseXPos = e.getX();
             currentMouseYPos = e.getY();
@@ -220,19 +237,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setLeft(sceneBox);
 
 
-
         AnchorPane bottomBar = new AnchorPane();
         root.setBottom(bottomBar);
 
         VBox ioBar = new VBox();
         TextArea textArea = new TextArea();
-        textArea.setPrefSize(700,100);
+        textArea.setPrefSize(700, 100);
         textArea.setMinHeight(Region.USE_COMPUTED_SIZE);
         textArea.setMaxHeight(Region.USE_COMPUTED_SIZE);
         textArea.setMinWidth(Region.USE_COMPUTED_SIZE);
         textArea.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        textArea.setStyle("-fx-border-color: black;" + "text-area-background: black;" );
-        ioBar.setPadding(new Insets(0,0,100,400));
+        textArea.setStyle("-fx-border-color: black;" + "text-area-background: black;");
+        ioBar.setPadding(new Insets(0, 0, 100, 400));
         ioBar.getChildren().add(textArea);
 
         bottomBar.getChildren().add(ioBar);
@@ -244,16 +260,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         VBox rightPane = new VBox();
         HBox spriteBox = new HBox();
 
-        rightPane.setPadding(new Insets(50,10,50,0));
+        rightPane.setPadding(new Insets(50, 10, 50, 0));
         rightPane.setSpacing(60);
-        spriteBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;" );
+        spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
         defaultSprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
         Label spriteLabel = new Label("Default Sprite");
-
 
 
         spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
@@ -264,12 +279,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteContainer.setAlignment(Pos.CENTER);
 
 
-
         spriteBox.getChildren().add(spriteContainer);
-
-
-
-
 
 
         rightPane.getChildren().add(spriteBox);
@@ -277,7 +287,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Text stageText = new Text();
         stageText.setText("stage");
         stageBox.getChildren().add(stageText);
-        stageBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        stageBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
         stageBox.setPadding(new Insets(0, 0, 200, 350));
         rightPane.getChildren().add(stageBox);
         root.setRight(rightPane);
@@ -286,23 +296,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         programBox = new VBox();
         Text programText = new Text();
         programText.setText("Program Box");
-        programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
-        programBox.setPadding(new Insets(0,100,600,100));
-        leftPane.setPadding(new Insets(50,50,10,50));
+        programBox.setPadding(new Insets(0, 100, 600, 100));
+        leftPane.setPadding(new Insets(50, 50, 10, 50));
         leftPane.getChildren().add(programBox);
         root.setLeft(leftPane);
-
-
 
 
         //playButton.setStyle("-fx-background-color: transparent;");
 
 
-
-
         //stopButton.setStyle("-fx-background-color: transparent;");
-
 
 
         Button compileButton = new Button();
@@ -311,7 +316,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         compileButtonView.setFitHeight(50);
         compileButtonView.setFitWidth(50);
         compileButton.setGraphic(compileButtonView);
-        
+
         Button OCRButton = new Button();
         OCRButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\OCRButton.png");
         ImageView OCRButtonView = new ImageView(OCRButtonImg);
@@ -322,7 +327,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image =   new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
+            File image = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
@@ -333,18 +338,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
 
         });
-        topBar.setMargin(OCRButton, new Insets(0,20,0,40));
+        topBar.setMargin(OCRButton, new Insets(0, 20, 0, 40));
 
-    
+
         compileButton.setDisable(true);
         topBar.getChildren().add(compileButton);
         compileButton.setOnAction(e -> {
-            Queue<Block> blocks =  interpreter.textToBlocks(text.get());
+            Queue<Block> blocks = interpreter.textToBlocks(text.get());
             compiled = interpreter.checkSyntax(blocks);
             Queue<Block> programBlock = new LinkedList<>(blocks);
             drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
-            if(compiled == true) {
+            if (compiled == true) {
                 spriteController.addSpriteCode(blocks, 0);
             }
             playButton.setDisable(false);
@@ -352,12 +357,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-
-
-
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
         spriteBox.setOnMouseClicked(e -> {
-            if (contextMenu.get() !=null) {
+            if (contextMenu.get() != null) {
                 contextMenu.get().hide();
                 contextMenu.set(null);
             }
@@ -383,12 +385,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 contextMenu.set(new ContextMenu());
                 contextMenu.get().getItems().add(menuItem1);
 
-                spriteBox.setOnContextMenuRequested(event-> {
+                spriteBox.setOnContextMenuRequested(event -> {
                     contextMenu.get().hide();
                     event.consume();
                 });
 
-                spriteBox.setOnContextMenuRequested(event-> {
+                spriteBox.setOnContextMenuRequested(event -> {
                     contextMenu.get().show(spriteBox, e.getScreenX(), e.getScreenY());
                     event.consume();
                 });
@@ -401,11 +403,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
         topBar.getChildren().add(playButton);
-        topBar.setMargin(playButton, new Insets(0,0,0,700));
+        topBar.setMargin(playButton, new Insets(0, 0, 0, 700));
 
 
-
-        playButton.setOnAction(e->{
+        playButton.setOnAction(e -> {
             playButton.setDisable(true);
             stopButton.setDisable(false);
             if (compiled == true) {
@@ -422,7 +423,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(stopButton);
 
 
-
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
         ImageView settingButtonView = new ImageView(settingButtonImg);
@@ -430,7 +430,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         settingButtonView.setFitWidth(50);
         settingButton.setGraphic(settingButtonView);
         topBar.getChildren().add(settingButton);
-        topBar.setMargin(settingButton, new Insets(0,20,0,830));
+        topBar.setMargin(settingButton, new Insets(0, 20, 0, 830));
 
         settingButton.setOnAction(e -> {
             drawSettings();
@@ -440,21 +440,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
         String spriteName = spriteLabelName.getText();
         dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
-        return  root;
+        return root;
 
     }
 
-  private void drawProgramBox(Queue<Block> blocks) {
+    private void drawProgramBox(Queue<Block> blocks) {
         programBox.getChildren().clear();
         Text programText = new Text(spriteController.getSprite(currentSpriteIndex).getSpriteName() + " Program Box");
-        programBox.setStyle("-fx-border-style: solid inside;" +  "-fx-background-color: #FFFDD0;");
+        programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
 
         //Rectangle rect = new Rectangle(30,40);
         //programBox.getChildren().add(rect);
 
 
-        while(blocks.size() > 0) {
+        while (blocks.size() > 0) {
             Block block = blocks.remove();
             String blockName = block.getName();
             StackPane stackPane = new StackPane();
@@ -471,7 +471,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "MOVE":
                     block = blocks.remove();
                     secondBlockName = block.getName();
-                     hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
                     blocks.remove();
                     break;
@@ -479,7 +479,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "CONDITION":
                     block = blocks.remove();
                     secondBlockName = block.getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName,255, 95, 31);
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
                     break;
                 case "PAUSE":
@@ -490,20 +490,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
-                    block =  blocks.remove();
+                    block = blocks.remove();
                     secondBlockName = block.getName();
 
 
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
-                    if(secondBlockName.equals("X")) {
+                    if (secondBlockName.equals("X")) {
                         blocks.remove();
                     }
                     break;
                 case "WHENEVER":
                     block = blocks.remove();
                     secondBlockName = block.getName();
-                    if(secondBlockName.equals("PRESSES")) {
+                    if (secondBlockName.equals("PRESSES")) {
                         blocks.remove();
                     } else if (secondBlockName.equals("HOVERS")) {
                         blocks.remove();
@@ -511,21 +511,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         blocks.remove();
                     }
                     thirdBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName,thirdBlockName,255, 95, 31);
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
 
                     break;
                 case "ELSE":
                 case "LOOP":
+                case "TERMINATE":
                     stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
                     programBox.getChildren().add(stackPane);
                     break;
                 case "HOVERS":
                 case "PRESSES":
-                case  "CLICKS":
+                case "CLICKS":
                     blocks.remove();
                     secondBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName,192, 240, 22);
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
                     programBox.getChildren().add(hBox);
                     break;
                 default:
@@ -535,39 +536,37 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
         }
-  }
+    }
 
-  private Node drawBlock (String blockName, int red, int green, int blue) {
-      StackPane stackPane = createStackPane(blockName, red, green, blue);
-      if(blockName.equals("PAUSE")) {
-          HBox hBox = new HBox();
-          hBox.getChildren().add(stackPane);
-          TextField textField = createTextField();
-          hBox.getChildren().add(textField);
-
-          return hBox;
-      }
-      return  stackPane;
-  }
-
-    private Node drawBlock (String blockName, String secondBlockName, int red, int green, int blue) {
+    private Node drawBlock(String blockName, int red, int green, int blue) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
-        if(blockName.equals("ROTATE")) {
+        if (blockName.equals("PAUSE")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            TextField textField = createTextField();
+            hBox.getChildren().add(textField);
+
+            return hBox;
+        }
+        return stackPane;
+    }
+
+    private Node drawBlock(String blockName, String secondBlockName, int red, int green, int blue) {
+        StackPane stackPane = createStackPane(blockName, red, green, blue);
+        if (blockName.equals("ROTATE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
 
-            String dropDown[] = {"90","180","270"};
+            String dropDown[] = {"90", "180", "270"};
             ComboBox comboBox = createComboBox(dropDown);
             hBox.getChildren().add(comboBox);
 
 
-
-
             return hBox;
-        } else if(blockName.equals("MOVE")) {
+        } else if (blockName.equals("MOVE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
@@ -609,7 +608,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 return hBox;
             }
 
-        }else if (blockName.equals("FLIP") || blockName.equals("CONDITION")) {
+        } else if (blockName.equals("FLIP") || blockName.equals("CONDITION")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
@@ -639,14 +638,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             return hBox;
         }
-        return  stackPane;
+        return stackPane;
     }
 
-    private Node drawBlock (String blockName, String secondBlockName, String thirdBlockName, int red, int green, int blue) {
+    private Node drawBlock(String blockName, String secondBlockName, String thirdBlockName, int red, int green, int blue) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
         HBox hBox = null;
-        if(blockName.equals("WHENEVER")) {
-            if(secondBlockName.equals("PRESSES")) {
+        if (blockName.equals("WHENEVER")) {
+            if (secondBlockName.equals("PRESSES")) {
                 hBox = new HBox();
                 hBox.getChildren().add(stackPane);
                 stackPane = createStackPane(secondBlockName, red, green, blue);
@@ -655,7 +654,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
                 ComboBox comboBox = createComboBox(keys);
                 hBox.getChildren().add(comboBox);
-            }  else if(secondBlockName.equals("HOVERS") || secondBlockName.equals("CLICKS")) {
+            } else if (secondBlockName.equals("HOVERS") || secondBlockName.equals("CLICKS")) {
                 hBox = new HBox();
                 hBox.getChildren().add(stackPane);
                 stackPane = createStackPane(secondBlockName, red, green, blue);
@@ -671,27 +670,27 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         }
 
-        return  stackPane;
+        return stackPane;
     }
 
-    private StackPane createStackPane( String blockName, int red, int green, int blue){
+    private StackPane createStackPane(String blockName, int red, int green, int blue) {
         StackPane stackPane = new StackPane();
-        Rectangle blockBox = new Rectangle(70,30);
-        blockBox.setFill(Color.rgb(red,green,blue));
-        Rectangle blockBorder = new Rectangle(80,40);
+        Rectangle blockBox = new Rectangle(70, 30);
+        blockBox.setFill(Color.rgb(red, green, blue));
+        Rectangle blockBorder = new Rectangle(80, 40);
         Label blockText = new Label(blockName);
         stackPane.getChildren().add(blockBorder);
         stackPane.getChildren().add(blockBox);
         stackPane.getChildren().add(blockText);
         blockText.setFont(new Font("Arial", 15));
-        return  stackPane;
+        return stackPane;
     }
 
     private TextField createTextField() {
         TextField textField = new TextField();
         String textFieldAsString = textField.toString();
         textField.setOnAction(e -> {
-            if(getInputBoxIndex(textFieldAsString) == - 1) {
+            if (getInputBoxIndex(textFieldAsString) == -1) {
                 System.out.println(textField.getText());
                 inputBoxesValues.put(textFieldAsString, (String) textField.getText());
                 inputBoxes.add(textFieldAsString);
@@ -700,14 +699,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 inputBoxesValues.put(textFieldAsString, (String) textField.getText());
             }
         });
-        return  textField;
+        return textField;
     }
 
     private ComboBox createComboBox(String[] dropDown) {
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown ));
+        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown));
         String comboBoxAsString = comboBox.toString();
         comboBox.setOnAction(e -> {
-            if(getInputBoxIndex(comboBoxAsString) == - 1) {
+            if (getInputBoxIndex(comboBoxAsString) == -1) {
                 inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
                 inputBoxes.add(comboBoxAsString);
             } else {
@@ -716,11 +715,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
 
         });
-        return  comboBox;
+        return comboBox;
     }
-
-
-
 
 
     private void drawSettings() {
@@ -729,7 +725,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #FF5438;");
         Button linkAppButton = new Button();
-        linkAppButton.setMinSize(100,100);
+        linkAppButton.setMinSize(100, 100);
         linkAppButton.setText("Link App");
         linkAppButton.setOnAction(e -> {
             try {
@@ -748,12 +744,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
         });
 
-        hBox.setPadding(new Insets(100,0,0,120));
+        hBox.setPadding(new Insets(100, 0, 0, 120));
         hBox.getChildren().add(linkAppButton);
         root.getChildren().add(hBox);
 
         settingStage.setResizable(false);
-        Scene scene = new Scene(root, 350,350);
+        Scene scene = new Scene(root, 350, 350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
     }
@@ -763,16 +759,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         System.out.println(localIP);
         QRCodeWriter qrCodeGenerator = new QRCodeWriter();
         BitMatrix bitMatrix =
-                qrCodeGenerator.encode(localIP, BarcodeFormat.QR_CODE,100,100);
-        WritableImage writableImage = new WritableImage(100,100);
+                qrCodeGenerator.encode(localIP, BarcodeFormat.QR_CODE, 100, 100);
+        WritableImage writableImage = new WritableImage(100, 100);
         PixelWriter pixelWriter = writableImage.getPixelWriter();
         System.out.println(bitMatrix.toString());
-        for(int j = 0; j < 100; j++) {
-            for(int i = 0; i < 100; i++) {
-                if(bitMatrix.get(i,j) == true) {
-                    pixelWriter.setColor(i,j, Color.color(0.0,0.0,0.0));
+        for (int j = 0; j < 100; j++) {
+            for (int i = 0; i < 100; i++) {
+                if (bitMatrix.get(i, j) == true) {
+                    pixelWriter.setColor(i, j, Color.color(0.0, 0.0, 0.0));
                 } else {
-                    pixelWriter.setColor(i,j, Color.color(1.0,1.0,1.0));
+                    pixelWriter.setColor(i, j, Color.color(1.0, 1.0, 1.0));
                 }
 
             }
@@ -784,15 +780,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     /**
      * Allows the User to change the label text.
-     * @param e The current Event.
+     *
+     * @param e               The current Event.
      * @param spriteContainer The Container which contains the sprite label.
      */
     private void clickOnLabel(Event e, VBox spriteContainer) {
         System.out.println("Detected Click");
-        Label currentLabel  = (Label) spriteContainer.getChildren().get(1);
+        Label currentLabel = (Label) spriteContainer.getChildren().get(1);
 
         TextField enterSpriteNameField = new TextField(currentLabel.getText());
-        enterSpriteNameField.setPrefSize(50,20);
+        enterSpriteNameField.setPrefSize(50, 20);
         enterSpriteNameField.setOnKeyPressed(event -> {
             System.out.println(event.getCode());
             String inputText = enterSpriteNameField.getText();
@@ -802,7 +799,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 Label newSpriteLabel = new Label(inputText);
                 spriteContainer.getChildren().remove(1);
                 spriteContainer.getChildren().add(newSpriteLabel);
-                newSpriteLabel.setOnMouseClicked(labelEvent->clickOnLabel(labelEvent, spriteContainer));
+                newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
             }
             event.consume();
         });
@@ -813,8 +810,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     /**
      * Allows the user to drag a sprite from the sprite box to the canvas.
-     * @param imageView The imageview of the sprite.
-     * @param sprite The image of the sprite.
+     *
+     * @param imageView  The imageview of the sprite.
+     * @param sprite     The image of the sprite.
      * @param spriteName The name of the sprite.
      */
     private void dragAndDrop(ImageView imageView, Image sprite, String spriteName) {
@@ -828,7 +826,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
                 canvas.setOnDragOver(new EventHandler<DragEvent>() {
                     public void handle(DragEvent event) {
-                        if (event.getGestureSource() ==   imageView)  {
+                        if (event.getGestureSource() == imageView) {
                             event.acceptTransferModes(TransferMode.ANY);
                             event.consume();
                         }
@@ -843,14 +841,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         System.out.println(s);
                         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-                        spriteController.addSprite(spriteName,x, y, sprite);
+                        spriteController.addSprite(spriteName, x, y, sprite);
                         currentSpriteIndex = spriteController.size() - 1;
-                        gc.drawImage(sprite, x , y);
+                        gc.drawImage(sprite, x, y);
 
                         imageView.setOnDragDetected(null);
                         programBox.getChildren().clear();
                         Text programText = new Text();
-                        programText.setText(spriteName + "'s " +"Program Box");
+                        programText.setText(spriteName + "'s " + "Program Box");
                         programBox.getChildren().add(programText);
 
                         event.consume();
@@ -866,7 +864,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private int getInputBoxIndex(String inputBox) {
         for (int i = 0; i < inputBoxes.size(); i++) {
-            if(inputBoxes.get(i).equals(inputBox)) {
+            if (inputBoxes.get(i).equals(inputBox)) {
                 return i;
             }
         }
@@ -876,9 +874,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static KeyCode getCurrentKey() {
         AtomicReference<KeyCode> pressedKey = new AtomicReference<>();
         scene.setOnKeyPressed(e -> {
-           pressedKey.set(e.getCode());
+            pressedKey.set(e.getCode());
         });
-        if (pressedKey.get() !=  null) {
+        if (pressedKey.get() != null) {
             System.out.println(pressedKey.get());
         }
 
@@ -887,13 +885,33 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     public static double[] getMousePosition() {
         double x = scene.getX();
-        double y = scene .getY();
-        double[] mousePosition = {x,y};
+        double y = scene.getY();
+        double[] mousePosition = {x, y};
         return mousePosition;
     }
 
 
+    public static Queue<Block> getEmptyLoopBlocks() {
+        return emptyLoopBlocks;
+    }
 
+    public static void setEmptyLoopBlocks(Queue<Block> emptyLoopBlocks) {
+        StageInitializer.emptyLoopBlocks =   new LinkedList<>(emptyLoopBlocks);
+    }
 
+    public static Sprite getLoopSprite() {
+        return loopSprite;
+    }
 
+    public static void setLoopSprite(Sprite loopSprite) {
+        StageInitializer.loopSprite = loopSprite;
+    }
+
+    public static int getLoopInt() {
+        return loopInt;
+    }
+
+    public static void setLoopInt(int loopInt) {
+        StageInitializer.loopInt = loopInt;
+    }
 }

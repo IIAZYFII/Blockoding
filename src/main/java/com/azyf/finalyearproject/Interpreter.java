@@ -22,6 +22,8 @@ public class Interpreter {
     private ArrayList<String> inputBoxes;
     private double mouseX;
     private double mouseY;
+    private boolean terminated = false;
+
 
 
 
@@ -111,7 +113,7 @@ public class Interpreter {
     }
 
 
-    private SpriteController switchStatement(String blockName, Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
+    public SpriteController switchStatement(String blockName, Queue<Block> blocks, Sprite sprite, SpriteController spriteController, int i) {
         String direction = "";
         String inputBoxAsString = "";
         String amount = "";
@@ -184,7 +186,15 @@ public class Interpreter {
                 checkConditionFinished(blocks);
                 break;
             case "LOOP":
+                StageInitializer.setEmptyLoopBlocks(getLoopBlocks(blocks));
+                StageInitializer.setLoopSprite(sprite);
+                StageInitializer.setLoopInt(i);
                 StageInitializer.frameTimeline.playFromStart();
+                enterLoop(blocks);
+                break;
+            case "TERMINATE":
+                System.out.println("Reached Terminate");
+                terminated = true;
                 break;
             default:
                 System.out.println(blockName + " something went wrong");
@@ -404,4 +414,38 @@ public class Interpreter {
         return spriteController;
     }
 
+
+    public boolean isTerminated() {
+        return terminated;
+    }
+
+    public void setTerminated(boolean terminated) {
+        this.terminated = terminated;
+    }
+
+    private Queue<Block> getLoopBlocks(Queue<Block> blocks) {
+        String blockName = "";
+        Queue<Block> loopBlocks = new LinkedList<>();
+        while(!(blockName.equals("TERMINATE"))) {
+            Block block = blocks.remove();
+            loopBlocks.add(block);
+            blockName = block.getName();
+        }
+
+        return loopBlocks;
+    }
+
+    private void enterLoop(Queue<Block> blocks) {
+        while(!blocks.isEmpty()) {
+            blocks.remove();
+        }
+    }
+
+    public int getInputBoxValueIndex() {
+        return inputBoxValueIndex;
+    }
+
+    public void setInputBoxValueIndex(int inputBoxValueIndex) {
+        this.inputBoxValueIndex = inputBoxValueIndex;
+    }
 }
