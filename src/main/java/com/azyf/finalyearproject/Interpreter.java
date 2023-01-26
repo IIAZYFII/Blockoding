@@ -108,8 +108,8 @@ public class Interpreter {
                 spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
             }
         }
-        StageInitializer.playButton.setDisable(false);
-        StageInitializer.stopButton.setDisable(true);
+        StageInitializer.playButton.setDisable(true);
+        StageInitializer.stopButton.setDisable(false);
     }
 
 
@@ -294,7 +294,6 @@ public class Interpreter {
                 String key = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
-                System.out.println(keyCondition.getName());
                 if((keyCondition == StageInitializer.getCurrentKey())) {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {

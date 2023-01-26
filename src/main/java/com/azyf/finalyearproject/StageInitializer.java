@@ -422,6 +422,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
 
+        stopButton.setOnAction(e -> {
+            frameTimeline.stop();
+            playButton.setDisable(false);
+            stopButton.setDisable(true);
+        });
 
         Button settingButton = new Button();
         Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
