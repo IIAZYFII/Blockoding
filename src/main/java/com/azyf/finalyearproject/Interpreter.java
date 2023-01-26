@@ -127,6 +127,7 @@ public class Interpreter {
                 inputBoxValueIndex++;
                 sprite = moveSprite(sprite, direction , steps);
                 spriteController.setSprite(i, sprite);
+                StageInitializer.setCurrentKey(null);
                 break;
             case "END":
                 System.out.println("Program finished");
@@ -138,6 +139,7 @@ public class Interpreter {
                 direction = blocks.remove().getName();
                 sprite = flipSprite(sprite, direction);
                 spriteController.setSprite(i, sprite);
+                StageInitializer.setCurrentKey(null);
                 break;
             case "TELPORT":
                 blocks.remove();
@@ -159,6 +161,7 @@ public class Interpreter {
                     sprite = teleportSprite(sprite, mouseX, mouseY);
                 }
                 spriteController.setSprite(i, sprite);
+                StageInitializer.setCurrentKey(null);
                 break;
             case "ROTATE":
                 String orientation = blocks.remove().getName();
@@ -167,12 +170,14 @@ public class Interpreter {
                 sprite = rotateSprite(sprite, orientation, amount);
                 spriteController.setSprite(i, sprite);
                 inputBoxValueIndex++;
+                StageInitializer.setCurrentKey(null);
                 break;
             case "PAUSE":
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 amount = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 pauseProgram(amount);
+                StageInitializer.setCurrentKey(null);
                 break;
             case "WHENEVER":
             case "AND":
@@ -294,6 +299,8 @@ public class Interpreter {
                 String key = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
+                System.out.println(keyCondition);
+                System.out.println(StageInitializer.getCurrentKey());
                 if((keyCondition == StageInitializer.getCurrentKey())) {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {

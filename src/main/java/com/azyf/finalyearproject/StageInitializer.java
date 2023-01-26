@@ -81,8 +81,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private static Sprite loopSprite;
     private static int loopInt;
+    private static KeyCode currentKey;
+    private static int frameCounter = 0;
 
-    public static String test = "jfc";
 
 
     public StageInitializer() throws FileNotFoundException {
@@ -125,6 +126,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         interpreter.setTerminated(false);
         interpreter.setInputBoxValueIndex(tempIndexValue);
         drawScene();
+        frameCounter++;
 
     }
 
@@ -877,15 +879,27 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     public static KeyCode getCurrentKey() {
-        AtomicReference<KeyCode> pressedKey = new AtomicReference<>();
-        scene.setOnKeyPressed(e -> {
-            pressedKey.set(e.getCode());
-        });
-        if (pressedKey.get() != null) {
-            System.out.println(pressedKey.get());
-        }
+        /**
+         *   if(frameCounter >= 60) {
+         *             currentKey =  null;
+         *             frameCounter = 0;
+         *         } else if (currentKey != null && frameCounter <= 50) {
+         *             currentKey =  null;
+         *         }
+         */
 
-        return pressedKey.get();
+
+        scene.setOnKeyPressed(e -> {
+            KeyCode keyCode = e.getCode();
+            currentKey = keyCode;
+
+        });
+        System.out.println(currentKey + " Is being pressed");
+        return currentKey;
+    }
+
+    public static void setCurrentKey(KeyCode currentKey) {
+        StageInitializer.currentKey = currentKey;
     }
 
     public static double[] getMousePosition() {
