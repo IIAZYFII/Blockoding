@@ -407,6 +407,9 @@ public class Interpreter {
         String blockName = "";
         while ((!(blockName.equals("FINISHED"))) && (!(blockName.equals("ELSE"))) ) {
             blockName = blocks.remove().getName();
+            if(blockName.equals("KEY") || blockName.equals("SPRITE") || blockName.equals("NUMBER")) {
+                inputBoxValueIndex++;
+            }
         }
 
     }

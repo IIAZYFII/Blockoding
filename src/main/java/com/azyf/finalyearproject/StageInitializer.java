@@ -78,6 +78,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static Button stopButton = new Button();
     public static Timeline frameTimeline;
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
+    private static   BorderPane root;
 
     private static Sprite loopSprite;
     private static int loopInt;
@@ -94,16 +95,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         frameTimeline = new Timeline(new KeyFrame(Duration.millis(16.67), e -> frame()));
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
-        BorderPane root = (BorderPane) buildGUI(stage);
+         root = (BorderPane) buildGUI(stage);
+
 
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
 
         scene = new Scene(root, screenWidth, screenHeight);
-
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
         stage.show();
+        root.requestFocus();
         try {
             interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
         } catch (UnsupportedEncodingException e) {
@@ -114,7 +116,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     private void frame() {
-        int tempIndexValue = interpreter.getInputBoxValueIndex();
+        int tempIndexValue =  0;
+                //interpreter.getInputBoxValueIndex();
+        System.out.println(tempIndexValue + " temp index value");
         System.out.println("frame");
         System.out.println(getEmptyLoopBlocks());
         Queue<Block> loopBlocks = new LinkedList<>(emptyLoopBlocks);
@@ -123,8 +127,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             blockName = loopBlocks.remove().getName();
             interpreter.switchStatement(blockName, loopBlocks, loopSprite, spriteController, loopInt);
         }
-        interpreter.setTerminated(false);
         interpreter.setInputBoxValueIndex(tempIndexValue);
+        interpreter.setTerminated(false);
+
         drawScene();
         frameCounter++;
 
@@ -714,6 +719,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String comboBoxAsString = comboBox.toString();
         comboBox.setOnAction(e -> {
             if (getInputBoxIndex(comboBoxAsString) == -1) {
+                System.out.println(comboBox.getValue());
                 inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
                 inputBoxes.add(comboBoxAsString);
             } else {
@@ -889,7 +895,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
          */
 
 
-        scene.setOnKeyPressed(e -> {
+       root.setOnKeyPressed(e -> {
             KeyCode keyCode = e.getCode();
             currentKey = keyCode;
 
