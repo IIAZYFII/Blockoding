@@ -121,6 +121,7 @@ public class Interpreter {
         switch (blockName) {
             case "MOVE":
                 block = blocks.remove();
+                blocks.remove();
                 direction = block.getName();
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 String steps = inputBoxesValues.get(inputBoxAsString);
