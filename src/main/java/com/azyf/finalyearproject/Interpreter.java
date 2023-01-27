@@ -1,18 +1,12 @@
 package com.azyf.finalyearproject;
 
-import com.google.protobuf.compiler.PluginProtos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.util.Pair;
-import org.apache.pdfbox.debugger.ui.Tree;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-
-import static com.azyf.finalyearproject.ImageProcessor.flipImage;
 
 
 public class Interpreter {
@@ -24,6 +18,7 @@ public class Interpreter {
     private double mouseY;
     private boolean terminated = false;
 
+    private boolean notActive = false;
 
 
 
@@ -218,9 +213,9 @@ public class Interpreter {
         } else if (direction.equals("LEFT")) {
             sprite.setXPos(sprite.getXPos() - steps);
         } else if (direction.equals("UP")) {
-            sprite.setYPos(sprite.getYPos() + steps);
-        } else if (direction.equals("DOWN")) {
             sprite.setYPos(sprite.getYPos() - steps);
+        } else if (direction.equals("DOWN")) {
+            sprite.setYPos(sprite.getYPos() + steps);
         }
 
         return sprite;
@@ -293,6 +288,10 @@ public class Interpreter {
         String inputBoxAsString = "";
         String blockName = "";
         switch (condition) {
+            case "NOT":
+                notActive = true;
+                spriteController = wheneverStatement(blocks, sprite, spriteController, i);
+                break;
             case "PRESSES":
                 blocks.remove();
                 blockName = blocks.remove().getName();
@@ -302,7 +301,8 @@ public class Interpreter {
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition);
                 System.out.println(StageInitializer.getCurrentKey());
-                if((keyCondition == StageInitializer.getCurrentKey())) {
+                if((keyCondition == StageInitializer.getCurrentKey() && notActive == false) ||
+                        !(keyCondition == StageInitializer.getCurrentKey() && notActive == true)) {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
@@ -312,7 +312,7 @@ public class Interpreter {
                     } else if(blockName.equals("OR")) {
                        spriteController = ORCondition(blocks,sprite, spriteController, i);
                     }
-
+                    notActive = false;
                     return spriteController;
                 } else if(blockName.equals("OR")) {
                     spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
@@ -337,7 +337,8 @@ public class Interpreter {
                 spriteName = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
-                if((tmpSpriteName.equals(spriteName))) {
+                if((tmpSpriteName.equals(spriteName) && notActive == false) ||
+                        (!(tmpSpriteName.equals(spriteName)) && notActive == true)) {
                     System.out.println("Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
@@ -348,7 +349,8 @@ public class Interpreter {
                     } else if (blockName.equals("OR")) {
                         spriteController = ORCondition(blocks,sprite, spriteController, i);
                     }
-
+                    notActive = false;
+                    return spriteController;
                 } else if(blockName.equals("OR")) {
                     spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                 } else {
@@ -365,9 +367,10 @@ public class Interpreter {
                 boolean found = false;
                 int j = 0;
                 while(found == false) {
-                    if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
+                    if((spriteController.getSprite(j).getSpriteName().equals(spriteName))) {
                         tmpSprite = spriteController.getSprite(j);
-                        if(tmpSprite.isClicked()) {
+                        if((tmpSprite.isClicked() && notActive == false) ||
+                                (!(tmpSprite.isClicked()) && notActive == true) ) {
                             tmpSprite.setClicked(false);
                             if(blockName.equals("THEN")) {
                                 blockName = blocks.remove().getName();
@@ -380,7 +383,8 @@ public class Interpreter {
                             } else if (blockName.equals("OR")) {
                                 spriteController = ORCondition(blocks,sprite, spriteController, i);
                             }
-
+                            notActive = false;
+                            return spriteController;
                         } else if(blockName.equals("OR")) {
                             spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
                         } else {

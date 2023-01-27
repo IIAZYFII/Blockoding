@@ -116,8 +116,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     private void frame() {
-        int tempIndexValue =  0;
-                //interpreter.getInputBoxValueIndex();
+        int tempIndexValue =  interpreter.getInputBoxValueIndex();
         System.out.println(tempIndexValue + " temp index value");
         System.out.println("frame");
         System.out.println(getEmptyLoopBlocks());
@@ -521,11 +520,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         blocks.remove();
                     } else if (secondBlockName.equals("CLICKS")) {
                         blocks.remove();
+                    } else if (secondBlockName.equals("NOT")) {
+                        stackPane = (StackPane) drawBlock(secondBlockName, 192, 240, 22);
+                        secondBlockName = blocks.remove().getName();
+                        thirdBlockName = blocks.remove().getName();
+                        hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                        hBox.getChildren().add(1,stackPane);
+                        programBox.getChildren().add(hBox);
+                        break;
                     }
                     thirdBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
-
                     break;
                 case "ELSE":
                 case "LOOP":
@@ -684,6 +690,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         return stackPane;
     }
+
+
+
 
     private StackPane createStackPane(String blockName, int red, int green, int blue) {
         StackPane stackPane = new StackPane();
