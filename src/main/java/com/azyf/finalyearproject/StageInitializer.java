@@ -523,6 +523,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     } else if (secondBlockName.equals("NOT")) {
                         stackPane = (StackPane) drawBlock(secondBlockName, 192, 240, 22);
                         secondBlockName = blocks.remove().getName();
+                        if (secondBlockName.equals("PRESSES") ||(secondBlockName.equals("CLICKS")
+                                || secondBlockName.equals("HOVERS"))) {
+                            blocks.remove();
+                        }
                         thirdBlockName = blocks.remove().getName();
                         hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
                         hBox.getChildren().add(1,stackPane);

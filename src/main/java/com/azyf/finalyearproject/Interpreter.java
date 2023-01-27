@@ -339,6 +339,7 @@ public class Interpreter {
 
                 if((tmpSpriteName.equals(spriteName) && notActive == false) ||
                         (!(tmpSpriteName.equals(spriteName)) && notActive == true)) {
+                    notActive = false;
                     System.out.println("Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
@@ -349,7 +350,6 @@ public class Interpreter {
                     } else if (blockName.equals("OR")) {
                         spriteController = ORCondition(blocks,sprite, spriteController, i);
                     }
-                    notActive = false;
                     return spriteController;
                 } else if(blockName.equals("OR")) {
                     spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
@@ -423,6 +423,9 @@ public class Interpreter {
         while(blockName.equals("PRESSES") || blockName.equals("KEY") || blockName.equals("CLICKS")
                 || blockName.equals("SPRITE") || blockName.equals("HOVERS") || blockName.equals("NOT") || blockName.equals("THEN")) {
             blockName = blocks.remove().getName();
+            if(blockName.equals("SPRITE") || blockName.equals("KEY")) {
+                inputBoxValueIndex++;
+            }
         }
         spriteController = switchStatement(blockName, blocks, sprite, spriteController, i);
         return spriteController;
