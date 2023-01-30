@@ -553,15 +553,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
                     programBox.getChildren().add(hBox);
                     break;
-                case "NOT":
-                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
-                    blockName = blocks.remove().getName();
-                    blocks.remove();
-                    secondBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
-                    hBox.getChildren().add(0,stackPane);
-                    programBox.getChildren().add(hBox);
-                    break;
                 default:
                     System.out.println("test");
                     break;
