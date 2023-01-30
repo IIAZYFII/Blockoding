@@ -25,7 +25,7 @@ public class ImageProcessor {
         System.out.println("Converting to Gray Scale");
         convertToGrayScale(imageFile);
         System.out.println("Zooming into image");
-        imageFile = zoomImage("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\rotateimg.png");
+        imageFile = zoomImage("Cache\\rotateimg.png");
         return imageFile;
     }
 
@@ -50,12 +50,12 @@ public class ImageProcessor {
                 pixelWriter.setColor(i, j, color);
             }
         }
-        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\imgGrayScale.png");
+        File saveImage = new File("Cache\\imgGrayScale.png");
         image = SwingFXUtils.fromFXImage(grayScaleImage, null);
         ImageIO.write(image, "png", saveImage);
 
         if(grayScaleImage.getWidth() > grayScaleImage.getHeight()) {
-            rotateImage(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\imgGrayScale.png"));
+            rotateImage(new File("Cache\\imgGrayScale.png"));
         }
 
 
@@ -64,7 +64,7 @@ public class ImageProcessor {
 
     private File zoomImage(String fileLocation) throws IOException {
         javafx.scene.image.Image image = new javafx.scene.image.Image(fileLocation, 1050, 1024, false, false);
-        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\zoomimg.png");
+        File saveImage = new File("Cache\\zoomimg.png");
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(bufferedImage, "png", saveImage);
         return saveImage;
@@ -91,7 +91,7 @@ public class ImageProcessor {
 
             }
         }
-        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\rotateimg.png");
+        File saveImage = new File("Cache\\rotateimg.png");
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(rotatedImage, null);
         ImageIO.write(bufferedImage, "png", saveImage);
     }

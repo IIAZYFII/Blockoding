@@ -92,6 +92,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
+
         frameTimeline = new Timeline(new KeyFrame(Duration.millis(16.67), e -> frame()));
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
@@ -107,7 +108,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stage.show();
         root.requestFocus();
         try {
-            interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
+            interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -271,7 +272,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        defaultSprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
+        String df = "default.png";
+        defaultSprite = new Image(df);
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
         Label spriteLabel = new Label("Default Sprite");
@@ -317,14 +319,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         Button compileButton = new Button();
-        compileButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\CompileButton.png");
+        compileButtonImg = new Image("Assets\\Images\\CompileButton.png");
         ImageView compileButtonView = new ImageView(compileButtonImg);
         compileButtonView.setFitHeight(50);
         compileButtonView.setFitWidth(50);
         compileButton.setGraphic(compileButtonView);
 
         Button OCRButton = new Button();
-        OCRButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\OCRButton.png");
+        OCRButtonImg = new Image("Assets\\Images\\OCRButton.png");
         ImageView OCRButtonView = new ImageView(OCRButtonImg);
         OCRButtonView.setFitHeight(50);
         OCRButtonView.setFitWidth(50);
@@ -333,7 +335,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
+            File image = new File("Cache\\img.png");
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
@@ -405,7 +407,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         playButton.setDisable(true);
-        playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
+        playButtonImg = new Image("Assets\\Images\\Playbutton.png");
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
         topBar.getChildren().add(playButton);
@@ -423,7 +425,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         stopButton.setDisable(true);
-        stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
+        stopButtonImg = new Image("Assets\\Images\\Stopbutton.png");
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
@@ -435,7 +437,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         Button settingButton = new Button();
-        Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
+        Image settingButtonImg = new Image("Assets\\Images\\SettingsButton.png");
         ImageView settingButtonView = new ImageView(settingButtonImg);
         settingButtonView.setFitHeight(50);
         settingButtonView.setFitWidth(50);
@@ -766,7 +768,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 generateQRCode();
                 hBox.getChildren().clear();
-                Image qrCode = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
+                Image qrCode = new Image("Cache\\qrcode.png");
                 ImageView qrCodeViewer = new ImageView(qrCode);
                 qrCodeViewer.setFitHeight(120);
                 qrCodeViewer.setFitWidth(120);
@@ -808,7 +810,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
         }
-        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
+        File saveImage = new File("Cache\\qrcode.png");
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
     }

@@ -33,7 +33,7 @@ public class  ParseTree {
      * @throws FileNotFoundException
      */
     private void loadBlocks() throws FileNotFoundException {
-        File blockFile = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\Default.txt");
+        File blockFile = new File("Assets\\Blocks\\Default.txt");
         Scanner in = null;
         Scanner inLine = null;
         try {

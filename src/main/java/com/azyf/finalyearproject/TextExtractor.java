@@ -28,7 +28,7 @@ public class TextExtractor {
     public TextExtractor() {
 
         wordProcessor = new WordProcessor();
-        wordProcessor.addWordsToDictionary(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Words\\default.txt"));
+        wordProcessor.addWordsToDictionary(new File("Assets\\Words\\default.txt"));
 
     }
     public String extractText(File imageFile) throws IOException {

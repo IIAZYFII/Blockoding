@@ -38,7 +38,7 @@ public class BinaryImageResource {
             BufferedImage imageFromBytes = ImageIO.read(inputStream);
 
 
-            File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
+            File saveImage = new File("Cache\\img.png");
             ImageIO.write(imageFromBytes, "png", saveImage);
             System.out.println("done");
             System.out.println();
