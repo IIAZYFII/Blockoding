@@ -3,6 +3,7 @@ package com.azyf.finalyearproject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -25,7 +26,8 @@ public class ImageProcessor {
         System.out.println("Converting to Gray Scale");
         convertToGrayScale(imageFile);
         System.out.println("Zooming into image");
-        imageFile = zoomImage("Cache\\rotateimg.png");
+        String pathTempRotateImg =  StageInitializer.getAbsolutePath() + "/Cache/rotateimg.png";
+        imageFile = zoomImage(pathTempRotateImg);
         return imageFile;
     }
 

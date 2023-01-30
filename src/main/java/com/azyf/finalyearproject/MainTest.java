@@ -15,7 +15,9 @@ public class MainTest {
         //interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
         //System.out.println(interpreter.getParseTree().root);
         //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0));
-
+        File path = new File("");
+        String systemPath = path.getAbsolutePath();
+        System.out.println(systemPath);
 
     }
 }

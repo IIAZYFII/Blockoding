@@ -272,8 +272,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        String df = "default.png";
-        defaultSprite = new Image(df);
+        String pathDS = getAbsolutePath() + "/Assets/Images/Sprites/default.png";
+        defaultSprite = new Image(pathDS);
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
         Label spriteLabel = new Label("Default Sprite");
@@ -319,14 +319,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         Button compileButton = new Button();
-        compileButtonImg = new Image("Assets\\Images\\CompileButton.png");
+        String pathCompileButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
+        compileButtonImg = new Image(pathCompileButton);
         ImageView compileButtonView = new ImageView(compileButtonImg);
         compileButtonView.setFitHeight(50);
         compileButtonView.setFitWidth(50);
         compileButton.setGraphic(compileButtonView);
 
         Button OCRButton = new Button();
-        OCRButtonImg = new Image("Assets\\Images\\OCRButton.png");
+        String pathOCRButton = getAbsolutePath() + "/Assets/Images/OCRButton.png";
+        OCRButtonImg = new Image(pathOCRButton);
         ImageView OCRButtonView = new ImageView(OCRButtonImg);
         OCRButtonView.setFitHeight(50);
         OCRButtonView.setFitWidth(50);
@@ -335,7 +337,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image = new File("Cache\\img.png");
+            String pathTempIMG = StageInitializer.getAbsolutePath() + "/Cache/img.png";
+            File image = new File(pathTempIMG);
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
@@ -407,7 +410,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         playButton.setDisable(true);
-        playButtonImg = new Image("Assets\\Images\\Playbutton.png");
+        String pathPlayButton = getAbsolutePath() + "/Assets/Images/PlayButton.png";
+        playButtonImg = new Image(pathPlayButton);
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
         topBar.getChildren().add(playButton);
@@ -425,7 +429,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         stopButton.setDisable(true);
-        stopButtonImg = new Image("Assets\\Images\\Stopbutton.png");
+        String pathStopButton = getAbsolutePath() + "/Assets/Images/StopButton.png";
+        stopButtonImg = new Image(pathStopButton);
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
@@ -437,7 +442,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         Button settingButton = new Button();
-        Image settingButtonImg = new Image("Assets\\Images\\SettingsButton.png");
+        String pathSettingButton = getAbsolutePath() + "/Assets/Images/SettingsButton.png";
+        Image settingButtonImg = new Image(pathSettingButton);
         ImageView settingButtonView = new ImageView(settingButtonImg);
         settingButtonView.setFitHeight(50);
         settingButtonView.setFitWidth(50);
@@ -953,5 +959,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     public static void setLoopInt(int loopInt) {
         StageInitializer.loopInt = loopInt;
+    }
+
+    public static String getAbsolutePath() {
+        File path = new File("");
+        String systemPath = path.getAbsolutePath();
+        System.out.println(systemPath);
+        return systemPath;
     }
 }
