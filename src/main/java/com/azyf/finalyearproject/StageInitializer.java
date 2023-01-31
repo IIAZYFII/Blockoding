@@ -510,8 +510,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
+                    blocks.remove();
+                    secondBlockName = blocks.remove().getName();
 
 
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
@@ -605,8 +605,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
 
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
+
 
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
@@ -618,6 +617,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("TELPORT")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
             if (secondBlockName.equals("X")) {
                 stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
@@ -638,7 +639,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
                 String options[] = {"no options"};
-                ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+                comboBox = new ComboBox(FXCollections.observableArrayList(options));
                 hBox.getChildren().add(comboBox);
                 return hBox;
             } else if (secondBlockName.equals("RANDOM")) {
