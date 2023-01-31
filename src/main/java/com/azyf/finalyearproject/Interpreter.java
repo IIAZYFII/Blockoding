@@ -146,6 +146,7 @@ public class Interpreter {
                 break;
             case "TELPORT":
                 blocks.remove();
+                blocks.remove();
                 block = blocks.remove();
                 String position = block.getName();
                 spriteIntegerPair = getSprite(spriteController);
@@ -492,13 +493,14 @@ public class Interpreter {
         inputBoxValueIndex++;
         Sprite tmpSprite = null;
         boolean found = false;
-        int count = 0;
+        int count = -1;
         while(found == false) {
+            count++;
             if(spriteController.getSprite(count).getSpriteName().equals(spriteName)) {
                 tmpSprite = spriteController.getSprite(count);
                 found = true;
             }
-            count++;
+
         }
         Pair<Sprite, Integer> spriteIntegerPair = new Pair<>(tmpSprite, count);
         return spriteIntegerPair;
