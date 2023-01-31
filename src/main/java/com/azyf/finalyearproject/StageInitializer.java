@@ -617,6 +617,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("TELPORT")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+            stackPane = createStackPane("TO", red, green, blue);
+            hBox.getChildren().add(stackPane);
             ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
             hBox.getChildren().add(comboBox);
             if (secondBlockName.equals("X")) {
