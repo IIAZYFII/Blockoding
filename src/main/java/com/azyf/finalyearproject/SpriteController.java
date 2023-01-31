@@ -61,9 +61,7 @@ public class SpriteController {
         return  sprites.size();
     }
 
-    public  void addSpriteCode(Queue<Block> code, int i) {
-        sprites.get(i).addSpriteCode(code);
-    }
+
 
     public ArrayList<Sprite> getSprites() {
         return sprites;
@@ -75,10 +73,6 @@ public class SpriteController {
             spriteNames[i] = this.getSprite(i).getSpriteName();
         }
         return spriteNames;
-    }
-
-    public Queue<Block> getSpriteCodeBlocks(int i) {
-       return sprites.get(i).getCodeBlocks();
     }
 
 

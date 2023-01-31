@@ -80,8 +80,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
 
-    private static Sprite loopSprite;
-    private static int loopInt;
+
     private static KeyCode currentKey;
     private static int frameCounter = 0;
 
@@ -125,7 +124,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String blockName = "";
         while (interpreter.isTerminated() == false) {
             blockName = loopBlocks.remove().getName();
-            interpreter.switchStatement(blockName, loopBlocks, loopSprite, spriteController, loopInt);
+            interpreter.switchStatement(blockName, loopBlocks, spriteController);
         }
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
@@ -361,7 +360,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
             if (compiled == true) {
-                spriteController.addSpriteCode(blocks, 0);
+                //spriteController.addSpriteCode(blocks, 0);
+                interpreter.loadBlocks(blocks);
             }
             playButton.setDisable(false);
 
@@ -489,6 +489,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "ROTATE":
                 case "MOVE":
                     block = blocks.remove();
+                    blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
@@ -586,12 +587,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         if (blockName.equals("ROTATE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
 
             String dropDown[] = {"90", "180", "270"};
-            ComboBox comboBox = createComboBox(dropDown);
+            comboBox = createComboBox(dropDown);
             hBox.getChildren().add(comboBox);
 
 
@@ -599,6 +604,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("MOVE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
@@ -638,14 +647,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 return hBox;
             }
 
-        } else if (blockName.equals("FLIP") || blockName.equals("CONDITION")) {
+        } else if (blockName.equals("FLIP") ) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+            return hBox;
+
+        } else if(blockName.equals("CONDITION")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
             return hBox;
 
-        } else if (blockName.equals("PRESSES")) {
+        }else if (blockName.equals("PRESSES")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -945,21 +965,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StageInitializer.emptyLoopBlocks =   new LinkedList<>(emptyLoopBlocks);
     }
 
-    public static Sprite getLoopSprite() {
-        return loopSprite;
-    }
 
-    public static void setLoopSprite(Sprite loopSprite) {
-        StageInitializer.loopSprite = loopSprite;
-    }
 
-    public static int getLoopInt() {
-        return loopInt;
-    }
-
-    public static void setLoopInt(int loopInt) {
-        StageInitializer.loopInt = loopInt;
-    }
 
     public static String getAbsolutePath() {
         File path = new File("");
