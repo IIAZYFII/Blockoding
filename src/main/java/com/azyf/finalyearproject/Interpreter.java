@@ -18,7 +18,7 @@ public class Interpreter {
     private double mouseY;
     private boolean terminated = false;
     private boolean notActive = false;
-    private Queue<Block> blocks = new LinkedList<>();
+    private Queue<Block> storedBlocks = new LinkedList<>();
 
 
 
@@ -94,6 +94,7 @@ public class Interpreter {
         inputBoxes = inputBxs;
         mouseX = xMouse;
         mouseY = yMouse;
+        Queue<Block> blocks = new LinkedList<>(storedBlocks);
             while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
@@ -483,8 +484,8 @@ public class Interpreter {
         this.inputBoxValueIndex = inputBoxValueIndex;
     }
 
-    public void loadBlocks(Queue<Block> blocks) {
-        this.blocks = blocks;
+    public void loadBlocks(Queue<Block> storedBlocks) {
+        this.storedBlocks = storedBlocks;
     }
 
     private Pair<Sprite, Integer> getSprite(SpriteController spriteController) {
