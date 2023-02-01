@@ -67,7 +67,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private Image OCRButtonImg;
     private Image defaultSprite;
-    private ImageView defaultSpriteViewer = new ImageView();
     private SpriteController spriteController = new SpriteController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
@@ -273,20 +272,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
         String pathDS = getAbsolutePath() + "/Assets/Images/Sprites/default.png";
         defaultSprite = new Image(pathDS);
+        ImageView defaultSpriteViewer = new ImageView();
         defaultSpriteViewer.setImage(defaultSprite);
-        VBox spriteContainer = new VBox();
-        Label spriteLabel = new Label("default");
 
-
-        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
-
-
-        spriteContainer.getChildren().add(defaultSpriteViewer);
-        spriteContainer.getChildren().add(spriteLabel);
-        spriteContainer.setAlignment(Pos.CENTER);
-
-
-        spriteBox.getChildren().add(spriteContainer);
 
 
         rightPane.getChildren().add(spriteBox);
@@ -360,7 +348,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
             if (compiled == true) {
-                //spriteController.addSpriteCode(blocks, 0);
                 interpreter.loadBlocks(blocks);
             }
             playButton.setDisable(false);
@@ -386,10 +373,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     File file = fileChooser.showOpenDialog(stage);
                     if (file != null) {
                         Image createdSprite = new Image(file.getPath());
+                        String tmpSpriteName = file.getName();
+                        String spriteName = tmpSpriteName.substring(0, tmpSpriteName.lastIndexOf('.'));
+                        System.out.println(spriteName);
                         ImageView imageView = new ImageView();
                         imageView.setImage(createdSprite);
-                        spriteBox.getChildren().add(imageView);
-                        //dragAndDrop(imageView, createdSprite, programBox);
+                        VBox tmpSpriteContainer = createSpriteContainer(spriteName, imageView);
+                        spriteBox.getChildren().add(tmpSpriteContainer);
+
+                        dragAndDrop(imageView, createdSprite, spriteName);
                     }
 
                 });
@@ -455,9 +447,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawSettings();
         });
 
-
+        VBox spriteContainer = createSpriteContainer("default", defaultSpriteViewer);
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
         String spriteName = spriteLabelName.getText();
+        spriteBox.getChildren().add(spriteContainer);
         dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
         return root;
 
@@ -987,7 +980,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StageInitializer.emptyLoopBlocks =   new LinkedList<>(emptyLoopBlocks);
     }
 
+    private VBox createSpriteContainer(String spriteName, ImageView spriteViewer) {
+        VBox spriteContainer = new VBox();
+        Label spriteLabel = new Label(spriteName);
 
+        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
+
+
+        spriteContainer.getChildren().add(spriteViewer);
+        spriteContainer.getChildren().add(spriteLabel);
+        spriteContainer.setAlignment(Pos.CENTER);
+
+
+
+
+        return spriteContainer;
+    }
 
 
     public static String getAbsolutePath() {
