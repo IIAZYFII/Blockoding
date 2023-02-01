@@ -178,13 +178,16 @@ public class Interpreter {
                 break;
             case "ROTATE":
                 blocks.remove();
+                System.out.println(inputBoxesValues.size());
                 String orientation = blocks.remove().getName();
+                blocks.remove();
 
                 spriteIntegerPair = getSprite(spriteController);
                 tmpSprite = spriteIntegerPair.getKey();
                 index = spriteIntegerPair.getValue();
 
-                inputBoxAsString = inputBoxesValues.get(0);
+
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 amount = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
