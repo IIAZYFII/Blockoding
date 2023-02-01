@@ -43,15 +43,17 @@ public class SpriteController {
         return -1;
     }
 
-    public void changeSpriteName(String newSpriteName, String oldSpriteName) {
+    public boolean changeSpriteName(String newSpriteName, String oldSpriteName) {
         for(int i = 0; i < sprites.size(); i++) {
             Sprite sprite = sprites.get(i);
             if(sprite.getSpriteName().equals(newSpriteName)) {
                 throw new UnsupportedOperationException();
             } else if (sprite.getSpriteName().equals(oldSpriteName)) {
                 sprites.get(i).setSpriteName(newSpriteName);
+                return true;
             }
         }
+        return false;
     }
 
 

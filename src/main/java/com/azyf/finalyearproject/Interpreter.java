@@ -119,7 +119,7 @@ public class Interpreter {
                 block = blocks.remove();
                 direction = block.getName();
                 blocks.remove();
-                
+
                 spriteIntegerPair = getSprite(spriteController);
                 tmpSprite = spriteIntegerPair.getKey();
                 index = spriteIntegerPair.getValue();

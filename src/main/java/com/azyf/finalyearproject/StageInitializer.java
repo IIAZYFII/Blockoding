@@ -275,7 +275,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         defaultSprite = new Image(pathDS);
         defaultSpriteViewer.setImage(defaultSprite);
         VBox spriteContainer = new VBox();
-        Label spriteLabel = new Label("Default Sprite");
+        Label spriteLabel = new Label("default");
 
 
         spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
@@ -863,9 +863,19 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 System.out.println("detected enter");
 
                 Label newSpriteLabel = new Label(inputText);
-                spriteContainer.getChildren().remove(1);
-                spriteContainer.getChildren().add(newSpriteLabel);
-                newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
+                String oldName = currentLabel.getText();
+                System.out.println(oldName);
+
+                boolean changedName =
+                        spriteController.changeSpriteName(inputText, oldName);
+                if(changedName == true) {
+                    spriteContainer.getChildren().remove(1);
+                    spriteContainer.getChildren().add(newSpriteLabel);
+                    newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
+
+                }
+
+
             }
             event.consume();
         });
