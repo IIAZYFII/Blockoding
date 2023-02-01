@@ -488,15 +488,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     break;
                 case "ROTATE":
                 case "MOVE":
+                    blocks.remove();
                     block = blocks.remove();
                     blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
-                    blocks.remove();
+                    break;
+
+                case "CONDITION":
+                    block = blocks.remove();
+                    secondBlockName = block.getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
+                    programBox.getChildren().add(hBox);
                     break;
                 case "FLIP":
-                case "CONDITION":
+                    blocks.remove();
                     block = blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
@@ -605,6 +612,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
 
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
 
 
             stackPane = createStackPane(secondBlockName, red, green, blue);

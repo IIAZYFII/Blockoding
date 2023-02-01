@@ -106,7 +106,7 @@ public class ImageProcessor {
         } else if (direction.equals("HORIZONTAL")) {
             Core.flip(src, newSprite, 0);
         }
-
+        System.out.println(sprite.getUrl());
         Imgcodecs.imwrite(sprite.getUrl(), newSprite);
         sprite = new Image(sprite.getUrl());
         return sprite;

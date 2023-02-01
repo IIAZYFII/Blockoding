@@ -137,6 +137,7 @@ public class Interpreter {
                 System.out.println("Program starting");
                 break;
             case "FLIP":
+                blocks.remove();
                 direction = blocks.remove().getName();
                 spriteIntegerPair = getSprite(spriteController);
                 tmpSprite = spriteIntegerPair.getKey();
@@ -176,16 +177,21 @@ public class Interpreter {
                 StageInitializer.setCurrentKey(null);
                 break;
             case "ROTATE":
-
+                blocks.remove();
                 String orientation = blocks.remove().getName();
-                inputBoxAsString = inputBoxesValues.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
+
                 spriteIntegerPair = getSprite(spriteController);
                 tmpSprite = spriteIntegerPair.getKey();
-                tmpSprite = rotateSprite(tmpSprite, orientation, amount);
                 index = spriteIntegerPair.getValue();
-                spriteController.setSprite(index, tmpSprite);
+
+                inputBoxAsString = inputBoxesValues.get(0);
+                amount = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
+
+                tmpSprite = rotateSprite(tmpSprite, orientation, amount);
+
+                spriteController.setSprite(index, tmpSprite);
+
                 StageInitializer.setCurrentKey(null);
                 break;
             case "PAUSE":
@@ -495,13 +501,13 @@ public class Interpreter {
         Sprite tmpSprite = null;
         boolean found = false;
         int count = -1;
-        while(found == false) {
+
+        while(!found) {
             count++;
             if(spriteController.getSprite(count).getSpriteName().equals(spriteName)) {
                 tmpSprite = spriteController.getSprite(count);
                 found = true;
             }
-
         }
         Pair<Sprite, Integer> spriteIntegerPair = new Pair<>(tmpSprite, count);
         return spriteIntegerPair;
