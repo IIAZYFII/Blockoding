@@ -115,17 +115,21 @@ public class Interpreter {
         Pair<Sprite, Integer> spriteIntegerPair = null;
         switch (blockName) {
             case "MOVE":
-                block = blocks.remove();
                 blocks.remove();
+                block = blocks.remove();
                 direction = block.getName();
+                blocks.remove();
+                
+                spriteIntegerPair = getSprite(spriteController);
+                tmpSprite = spriteIntegerPair.getKey();
+                index = spriteIntegerPair.getValue();
+
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 String steps = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
 
-                spriteIntegerPair = getSprite(spriteController);
-                tmpSprite = spriteIntegerPair.getKey();
-                index = spriteIntegerPair.getValue();
+
                 tmpSprite = moveSprite(tmpSprite, direction, steps);
                 spriteController.setSprite(index, tmpSprite);
                 StageInitializer.setCurrentKey(null);

@@ -616,11 +616,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
             hBox.getChildren().add(comboBox);
 
-
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
-            TextField textField = createTextField();
+          TextField textField = createTextField();
             hBox.getChildren().add(textField);
             return hBox;
 
