@@ -582,6 +582,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
                     programBox.getChildren().add(hBox);
                     break;
+                case "SET":
+                    blocks.remove();
+                    secondBlockName = blocks.remove().getName();
+                    thirdBlockName = blocks.remove().getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
+                    programBox.getChildren().add(hBox);
+                    break;
                 default:
                     System.out.println("test");
                     break;
@@ -740,10 +747,29 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 hBox.getChildren().add(comboBox);
 
             }
+
             stackPane = createStackPane(thirdBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
             return hBox;
+        } else if (blockName.equals("SET")) {
+            hBox = new HBox();
+            ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+            hBox.getChildren().add(comboBox);
+
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+
+            if(thirdBlockName.equals("NUMBER")) {
+                TextField textField = createTextField();
+                hBox.getChildren().add(textField);
+            } else {
+                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                hBox.getChildren().add(comboBox);
+            }
+
+            return hBox;
+
 
         }
 
