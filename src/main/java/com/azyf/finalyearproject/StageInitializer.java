@@ -65,6 +65,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image stopButtonImg;
     private Image compileButtonImg;
     private Image variableButtonImg;
+    private VariableManager variableManager = new VariableManager();
+
 
     private Image OCRButtonImg;
     private Image defaultSprite;
@@ -835,7 +837,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawVariableManager(){
         Stage variableManagerStage = new Stage();
         variableManagerStage.setResizable(false);
-        BorderPane variableManagerRoot = drawBaseVariableManager();
+        BorderPane variableManagerRoot = drawBaseVariableManager(variableManagerStage);
 
 
         Scene scene = new Scene(variableManagerRoot, 350, 350);
@@ -843,7 +845,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         variableManagerStage.showAndWait();
     }
 
-    private BorderPane drawBaseVariableManager() {
+    private BorderPane drawBaseVariableManager(Stage variableManagerStage) {
         AtomicReference<BorderPane> variableManagerRoot  = new AtomicReference<>(new BorderPane());
         variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
 
@@ -858,22 +860,40 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             variableName.setMinSize(100,50);
             content.getChildren().add(variableName);
 
+
             TextField enterVariableName = new TextField();
             enterVariableName.setMinSize(200,50);
             content.getChildren().add(enterVariableName);
+
+            Label initialValue = new Label();
+            initialValue.setText("initial Value");
+            content.getChildren().add(initialValue);
+
+            TextField enterInitialValue = new TextField();
+            enterInitialValue.setMinSize(200,50);
+            content.getChildren().add(enterInitialValue);
+
 
             HBox buttonsBox = new HBox();
             Button cancelButton = new Button();
             cancelButton.setText("Cancel");
             cancelButton.setMinSize(75,25);
             cancelButton.setOnAction(event -> {
-                variableManagerRoot.set(drawBaseVariableManager());
                 event.consume();
             });
             buttonsBox.getChildren().add(cancelButton);
 
             Button confirmButton = new Button();
             confirmButton.setText("OK");
+
+            confirmButton.setOnAction(event -> {
+                   String name =  enterVariableName.getText();
+                   int variableValue = Integer.parseInt(enterInitialValue.getText());
+                   Variable variable = new Variable(variableValue, name);
+                   System.out.println("Added Variable");
+                   variableManager.addVariable(variable);
+                   variableManagerStage.close();
+            });
             confirmButton.setMinSize(50,25);
 
 
