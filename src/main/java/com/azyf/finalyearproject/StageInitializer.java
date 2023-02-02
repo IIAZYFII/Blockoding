@@ -61,6 +61,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private ImageProcessor imageProcessor = new ImageProcessor();
     private HashMap<String, String> inputBoxesValues = new HashMap<>();
     private ArrayList<String> inputBoxes = new ArrayList<>();
+    private HBox variableBox;
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image compileButtonImg;
@@ -281,7 +282,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         rightPane.getChildren().add(spriteBox);
-        HBox variableBox = new HBox();
+        variableBox = new HBox();
         Text variableText = new Text();
         variableText.setText("Variables");
         variableBox.getChildren().add(variableText);
@@ -892,6 +893,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                    Variable variable = new Variable(variableValue, name);
                    System.out.println("Added Variable");
                    variableManager.addVariable(variable);
+                    addVariableToCanvas(variable);
                    variableManagerStage.close();
             });
             confirmButton.setMinSize(50,25);
@@ -1102,8 +1104,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return systemPath;
     }
     private void addVariableToCanvas(Variable variable) {
-        String content = new String(variable.getName() +  " : " + variable.getValue());
+        String content = (variable.getName() +  " : " + variable.getValue());
         StackPane stackPane =  createStackPane(content, 255, 84, 56);
+        variableBox.getChildren().add(stackPane);
 
     }
 }
