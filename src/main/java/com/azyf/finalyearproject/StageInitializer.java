@@ -127,7 +127,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String blockName = "";
         while (interpreter.isTerminated() == false) {
             blockName = loopBlocks.remove().getName();
-            interpreter.switchStatement(blockName, loopBlocks, spriteController);
+            interpreter.switchStatement(blockName, loopBlocks, spriteController, variableManager);
         }
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
@@ -436,7 +436,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             playButton.setDisable(true);
             stopButton.setDisable(false);
             if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues, inputBoxes);
+                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
+                        inputBoxes, variableManager);
                 drawScene();
             }
 
