@@ -281,13 +281,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         rightPane.getChildren().add(spriteBox);
-        HBox stageBox = new HBox();
-        Text stageText = new Text();
-        stageText.setText("stage");
-        stageBox.getChildren().add(stageText);
-        stageBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        stageBox.setPadding(new Insets(0, 0, 200, 350));
-        rightPane.getChildren().add(stageBox);
+        HBox variableBox = new HBox();
+        Text variableText = new Text();
+        variableText.setText("Variables");
+        variableBox.getChildren().add(variableText);
+        variableBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        variableBox.setPadding(new Insets(0, 0, 200, 350));
+        rightPane.getChildren().add(variableBox);
         root.setRight(rightPane);
 
         VBox leftPane = new VBox();
@@ -1100,5 +1100,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String systemPath = path.getAbsolutePath();
         System.out.println(systemPath);
         return systemPath;
+    }
+    private void addVariableToCanvas(Variable variable) {
+        String content = new String(variable.getName() +  " : " + variable.getValue());
+        StackPane stackPane =  createStackPane(content, 255, 84, 56);
+
     }
 }
