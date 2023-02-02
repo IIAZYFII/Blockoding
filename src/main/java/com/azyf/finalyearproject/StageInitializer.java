@@ -64,6 +64,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image compileButtonImg;
+    private Image variableButtonImg;
 
     private Image OCRButtonImg;
     private Image defaultSprite;
@@ -341,6 +342,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         compileButton.setDisable(true);
         topBar.getChildren().add(compileButton);
+
         compileButton.setOnAction(e -> {
             Queue<Block> blocks = interpreter.textToBlocks(text.get());
             compiled = interpreter.checkSyntax(blocks);
@@ -351,8 +353,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 interpreter.loadBlocks(blocks);
             }
             playButton.setDisable(false);
-
+            e.consume();
         });
+
+
+        Button variableButton = new Button();
+        //String pathVariableButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
+        //variableButtonImg = new Image(pathCompileButton);
+        //ImageView variableButtonView = new ImageView(compileButtonImg);
+        //comButtonView.setFitHeight(50);
+        //compileButtonView.setFitWidth(50);
+        //compileButton.setGraphic(compileButtonView);
+
+        variableButton.setOnAction(e-> {
+            drawVariableManager();
+            e.consume();
+        });
+
+        topBar.getChildren().add(variableButton);
+
 
 
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
@@ -781,8 +800,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawSettings() {
         Stage settingStage = new Stage();
         HBox hBox = new HBox();
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #FF5438;");
+        BorderPane setttingsRoot = new BorderPane();
+        setttingsRoot.setStyle("-fx-background-color: #FF5438;");
         Button linkAppButton = new Button();
         linkAppButton.setMinSize(100, 100);
         linkAppButton.setText("Link App");
@@ -805,12 +824,70 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         hBox.setPadding(new Insets(100, 0, 0, 120));
         hBox.getChildren().add(linkAppButton);
-        root.getChildren().add(hBox);
+        setttingsRoot.getChildren().add(hBox);
 
         settingStage.setResizable(false);
-        Scene scene = new Scene(root, 350, 350);
+        Scene scene = new Scene(setttingsRoot, 350, 350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
+    }
+
+    private void drawVariableManager(){
+        Stage variableManagerStage = new Stage();
+        variableManagerStage.setResizable(false);
+        BorderPane variableManagerRoot = drawBaseVariableManager();
+
+
+        Scene scene = new Scene(variableManagerRoot, 350, 350);
+        variableManagerStage.setScene(scene);
+        variableManagerStage.showAndWait();
+    }
+
+    private BorderPane drawBaseVariableManager() {
+        AtomicReference<BorderPane> variableManagerRoot  = new AtomicReference<>(new BorderPane());
+        variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
+
+        VBox content = new VBox();
+        Button create = new Button();
+        create.setText("Create Variable");
+        create.setMinSize(200,50);
+        create.setOnAction(e-> {
+            content.getChildren().clear();
+            Label variableName = new Label();
+            variableName.setText("Name of Variable");
+            variableName.setMinSize(100,50);
+            content.getChildren().add(variableName);
+
+            TextField enterVariableName = new TextField();
+            enterVariableName.setMinSize(200,50);
+            content.getChildren().add(enterVariableName);
+
+            HBox buttonsBox = new HBox();
+            Button cancelButton = new Button();
+            cancelButton.setText("Cancel");
+            cancelButton.setMinSize(75,25);
+            cancelButton.setOnAction(event -> {
+                variableManagerRoot.set(drawBaseVariableManager());
+                event.consume();
+            });
+            buttonsBox.getChildren().add(cancelButton);
+
+            Button confirmButton = new Button();
+            confirmButton.setText("OK");
+            confirmButton.setMinSize(50,25);
+
+
+            buttonsBox.getChildren().add(confirmButton);
+
+            content.getChildren().add(buttonsBox);
+
+
+            e.consume();
+        });
+        content.getChildren().add(create);
+        content.setPadding(new Insets(0,0,0,0));
+        variableManagerRoot.get().getChildren().add(content);
+        return variableManagerRoot.get();
     }
 
     private void generateQRCode() throws WriterException, IOException {
