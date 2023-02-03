@@ -61,13 +61,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private ImageProcessor imageProcessor = new ImageProcessor();
     private HashMap<String, String> inputBoxesValues = new HashMap<>();
     private ArrayList<String> inputBoxes = new ArrayList<>();
+    private HBox variableBox;
     private Image playButtonImg;
     private Image stopButtonImg;
     private Image compileButtonImg;
+    private Image variableButtonImg;
+    private VariableManager variableManager = new VariableManager();
+
 
     private Image OCRButtonImg;
     private Image defaultSprite;
-    private ImageView defaultSpriteViewer = new ImageView();
     private SpriteController spriteController = new SpriteController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
@@ -80,8 +83,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
 
-    private static Sprite loopSprite;
-    private static int loopInt;
+
     private static KeyCode currentKey;
     private static int frameCounter = 0;
 
@@ -92,6 +94,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     @Override
     public void onApplicationEvent(BlockApplication.StageReadyEvent event) {
+
         frameTimeline = new Timeline(new KeyFrame(Duration.millis(16.67), e -> frame()));
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
@@ -107,7 +110,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         stage.show();
         root.requestFocus();
         try {
-            interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
+            interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -124,7 +127,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String blockName = "";
         while (interpreter.isTerminated() == false) {
             blockName = loopBlocks.remove().getName();
-            interpreter.switchStatement(blockName, loopBlocks, loopSprite, spriteController, loopInt);
+            interpreter.switchStatement(blockName, loopBlocks, spriteController);
         }
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
@@ -271,31 +274,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        defaultSprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
+        String pathDS = getAbsolutePath() + "/Assets/Images/Sprites/default.png";
+        defaultSprite = new Image(pathDS);
+        ImageView defaultSpriteViewer = new ImageView();
         defaultSpriteViewer.setImage(defaultSprite);
-        VBox spriteContainer = new VBox();
-        Label spriteLabel = new Label("Default Sprite");
 
-
-        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
-
-
-        spriteContainer.getChildren().add(defaultSpriteViewer);
-        spriteContainer.getChildren().add(spriteLabel);
-        spriteContainer.setAlignment(Pos.CENTER);
-
-
-        spriteBox.getChildren().add(spriteContainer);
 
 
         rightPane.getChildren().add(spriteBox);
-        HBox stageBox = new HBox();
-        Text stageText = new Text();
-        stageText.setText("stage");
-        stageBox.getChildren().add(stageText);
-        stageBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        stageBox.setPadding(new Insets(0, 0, 200, 350));
-        rightPane.getChildren().add(stageBox);
+        variableBox = new HBox();
+        Text variableText = new Text();
+        variableText.setText("Variables");
+        variableBox.getChildren().add(variableText);
+        variableBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        variableBox.setPadding(new Insets(0, 0, 200, 350));
+        rightPane.getChildren().add(variableBox);
         root.setRight(rightPane);
 
         VBox leftPane = new VBox();
@@ -317,14 +310,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         Button compileButton = new Button();
-        compileButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\CompileButton.png");
+        String pathCompileButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
+        compileButtonImg = new Image(pathCompileButton);
         ImageView compileButtonView = new ImageView(compileButtonImg);
         compileButtonView.setFitHeight(50);
         compileButtonView.setFitWidth(50);
         compileButton.setGraphic(compileButtonView);
 
         Button OCRButton = new Button();
-        OCRButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\OCRButton.png");
+        String pathOCRButton = getAbsolutePath() + "/Assets/Images/OCRButton.png";
+        OCRButtonImg = new Image(pathOCRButton);
         ImageView OCRButtonView = new ImageView(OCRButtonImg);
         OCRButtonView.setFitHeight(50);
         OCRButtonView.setFitWidth(50);
@@ -333,7 +328,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
             //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
-            File image = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\img.png");
+            String pathTempIMG = StageInitializer.getAbsolutePath() + "/Cache/img.png";
+            File image = new File(pathTempIMG);
             try {
                 image = imageProcessor.processImage(image);
                 text.set(textExtractor.extractText(image));
@@ -349,6 +345,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         compileButton.setDisable(true);
         topBar.getChildren().add(compileButton);
+
         compileButton.setOnAction(e -> {
             Queue<Block> blocks = interpreter.textToBlocks(text.get());
             compiled = interpreter.checkSyntax(blocks);
@@ -356,11 +353,28 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawProgramBox(programBlock);
             System.out.println("-----------------------------------------");
             if (compiled == true) {
-                spriteController.addSpriteCode(blocks, 0);
+                interpreter.loadBlocks(blocks);
             }
             playButton.setDisable(false);
-
+            e.consume();
         });
+
+
+        Button variableButton = new Button();
+        //String pathVariableButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
+        //variableButtonImg = new Image(pathCompileButton);
+        //ImageView variableButtonView = new ImageView(compileButtonImg);
+        //comButtonView.setFitHeight(50);
+        //compileButtonView.setFitWidth(50);
+        //compileButton.setGraphic(compileButtonView);
+
+        variableButton.setOnAction(e-> {
+            drawVariableManager();
+            e.consume();
+        });
+
+        topBar.getChildren().add(variableButton);
+
 
 
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
@@ -381,10 +395,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     File file = fileChooser.showOpenDialog(stage);
                     if (file != null) {
                         Image createdSprite = new Image(file.getPath());
+                        String tmpSpriteName = file.getName();
+                        String spriteName = tmpSpriteName.substring(0, tmpSpriteName.lastIndexOf('.'));
+                        System.out.println(spriteName);
                         ImageView imageView = new ImageView();
                         imageView.setImage(createdSprite);
-                        spriteBox.getChildren().add(imageView);
-                        //dragAndDrop(imageView, createdSprite, programBox);
+                        VBox tmpSpriteContainer = createSpriteContainer(spriteName, imageView);
+                        spriteBox.getChildren().add(tmpSpriteContainer);
+
+                        dragAndDrop(imageView, createdSprite, spriteName);
                     }
 
                 });
@@ -405,7 +424,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         playButton.setDisable(true);
-        playButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Playbutton.png");
+        String pathPlayButton = getAbsolutePath() + "/Assets/Images/PlayButton.png";
+        playButtonImg = new Image(pathPlayButton);
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
         topBar.getChildren().add(playButton);
@@ -423,7 +443,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         stopButton.setDisable(true);
-        stopButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Stopbutton.png");
+        String pathStopButton = getAbsolutePath() + "/Assets/Images/StopButton.png";
+        stopButtonImg = new Image(pathStopButton);
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
         topBar.getChildren().add(stopButton);
@@ -435,7 +456,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         Button settingButton = new Button();
-        Image settingButtonImg = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\SettingsButton.png");
+        String pathSettingButton = getAbsolutePath() + "/Assets/Images/SettingsButton.png";
+        Image settingButtonImg = new Image(pathSettingButton);
         ImageView settingButtonView = new ImageView(settingButtonImg);
         settingButtonView.setFitHeight(50);
         settingButtonView.setFitWidth(50);
@@ -447,9 +469,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawSettings();
         });
 
-
+        VBox spriteContainer = createSpriteContainer("default", defaultSpriteViewer);
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
         String spriteName = spriteLabelName.getText();
+        spriteBox.getChildren().add(spriteContainer);
         dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
         return root;
 
@@ -480,14 +503,22 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     break;
                 case "ROTATE":
                 case "MOVE":
+                    blocks.remove();
+                    block = blocks.remove();
+                    blocks.remove();
+                    secondBlockName = block.getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
+                    programBox.getChildren().add(hBox);
+                    break;
+
+                case "CONDITION":
                     block = blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
                     programBox.getChildren().add(hBox);
-                    blocks.remove();
                     break;
                 case "FLIP":
-                case "CONDITION":
+                    blocks.remove();
                     block = blocks.remove();
                     secondBlockName = block.getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
@@ -501,8 +532,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "TELPORT":
                     blockName = "TELPORT";
                     blocks.remove();
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
+                    blocks.remove();
+                    secondBlockName = blocks.remove().getName();
 
 
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
@@ -551,13 +582,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
                     programBox.getChildren().add(hBox);
                     break;
-                case "NOT":
-                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
-                    blockName = blocks.remove().getName();
+                case "SET":
                     blocks.remove();
                     secondBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
-                    hBox.getChildren().add(0,stackPane);
+                    thirdBlockName = blocks.remove().getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
                     programBox.getChildren().add(hBox);
                     break;
                 default:
@@ -587,12 +616,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         if (blockName.equals("ROTATE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
 
             String dropDown[] = {"90", "180", "270"};
-            ComboBox comboBox = createComboBox(dropDown);
+            comboBox = createComboBox(dropDown);
             hBox.getChildren().add(comboBox);
 
 
@@ -600,16 +633,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("MOVE")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
-            TextField textField = createTextField();
+          TextField textField = createTextField();
             hBox.getChildren().add(textField);
             return hBox;
 
         } else if (blockName.equals("TELPORT")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+            stackPane = createStackPane("TO", red, green, blue);
+            hBox.getChildren().add(stackPane);
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
             if (secondBlockName.equals("X")) {
                 stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
@@ -630,7 +672,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
                 String options[] = {"no options"};
-                ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(options));
+                comboBox = new ComboBox(FXCollections.observableArrayList(options));
                 hBox.getChildren().add(comboBox);
                 return hBox;
             } else if (secondBlockName.equals("RANDOM")) {
@@ -639,14 +681,25 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 return hBox;
             }
 
-        } else if (blockName.equals("FLIP") || blockName.equals("CONDITION")) {
+        } else if (blockName.equals("FLIP") ) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
+            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
+            hBox.getChildren().add(comboBox);
+
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+            return hBox;
+
+        } else if(blockName.equals("CONDITION")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
             return hBox;
 
-        } else if (blockName.equals("PRESSES")) {
+        }else if (blockName.equals("PRESSES")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
@@ -694,10 +747,29 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 hBox.getChildren().add(comboBox);
 
             }
+
             stackPane = createStackPane(thirdBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
             return hBox;
+        } else if (blockName.equals("SET")) {
+            hBox = new HBox();
+            ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+            hBox.getChildren().add(comboBox);
+
+            stackPane = createStackPane(secondBlockName, red, green, blue);
+            hBox.getChildren().add(stackPane);
+
+            if(thirdBlockName.equals("NUMBER")) {
+                TextField textField = createTextField();
+                hBox.getChildren().add(textField);
+            } else {
+                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                hBox.getChildren().add(comboBox);
+            }
+
+            return hBox;
+
 
         }
 
@@ -757,8 +829,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawSettings() {
         Stage settingStage = new Stage();
         HBox hBox = new HBox();
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #FF5438;");
+        BorderPane setttingsRoot = new BorderPane();
+        setttingsRoot.setStyle("-fx-background-color: #FF5438;");
         Button linkAppButton = new Button();
         linkAppButton.setMinSize(100, 100);
         linkAppButton.setText("Link App");
@@ -766,7 +838,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 generateQRCode();
                 hBox.getChildren().clear();
-                Image qrCode = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
+                Image qrCode = new Image("Cache\\qrcode.png");
                 ImageView qrCodeViewer = new ImageView(qrCode);
                 qrCodeViewer.setFitHeight(120);
                 qrCodeViewer.setFitWidth(120);
@@ -781,12 +853,89 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         hBox.setPadding(new Insets(100, 0, 0, 120));
         hBox.getChildren().add(linkAppButton);
-        root.getChildren().add(hBox);
+        setttingsRoot.getChildren().add(hBox);
 
         settingStage.setResizable(false);
-        Scene scene = new Scene(root, 350, 350);
+        Scene scene = new Scene(setttingsRoot, 350, 350);
         settingStage.setScene(scene);
         settingStage.showAndWait();
+    }
+
+    private void drawVariableManager(){
+        Stage variableManagerStage = new Stage();
+        variableManagerStage.setResizable(false);
+        BorderPane variableManagerRoot = drawBaseVariableManager(variableManagerStage);
+
+
+        Scene scene = new Scene(variableManagerRoot, 350, 350);
+        variableManagerStage.setScene(scene);
+        variableManagerStage.showAndWait();
+    }
+
+    private BorderPane drawBaseVariableManager(Stage variableManagerStage) {
+        AtomicReference<BorderPane> variableManagerRoot  = new AtomicReference<>(new BorderPane());
+        variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
+
+        VBox content = new VBox();
+        Button create = new Button();
+        create.setText("Create Variable");
+        create.setMinSize(200,50);
+        create.setOnAction(e-> {
+            content.getChildren().clear();
+            Label variableName = new Label();
+            variableName.setText("Name of Variable");
+            variableName.setMinSize(100,50);
+            content.getChildren().add(variableName);
+
+
+            TextField enterVariableName = new TextField();
+            enterVariableName.setMinSize(200,50);
+            content.getChildren().add(enterVariableName);
+
+            Label initialValue = new Label();
+            initialValue.setText("initial Value");
+            content.getChildren().add(initialValue);
+
+            TextField enterInitialValue = new TextField();
+            enterInitialValue.setMinSize(200,50);
+            content.getChildren().add(enterInitialValue);
+
+
+            HBox buttonsBox = new HBox();
+            Button cancelButton = new Button();
+            cancelButton.setText("Cancel");
+            cancelButton.setMinSize(75,25);
+            cancelButton.setOnAction(event -> {
+                event.consume();
+            });
+            buttonsBox.getChildren().add(cancelButton);
+
+            Button confirmButton = new Button();
+            confirmButton.setText("OK");
+
+            confirmButton.setOnAction(event -> {
+                   String name =  enterVariableName.getText();
+                   int variableValue = Integer.parseInt(enterInitialValue.getText());
+                   Variable variable = new Variable(variableValue, name);
+                   System.out.println("Added Variable");
+                   variableManager.addVariable(variable);
+                    addVariableToCanvas(variable);
+                   variableManagerStage.close();
+            });
+            confirmButton.setMinSize(50,25);
+
+
+            buttonsBox.getChildren().add(confirmButton);
+
+            content.getChildren().add(buttonsBox);
+
+
+            e.consume();
+        });
+        content.getChildren().add(create);
+        content.setPadding(new Insets(0,0,0,0));
+        variableManagerRoot.get().getChildren().add(content);
+        return variableManagerRoot.get();
     }
 
     private void generateQRCode() throws WriterException, IOException {
@@ -808,7 +957,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             }
         }
-        File saveImage = new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\qrcode.png");
+        File saveImage = new File("Cache\\qrcode.png");
         BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
         ImageIO.write(image, "png", saveImage);
     }
@@ -832,9 +981,19 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 System.out.println("detected enter");
 
                 Label newSpriteLabel = new Label(inputText);
-                spriteContainer.getChildren().remove(1);
-                spriteContainer.getChildren().add(newSpriteLabel);
-                newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
+                String oldName = currentLabel.getText();
+                System.out.println(oldName);
+
+                boolean changedName =
+                        spriteController.changeSpriteName(inputText, oldName);
+                if(changedName == true) {
+                    spriteContainer.getChildren().remove(1);
+                    spriteContainer.getChildren().add(newSpriteLabel);
+                    newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
+
+                }
+
+
             }
             event.consume();
         });
@@ -946,19 +1105,34 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StageInitializer.emptyLoopBlocks =   new LinkedList<>(emptyLoopBlocks);
     }
 
-    public static Sprite getLoopSprite() {
-        return loopSprite;
+    private VBox createSpriteContainer(String spriteName, ImageView spriteViewer) {
+        VBox spriteContainer = new VBox();
+        Label spriteLabel = new Label(spriteName);
+
+        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
+
+
+        spriteContainer.getChildren().add(spriteViewer);
+        spriteContainer.getChildren().add(spriteLabel);
+        spriteContainer.setAlignment(Pos.CENTER);
+
+
+
+
+        return spriteContainer;
     }
 
-    public static void setLoopSprite(Sprite loopSprite) {
-        StageInitializer.loopSprite = loopSprite;
-    }
 
-    public static int getLoopInt() {
-        return loopInt;
+    public static String getAbsolutePath() {
+        File path = new File("");
+        String systemPath = path.getAbsolutePath();
+        System.out.println(systemPath);
+        return systemPath;
     }
+    private void addVariableToCanvas(Variable variable) {
+        String content = (variable.getName() +  " : " + variable.getValue());
+        StackPane stackPane =  createStackPane(content, 255, 84, 56);
+        variableBox.getChildren().add(stackPane);
 
-    public static void setLoopInt(int loopInt) {
-        StageInitializer.loopInt = loopInt;
     }
 }

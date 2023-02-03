@@ -38,7 +38,6 @@ Loop Conditions
 Pressed Interactions
 Touches Interactions
 atXY Interactions
-Equals Interactions
 Change Visuals
 Outfit Visuals
 Scene Visuals
@@ -56,10 +55,10 @@ Less Maths
 Than Maths
 Equals Maths
 Variable Maths
+Set Variable
 Sprite Misc
 Visual Misc
 Interaction Misc
-Variable Misc
 Increase Sounds
 Decrease Sounds
 Volume Sounds

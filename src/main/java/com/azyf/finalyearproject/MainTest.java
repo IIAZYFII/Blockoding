@@ -2,6 +2,7 @@ package com.azyf.finalyearproject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -11,9 +12,8 @@ public class MainTest {
         //String localIP = InetAddress.getLocalHost().getHostAddress();
         //System.out.println(localIP);
         Interpreter interpreter = new Interpreter();
-        interpreter.loadTree(new File("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Blocks\\parseTree.txt"));
-        System.out.println(interpreter.getParseTree().root);
-        //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0));
-
+        interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
+         System.out.println(interpreter.getParseTree().root);
+        //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0))
     }
 }

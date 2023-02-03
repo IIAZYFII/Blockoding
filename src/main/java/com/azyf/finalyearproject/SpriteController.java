@@ -23,7 +23,7 @@ public class SpriteController {
     }
 
     public void addSprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
-        Sprite spriteObject = new Sprite("default",xPos, yPos,defaultOutfit);
+        Sprite spriteObject = new Sprite(spriteName,xPos, yPos,defaultOutfit);
         sprites.add(spriteObject);
 
     }
@@ -43,15 +43,17 @@ public class SpriteController {
         return -1;
     }
 
-    public void changeSpriteName(String newSpriteName, String oldSpriteName) {
+    public boolean changeSpriteName(String newSpriteName, String oldSpriteName) {
         for(int i = 0; i < sprites.size(); i++) {
             Sprite sprite = sprites.get(i);
             if(sprite.getSpriteName().equals(newSpriteName)) {
                 throw new UnsupportedOperationException();
             } else if (sprite.getSpriteName().equals(oldSpriteName)) {
                 sprites.get(i).setSpriteName(newSpriteName);
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -61,9 +63,7 @@ public class SpriteController {
         return  sprites.size();
     }
 
-    public  void addSpriteCode(Queue<Block> code, int i) {
-        sprites.get(i).addSpriteCode(code);
-    }
+
 
     public ArrayList<Sprite> getSprites() {
         return sprites;
@@ -75,10 +75,6 @@ public class SpriteController {
             spriteNames[i] = this.getSprite(i).getSpriteName();
         }
         return spriteNames;
-    }
-
-    public Queue<Block> getSpriteCodeBlocks(int i) {
-       return sprites.get(i).getCodeBlocks();
     }
 
 

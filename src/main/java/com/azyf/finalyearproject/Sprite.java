@@ -13,7 +13,6 @@ public class Sprite {
     private double xPos;
     private double yPos;
     private ArrayList<Image> spriteOutfits = new ArrayList<Image>();
-    private Queue<Block> codeBlocks = new LinkedList<>();
 
     public Sprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
         this.spriteName = spriteName;
@@ -50,15 +49,8 @@ public class Sprite {
         this.yPos = yPos;
     }
 
-    public void addSpriteCode(Queue<Block> codeBlocks) {
-        if (this.codeBlocks.size() == 0) {
-            this.codeBlocks = codeBlocks;
-        } else {
-            for (int i = 0; i < codeBlocks.size(); i++) {
-                this.codeBlocks.add(codeBlocks.remove());
-            }
-        }
-    }
+
+
 
     public void setFlip(boolean flip) {
         this.flip = flip;
@@ -68,9 +60,7 @@ public class Sprite {
         return flip;
     }
 
-    public  Queue<Block> getCodeBlocks() {
-        return codeBlocks;
-    }
+
 
     public Image getSpriteOutfit(int i) {
         return spriteOutfits.get(i);
