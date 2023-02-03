@@ -350,8 +350,7 @@ public class Interpreter {
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition);
                 System.out.println(StageInitializer.getCurrentKey());
-                if((keyCondition == StageInitializer.getCurrentKey() && notActive == false) ||
-                        !(keyCondition == StageInitializer.getCurrentKey() && notActive == true)) {
+                if((keyCondition == StageInitializer.getCurrentKey() && notActive == false) || ((!(keyCondition == StageInitializer.getCurrentKey())) && notActive == true)) {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
