@@ -88,7 +88,8 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
-    public void compileAndRun(SpriteController spriteController, double xMouse, double yMouse, HashMap<String, String> inputBxsVls, ArrayList<String> inputBxs) {
+    public void compileAndRun(SpriteController spriteController, double xMouse, double yMouse, HashMap<String, String> inputBxsVls,
+                              ArrayList<String> inputBxs, VariableManager variableManager) {
         inputBoxValueIndex = 0;
         inputBoxesValues = inputBxsVls;
         inputBoxes = inputBxs;
@@ -98,14 +99,14 @@ public class Interpreter {
             while(blocks.size() > 0) {
                 Block block = blocks.remove();
                 String blockName = block.getName();
-                spriteController = switchStatement(blockName, blocks, spriteController);
+                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
             }
         StageInitializer.playButton.setDisable(true);
         StageInitializer.stopButton.setDisable(false);
     }
 
 
-    public SpriteController switchStatement(String blockName, Queue<Block> blocks, SpriteController spriteController) {
+    public SpriteController switchStatement(String blockName, Queue<Block> blocks, SpriteController spriteController, VariableManager variableManager) {
         String direction = "";
         String inputBoxAsString = "";
         String amount = "";
@@ -211,7 +212,7 @@ public class Interpreter {
             case "WHENEVER":
             case "AND":
             case "OR":
-               spriteController =  wheneverStatement(blocks, spriteController);
+               spriteController =  wheneverStatement(blocks, spriteController, variableManager);
                break;
             case "CONDITION":
                 blocks.remove();
@@ -227,6 +228,23 @@ public class Interpreter {
             case "TERMINATE":
                 System.out.println("Reached Terminate");
                 terminated = true;
+                break;
+            case "SET":
+                blocks.remove();
+
+               Pair<Variable, Integer> variableIntegerPair = getVariable(variableManager);
+               Variable tmpVariable = variableIntegerPair.getKey();
+                index = variableIntegerPair.getValue();
+
+                blocks.remove();
+                blocks.remove();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                amount = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+
+                tmpVariable.setValue(Integer.parseInt(amount));
+                variableManager.getVariables().set(index, tmpVariable);
+                System.out.println(variableManager.getVariables().get(index).getValue());
                 break;
             default:
                 System.out.println(blockName + " something went wrong");
@@ -313,7 +331,7 @@ public class Interpreter {
 
     }
 
-    private SpriteController wheneverStatement(Queue<Block> blocks, SpriteController spriteController) {
+    private SpriteController wheneverStatement(Queue<Block> blocks, SpriteController spriteController, VariableManager variableManager) {
         String condition = blocks.remove().getName();
         String spriteName = "";
         String inputBoxAsString = "";
@@ -321,7 +339,7 @@ public class Interpreter {
         switch (condition) {
             case "NOT":
                 notActive = true;
-                spriteController = wheneverStatement(blocks, spriteController);
+                spriteController = wheneverStatement(blocks, spriteController, variableManager);
                 break;
             case "PRESSES":
                 blocks.remove();
@@ -336,16 +354,16 @@ public class Interpreter {
                     System.out.println("Switch Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
-                        spriteController = switchStatement(blockName, blocks, spriteController);
+                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                     } else if (blockName.equals("AND")) {
-                        spriteController = switchStatement(blockName, blocks, spriteController);
+                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                     } else if(blockName.equals("OR")) {
-                       spriteController = ORCondition(blocks, spriteController);
+                       spriteController = ORCondition(blocks, spriteController, variableManager);
                     }
                     notActive = false;
                     return spriteController;
                 } else if(blockName.equals("OR")) {
-                    spriteController = switchStatement(blockName, blocks, spriteController);
+                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                 }else {
                   checkConditionFinished(blocks);
                 }
@@ -373,16 +391,16 @@ public class Interpreter {
                     System.out.println("Active");
                     if(blockName.equals("THEN")) {
                         blockName = blocks.remove().getName();
-                        spriteController = switchStatement(blockName, blocks, spriteController);
+                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                         return spriteController;
                     } else if(blockName.equals("AND")) {
-                        spriteController = switchStatement(blockName, blocks, spriteController);
+                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                     } else if (blockName.equals("OR")) {
-                        spriteController = ORCondition(blocks, spriteController);
+                        spriteController = ORCondition(blocks, spriteController, variableManager);
                     }
                     return spriteController;
                 } else if(blockName.equals("OR")) {
-                    spriteController = switchStatement(blockName, blocks, spriteController);
+                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                 } else {
                     checkConditionFinished(blocks);
                 }
@@ -404,19 +422,19 @@ public class Interpreter {
                             tmpSprite.setClicked(false);
                             if(blockName.equals("THEN")) {
                                 blockName = blocks.remove().getName();
-                                spriteController = switchStatement(blockName, blocks, spriteController);
+                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
 
                                 spriteController.setSprite(j,tmpSprite);
                                 return spriteController;
                             } else if(blockName.equals("AND")){
-                                spriteController = switchStatement(blockName, blocks,  spriteController);
+                                spriteController = switchStatement(blockName, blocks,  spriteController, variableManager);
                             } else if (blockName.equals("OR")) {
-                                spriteController = ORCondition(blocks, spriteController);
+                                spriteController = ORCondition(blocks, spriteController, variableManager);
                             }
                             notActive = false;
                             return spriteController;
                         } else if(blockName.equals("OR")) {
-                            spriteController = switchStatement(blockName, blocks, spriteController);
+                            spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
                         } else {
                            checkConditionFinished(blocks);
 
@@ -448,7 +466,7 @@ public class Interpreter {
 
     }
 
-    private SpriteController ORCondition(Queue<Block> blocks, SpriteController spriteController) {
+    private SpriteController ORCondition(Queue<Block> blocks, SpriteController spriteController, VariableManager variableManager) {
        String blockName = "PRESSES";
         while(blockName.equals("PRESSES") || blockName.equals("KEY") || blockName.equals("CLICKS")
                 || blockName.equals("SPRITE") || blockName.equals("HOVERS") || blockName.equals("NOT") || blockName.equals("THEN")) {
@@ -457,7 +475,7 @@ public class Interpreter {
                 inputBoxValueIndex++;
             }
         }
-        spriteController = switchStatement(blockName, blocks, spriteController);
+        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
         return spriteController;
     }
 
@@ -518,4 +536,25 @@ public class Interpreter {
         Pair<Sprite, Integer> spriteIntegerPair = new Pair<>(tmpSprite, count);
         return spriteIntegerPair;
     }
+
+    private Pair<Variable, Integer> getVariable(VariableManager variableManager) {
+        String inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+        String variableName = inputBoxesValues.get(inputBoxAsString);
+        inputBoxValueIndex++;
+        Variable tmpVariable = null;
+        boolean found = false;
+        int count = -1;
+
+        while(!found) {
+            count++;
+            if(variableManager.getVariables().get(count).getName().equals(variableName)) {
+                tmpVariable = variableManager.getVariables().get(count);
+                found = true;
+            }
+        }
+        Pair<Variable, Integer> variableIntegerPair = new Pair<>(tmpVariable, count);
+        return variableIntegerPair;
+    }
+
+
 }
