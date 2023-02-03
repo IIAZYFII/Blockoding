@@ -435,9 +435,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         playButton.setOnAction(e -> {
             playButton.setDisable(true);
             stopButton.setDisable(false);
+            System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues, inputBoxes);
                 drawScene();
+                System.out.println("Post " + variableManager.getVariables().get(0).getValue());
+
             }
 
         });
@@ -1129,6 +1132,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         System.out.println(systemPath);
         return systemPath;
     }
+
     private void addVariableToCanvas(Variable variable) {
         String content = (variable.getName() +  " : " + variable.getValue());
         StackPane stackPane =  createStackPane(content, 255, 84, 56);
