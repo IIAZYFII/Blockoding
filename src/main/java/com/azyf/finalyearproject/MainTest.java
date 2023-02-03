@@ -15,5 +15,7 @@ public class MainTest {
         interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
          System.out.println(interpreter.getParseTree().root);
         //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0))
+        int finalNumber = 20 % 3;
+        System.out.println(finalNumber);
     }
 }

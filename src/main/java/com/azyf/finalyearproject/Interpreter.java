@@ -113,6 +113,8 @@ public class Interpreter {
         Block block;
         Sprite tmpSprite;
         int index;
+        Variable tmpVariable = null;
+        Pair<Variable, Integer> variableIntegerPair = null;
         Pair<Sprite, Integer> spriteIntegerPair = null;
         switch (blockName) {
             case "MOVE":
@@ -232,9 +234,9 @@ public class Interpreter {
             case "SET":
                 blocks.remove();
 
-               Pair<Variable, Integer> variableIntegerPair = getVariable(variableManager);
-               Variable tmpVariable = variableIntegerPair.getKey();
-                index = variableIntegerPair.getValue();
+               variableIntegerPair = getVariable(variableManager);
+               tmpVariable = variableIntegerPair.getKey();
+               index = variableIntegerPair.getValue();
 
                 blocks.remove();
                 blocks.remove();
@@ -245,6 +247,15 @@ public class Interpreter {
                 tmpVariable.setValue(Integer.parseInt(amount));
                 variableManager.getVariables().set(index, tmpVariable);
                 System.out.println(variableManager.getVariables().get(index).getValue());
+                break;
+            case "VARIABLE":
+                blocks.remove();
+                variableIntegerPair = getVariable(variableManager);
+                tmpVariable = variableIntegerPair.getKey();
+                index = variableIntegerPair.getValue();
+                int newValue = mathStatement(blocks);
+                tmpVariable.setValue(newValue);
+                variableManager.getVariables().set(index, tmpVariable);
                 break;
             default:
                 System.out.println(blockName + " something went wrong");
@@ -453,6 +464,41 @@ public class Interpreter {
 
         }
         return  spriteController;
+    }
+
+    private int mathStatement(Queue<Block> blocks){
+        String firstNumber = "";
+        String secondNumber = "";
+        String inputBoxAsString = "";
+        int finalNumber = 0;
+        if(blocks.remove().getName().equals("NUMBER")) {
+            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+            firstNumber = inputBoxesValues.get(inputBoxAsString);
+            inputBoxValueIndex++;
+        } else {
+
+        }
+       String operation = blocks.remove().getName();
+        if(blocks.remove().getName().equals("NUMBER")) {
+            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+            secondNumber = inputBoxesValues.get(inputBoxAsString);
+            inputBoxValueIndex++;
+        } else {
+
+        }
+        if(operation.equals("ADD")) {
+            finalNumber = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);
+        } else if(operation.equals("SUBTRACT")) {
+            finalNumber = Integer.parseInt(firstNumber) - Integer.parseInt(secondNumber);
+        } else if (operation.equals("MULTIPLY")) {
+            finalNumber = Integer.parseInt(firstNumber) * Integer.parseInt(secondNumber);
+        } else if (operation.equals("DIVIDE")) {
+            finalNumber = Integer.parseInt(firstNumber) / Integer.parseInt(secondNumber);
+        } else if (operation.equals("MODULUS")) {
+            finalNumber = Integer.parseInt(firstNumber) % Integer.parseInt(secondNumber);
+        }
+
+        return  finalNumber;
     }
 
     private void checkConditionFinished(Queue<Block> blocks) {
