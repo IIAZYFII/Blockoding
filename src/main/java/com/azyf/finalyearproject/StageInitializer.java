@@ -597,6 +597,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
                     programBox.getChildren().add(hBox);
                     break;
+                case "VARIABLE":
+                    stackPane = createStackPane(blocks.remove().getName(),255,255,255);
+                    secondBlockName = blocks.remove().getName();
+                    StackPane equalsStackPane = createStackPane(blocks.remove().getName(),255,255,255);
+                    thirdBlockName = blocks.remove().getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
+                    hBox.getChildren().add(1,stackPane);
+                    hBox.getChildren().add(3,equalsStackPane);
+                    programBox.getChildren().add(hBox);
+                    break;
+
                 default:
                     System.out.println("test");
                     break;
@@ -779,6 +790,27 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             return hBox;
 
 
+        } else if(blockName.equals("VARIABLE")) {
+            hBox = new HBox();
+            ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+            hBox.getChildren().add(comboBox);
+
+            if(secondBlockName.equals("NUMBER")) {
+                TextField textField = createTextField();
+                hBox.getChildren().add(textField);
+            } else {
+                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                hBox.getChildren().add(comboBox);
+            }
+
+            if(thirdBlockName.equals("NUMBER")) {
+                TextField textField = createTextField();
+                hBox.getChildren().add(textField);
+            } else {
+                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                hBox.getChildren().add(comboBox);
+            }
+            return hBox;
         }
 
         return stackPane;
