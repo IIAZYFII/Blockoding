@@ -133,6 +133,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         interpreter.setTerminated(false);
 
         drawScene();
+        drawVariableBox();
         frameCounter++;
 
     }
@@ -440,6 +441,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
                         inputBoxes, variableManager);
                 drawScene();
+                drawVariableBox();
                 System.out.println("Post " + variableManager.getVariables().get(0).getValue());
 
             }
@@ -455,6 +457,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         stopButton.setOnAction(e -> {
             frameTimeline.stop();
+            variableManager.resetToInitialValues();
+            drawVariableBox();
             playButton.setDisable(false);
             stopButton.setDisable(true);
         });
@@ -1070,15 +1074,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     public static KeyCode getCurrentKey() {
-        /**
-         *   if(frameCounter >= 60) {
-         *             currentKey =  null;
-         *             frameCounter = 0;
-         *         } else if (currentKey != null && frameCounter <= 50) {
-         *             currentKey =  null;
-         *         }
-         */
-
 
        root.setOnKeyPressed(e -> {
             KeyCode keyCode = e.getCode();
@@ -1132,6 +1127,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String systemPath = path.getAbsolutePath();
         System.out.println(systemPath);
         return systemPath;
+    }
+
+    private void drawVariableBox() {
+        variableBox.getChildren().clear();
+        for(int i = 0; i < variableManager.getVariables().size(); i++) {
+            addVariableToCanvas(variableManager.getVariables().get(i));
+        }
     }
 
     private void addVariableToCanvas(Variable variable) {
