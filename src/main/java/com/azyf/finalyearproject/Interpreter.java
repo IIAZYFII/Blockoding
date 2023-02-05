@@ -253,7 +253,7 @@ public class Interpreter {
                 variableIntegerPair = getVariable(variableManager);
                 tmpVariable = variableIntegerPair.getKey();
                 index = variableIntegerPair.getValue();
-                int newValue = mathStatement(blocks);
+                int newValue = mathStatement(blocks, variableManager);
                 tmpVariable.setValue(newValue);
                 variableManager.getVariables().set(index, tmpVariable);
                 break;
@@ -466,17 +466,21 @@ public class Interpreter {
         return  spriteController;
     }
 
-    private int mathStatement(Queue<Block> blocks){
+    private int mathStatement(Queue<Block> blocks, VariableManager variableManager){
         String firstNumber = "";
         String secondNumber = "";
         String inputBoxAsString = "";
         int finalNumber = 0;
+        Pair<Variable, Integer> variableIntegerPair = null;
+        Variable tmpVariable = null;
         if(blocks.remove().getName().equals("NUMBER")) {
             inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
             firstNumber = inputBoxesValues.get(inputBoxAsString);
             inputBoxValueIndex++;
         } else {
-
+            variableIntegerPair = getVariable(variableManager);
+            tmpVariable = variableIntegerPair.getKey();
+            firstNumber = String.valueOf(tmpVariable.getValue());
         }
        String operation = blocks.remove().getName();
         if(blocks.remove().getName().equals("NUMBER")) {
@@ -484,7 +488,9 @@ public class Interpreter {
             secondNumber = inputBoxesValues.get(inputBoxAsString);
             inputBoxValueIndex++;
         } else {
-
+            variableIntegerPair = getVariable(variableManager);
+            tmpVariable = variableIntegerPair.getKey();
+            secondNumber = String.valueOf(tmpVariable.getValue());
         }
         if(operation.equals("ADD")) {
             finalNumber = Integer.parseInt(firstNumber) + Integer.parseInt(secondNumber);

@@ -4,6 +4,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import io.opencensus.common.Scope;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -292,11 +293,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         rightPane.getChildren().add(variableBox);
         root.setRight(rightPane);
 
-        VBox leftPane = new VBox();
+       VBox leftPane = new VBox();
+
         programBox = new VBox();
         Text programText = new Text();
         programText.setText("Program Box");
-        programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        programBox.setStyle( "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
         programBox.setPadding(new Insets(0, 100, 600, 100));
         leftPane.setPadding(new Insets(50, 50, 10, 50));
