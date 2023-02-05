@@ -99,13 +99,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         frameTimeline = new Timeline(new KeyFrame(Duration.millis(16.67), e -> frame()));
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
-         root = (BorderPane) buildGUI(stage);
-
+        root = (BorderPane) buildGUI(stage);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
 
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
-
-        scene = new Scene(root, screenWidth, screenHeight);
+        scene = new Scene(scrollPane, screenWidth, screenHeight);
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
         stage.show();
