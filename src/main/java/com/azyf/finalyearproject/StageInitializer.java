@@ -400,13 +400,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         Image createdSprite = new Image(file.getPath());
                         String tmpSpriteName = file.getName();
                         String spriteName = tmpSpriteName.substring(0, tmpSpriteName.lastIndexOf('.'));
-                        System.out.println(spriteName);
-                        ImageView imageView = new ImageView();
-                        imageView.setImage(createdSprite);
-                        VBox tmpSpriteContainer = createSpriteContainer(spriteName, imageView);
-                        spriteBox.getChildren().add(tmpSpriteContainer);
+                        boolean nameExist = checkNameExist(spriteBox, spriteName);
+                        if(nameExist == false) {
+                            System.out.println(spriteName);
+                            ImageView imageView = new ImageView();
+                            imageView.setImage(createdSprite);
+                            VBox tmpSpriteContainer = createSpriteContainer(spriteName, imageView);
+                            spriteBox.getChildren().add(tmpSpriteContainer);
 
-                        dragAndDrop(imageView, createdSprite, spriteName);
+                            dragAndDrop(imageView, createdSprite, spriteName);
+                        }
+
                     }
 
                 });
@@ -438,13 +442,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         playButton.setOnAction(e -> {
             playButton.setDisable(true);
             stopButton.setDisable(false);
-            System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
+           // System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
                         inputBoxes, variableManager);
                 drawScene();
                 drawVariableBox();
-                System.out.println("Post " + variableManager.getVariables().get(0).getValue());
+               // System.out.println("Post " + variableManager.getVariables().get(0).getValue());
 
             }
 
@@ -1077,15 +1081,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         System.out.println(s);
                         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-                        spriteController.addSprite(spriteName, x, y, sprite);
-                        currentSpriteIndex = spriteController.size() - 1;
-                        gc.drawImage(sprite, x, y);
+                         spriteController.addSprite(spriteName, x, y, sprite);
+                            System.out.println("added sprite");
+                            currentSpriteIndex = spriteController.size() - 1;
+                            gc.drawImage(sprite, x, y);
 
-                        imageView.setOnDragDetected(null);
-                        programBox.getChildren().clear();
-                        Text programText = new Text();
-                        programText.setText(spriteName + "'s " + "Program Box");
-                        programBox.getChildren().add(programText);
+                            imageView.setOnDragDetected(null);
+                            programBox.getChildren().clear();
+                            Text programText = new Text();
+                            programText.setText(spriteName + "'s " + "Program Box");
+                            programBox.getChildren().add(programText);
+
 
                         event.consume();
                     }
@@ -1175,5 +1181,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StackPane stackPane =  createStackPane(content, 255, 84, 56);
         variableBox.getChildren().add(stackPane);
 
+    }
+
+    private boolean checkNameExist(HBox spriteBox, String spriteName) {
+        boolean alreadyExist = false;
+        for (int i =0; i < spriteBox.getChildren().size(); i++) {
+          VBox tmpSpriteContainer = (VBox) spriteBox.getChildren().get(i);
+           Label tmpSpriteName = (Label) tmpSpriteContainer.getChildren().get(1);
+           if(tmpSpriteName.getText().equals(spriteName)) {
+               alreadyExist = true;
+           }
+
+        }
+        return alreadyExist;
     }
 }

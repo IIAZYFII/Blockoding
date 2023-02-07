@@ -23,8 +23,10 @@ public class SpriteController {
     }
 
     public void addSprite(String spriteName, double xPos, double yPos, Image defaultOutfit) {
-        Sprite spriteObject = new Sprite(spriteName,xPos, yPos,defaultOutfit);
-        sprites.add(spriteObject);
+            Sprite spriteObject = new Sprite(spriteName,xPos, yPos,defaultOutfit);
+            sprites.add(spriteObject);
+
+
 
     }
 
