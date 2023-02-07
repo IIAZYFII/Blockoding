@@ -964,8 +964,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                    int variableValue = Integer.parseInt(enterInitialValue.getText());
                    Variable variable = new Variable(variableValue, name);
                    System.out.println("Added Variable");
-                   variableManager.addVariable(variable);
-                    addVariableToCanvas(variable);
+                   boolean alreadyExist = variableManager.addVariable(variable);
+                   if(alreadyExist == false) {
+                       addVariableToCanvas(variable);
+                   }
+
                    variableManagerStage.close();
             });
             confirmButton.setMinSize(50,25);

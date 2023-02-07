@@ -16,9 +16,18 @@ public class VariableManager {
         return variables;
     }
 
-    public void addVariable(Variable variable) {
-        variables.add(variable);
-        initialValues.add(variable.getValue());
+    public boolean addVariable(Variable variable) {
+        boolean sameName = false;
+        for(int i = 0; i < variables.size(); i++) {
+            if(variable.getName().equals(variables.get(i).getName())) {
+                sameName = true;
+            }
+        }
+        if(sameName == false) {
+            variables.add(variable);
+            initialValues.add(variable.getValue());
+        }
+        return  sameName;
     }
 
 
