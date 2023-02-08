@@ -613,7 +613,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox.getChildren().add(3,equalsStackPane);
                     programBox.getChildren().add(hBox);
                     break;
-                case "ASK":
+                case "SPEAK":
                     secondBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 19, 3, 252);
                     programBox.getChildren().add(hBox);
@@ -721,7 +721,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             return hBox;
 
-        } else if(blockName.equals("CONDITION") ||  blockName.equals("ASK")) {
+        } else if(blockName.equals("CONDITION")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
@@ -750,6 +750,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
 
             return hBox;
+        } else if (blockName.equals("SPEAK")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            TextField textField = createTextField();
+            hBox.getChildren().add(textField);
+            return hBox;
+
         }
         return stackPane;
     }
@@ -834,7 +841,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Rectangle blockBox = new Rectangle(70, 30);
         blockBox.setFill(Color.rgb(red, green, blue));
         Rectangle blockBorder = new Rectangle(80, 40);
+
         Label blockText = new Label(blockName);
+        if(blockName.equals("SPEAK")) {
+            blockText.setTextFill(Color.color(1,1,1));
+        }
+
         stackPane.getChildren().add(blockBorder);
         stackPane.getChildren().add(blockBox);
         stackPane.getChildren().add(blockText);
