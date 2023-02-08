@@ -68,6 +68,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image compileButtonImg;
     private Image variableButtonImg;
     private VariableManager variableManager = new VariableManager();
+    private static TextArea terminal;
 
 
     private Image OCRButtonImg;
@@ -252,15 +253,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setBottom(bottomBar);
 
         VBox ioBar = new VBox();
-        TextArea textArea = new TextArea();
-        textArea.setPrefSize(700, 100);
-        textArea.setMinHeight(Region.USE_COMPUTED_SIZE);
-        textArea.setMaxHeight(Region.USE_COMPUTED_SIZE);
-        textArea.setMinWidth(Region.USE_COMPUTED_SIZE);
-        textArea.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        textArea.setStyle("-fx-border-color: black;" + "text-area-background: black;");
+        terminal = new TextArea();
+        terminal.setEditable(false);
+        terminal.setPrefSize(700, 100);
+        terminal.setMinHeight(Region.USE_COMPUTED_SIZE);
+        terminal.setMaxHeight(Region.USE_COMPUTED_SIZE);
+        terminal.setMinWidth(Region.USE_COMPUTED_SIZE);
+        terminal.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        terminal.setStyle("-fx-border-color: black;" + "text-area-background: black;");
         ioBar.setPadding(new Insets(0, 0, 100, 400));
-        ioBar.getChildren().add(textArea);
+        ioBar.getChildren().add(terminal);
 
         bottomBar.getChildren().add(ioBar);
 
@@ -467,6 +469,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawVariableBox();
             playButton.setDisable(false);
             stopButton.setDisable(true);
+            terminal.clear();
         });
 
         Button settingButton = new Button();
@@ -1220,5 +1223,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         }
         return alreadyExist;
+    }
+
+    public static void setTerminalContent(String content) {
+        String appendContent = terminal.getText() + content + "\n";
+            terminal.setText(appendContent);
     }
 }

@@ -257,6 +257,14 @@ public class Interpreter {
                 tmpVariable.setValue(newValue);
                 variableManager.getVariables().set(index, tmpVariable);
                 break;
+            case "SPEAK":
+                blocks.remove();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                amount = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
+                StageInitializer.setTerminalContent(amount);
+
+                break;
             default:
                 System.out.println(blockName + " something went wrong");
                 break;
