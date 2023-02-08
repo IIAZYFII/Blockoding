@@ -613,7 +613,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox.getChildren().add(3,equalsStackPane);
                     programBox.getChildren().add(hBox);
                     break;
-
+                case "ASK":
+                    secondBlockName = blocks.remove().getName();
+                    hBox = (HBox) drawBlock(blockName, secondBlockName, 19, 3, 252);
+                    programBox.getChildren().add(hBox);
+                    break;
                 default:
                     System.out.println("test");
                     break;
@@ -717,7 +721,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             return hBox;
 
-        } else if(blockName.equals("CONDITION")) {
+        } else if(blockName.equals("CONDITION") ||  blockName.equals("ASK")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
             stackPane = createStackPane(secondBlockName, red, green, blue);
