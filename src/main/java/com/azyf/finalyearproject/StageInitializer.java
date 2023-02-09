@@ -799,13 +799,23 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             stackPane = createStackPane(secondBlockName, red, green, blue);
             hBox.getChildren().add(stackPane);
 
-            if(thirdBlockName.equals("NUMBER")) {
+            if(thirdBlockName.equals("ASK")) {
+                stackPane = createStackPane(thirdBlockName,19, 3, 252);
+                hBox.getChildren().add(stackPane);
+
                 TextField textField = createTextField();
                 hBox.getChildren().add(textField);
-            } else {
-                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-                hBox.getChildren().add(comboBox);
-            }
+            } else if(thirdBlockName.equals("NUMBER")) {
+                    TextField textField = createTextField();
+                    hBox.getChildren().add(textField);
+                } else {
+                    comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                    hBox.getChildren().add(comboBox);
+                }
+
+
+
+
 
             return hBox;
 
