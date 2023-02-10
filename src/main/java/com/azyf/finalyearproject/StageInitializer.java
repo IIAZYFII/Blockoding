@@ -967,8 +967,19 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             enterVariableName.setMinSize(200,50);
             content.getChildren().add(enterVariableName);
 
+            Label initialType = new Label();
+            initialType.setText("Initial Type");
+            initialType.setMinSize(100,50);
+            content.getChildren().add(initialType);
+
+            String[] dropDown = {"Integer", "String"};
+
+            ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown));
+            content.getChildren().add(comboBox);
+
             Label initialValue = new Label();
-            initialValue.setText("initial Value");
+            initialValue.setText("Initial Value");
+            initialValue.setMinSize(100,50);
             content.getChildren().add(initialValue);
 
             TextField enterInitialValue = new TextField();
@@ -990,20 +1001,40 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             confirmButton.setOnAction(event -> {
                    String name =  enterVariableName.getText();
-                    int variableValue;
-                   try {
-                       variableValue = Integer.parseInt(enterInitialValue.getText());
-                       Variable variable = new Variable(variableValue, name);
-                       System.out.println("Added Variable");
-                       boolean alreadyExist = variableManager.addVariable(variable);
-                       if(alreadyExist == false) {
-                           addVariableToCanvas(variable);
-                       }
-                   } catch (Exception ex) {
-                       throw new IllegalArgumentException("Expected a number");
-                   } finally {
-                       variableManagerStage.close();
-                   }
+                    String variableType = (String) comboBox.getValue();
+                    Variable variable = null;
+                    if(variableType.equals("Integer")) {
+                        int variableValue;
+                        try {
+                            variableValue = Integer.parseInt(enterInitialValue.getText());
+                            VariableType type = VariableType.Integer;
+                            variable = new Variable(variableValue, name, type);
+                            System.out.println("Added Variable");
+                            boolean alreadyExist = variableManager.addVariable(variable);
+                            if(alreadyExist == false) {
+                                addVariableToCanvas(variable);
+                            }
+
+
+                        } catch (Exception ex) {
+                            throw new IllegalArgumentException("Expected a number");
+                        } finally {
+                            variableManagerStage.close();
+                        }
+                    } else if(variableType.equals("String")) {
+                        String variableValue;
+                        variableValue = enterInitialValue.getText();
+                        VariableType type = VariableType.String;
+                        variable = new Variable(variableValue, name, type);
+                        System.out.println("Added Variable");
+                        boolean alreadyExist = variableManager.addVariable(variable);
+                        if(alreadyExist == false) {
+                            addVariableToCanvas(variable);
+                        }
+
+                    }
+
+
 
 
             });
