@@ -1024,6 +1024,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     } else if(variableType.equals("String")) {
                         String variableValue;
                         variableValue = enterInitialValue.getText();
+                        variableValue = enterInitialValue.getText();
                         VariableType type = VariableType.String;
                         variable = new Variable(variableValue, name, type);
                         System.out.println("Added Variable");
@@ -1247,7 +1248,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
     private void addVariableToCanvas(Variable variable) {
-        String content = (variable.getName() +  " : " + variable.getValue());
+        VariableType variableType = variable.getType();
+        String content = variable.getName() + " : ";
+        if (variableType == VariableType.Integer) {
+            content = content +  variable.getValue();
+        } else if (variableType == VariableType.String) {
+            content = content +  variable.getContent();
+        }
+        
         StackPane stackPane =  createStackPane(content, 255, 84, 56);
         variableBox.getChildren().add(stackPane);
 

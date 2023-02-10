@@ -233,20 +233,31 @@ public class Interpreter {
                 break;
             case "SET":
                 blocks.remove();
-
-               variableIntegerPair = getVariable(variableManager);
-               tmpVariable = variableIntegerPair.getKey();
-               index = variableIntegerPair.getValue();
-
                 blocks.remove();
-                blocks.remove();
+                blockName =  blocks.remove().getName();
+
+                variableIntegerPair = getVariable(variableManager);
+                tmpVariable = variableIntegerPair.getKey();
+                index = variableIntegerPair.getValue();
+
                 inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                 amount = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
-                tmpVariable.setValue(Integer.parseInt(amount));
+                if(blockName.equals("ASK")) {
+                    tmpVariable.setContent(amount);
+                } else {
+                    tmpVariable.setValue(Integer.parseInt(amount));
+                }
+
                 variableManager.getVariables().set(index, tmpVariable);
-                System.out.println(variableManager.getVariables().get(index).getValue());
+
+
+
+
+
+
+
                 break;
             case "VARIABLE":
                 blocks.remove();
