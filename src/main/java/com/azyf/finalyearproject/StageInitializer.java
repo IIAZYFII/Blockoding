@@ -71,6 +71,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static TextArea terminal;
 
 
+
     private Image OCRButtonImg;
     private Image defaultSprite;
     private SpriteController spriteController = new SpriteController();
@@ -235,7 +236,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.rgb(255, 253, 208));
         gc.fillRoundRect(0, 0, 728, 597, 20.0, 20.0);
-        //gc.setLineWidth(20.0);
+
         gc.strokeRoundRect(0, 0, 728, 597, 20.0, 20.0);
         canvas.setOnMouseMoved(e -> {
             currentMouseXPos = e.getX();
@@ -337,8 +338,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             File image = new File(pathTempIMG);
             try {
                 image = imageProcessor.processImage(image);
-                text.set(textExtractor.extractText(image));
-                compileButton.setDisable(false);
+                String tmpText = textExtractor.extractText(image);
+                String lastBlock = tmpText.substring(tmpText.lastIndexOf("\n") + 1);
+                if(lastBlock.equalsIgnoreCase("END")) {
+                    text.set(tmpText);
+                    compileButton.setDisable(false);
+                } else if (lastBlock.equalsIgnoreCase("CONTINUE")) {
+                    Alert moreCode = new Alert(Alert.AlertType.INFORMATION);
+                    moreCode.setTitle("Detected continue block");
+                    moreCode.setContentText("You have used a continue block. Please finish your code and send it through.");
+                    moreCode.showAndWait();
+                }
+
+
+
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -622,7 +635,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     programBox.getChildren().add(hBox);
                     break;
                 default:
-                    System.out.println("test");
+                    System.out.println("test    ");
                     break;
 
 
@@ -793,6 +806,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             return hBox;
         } else if (blockName.equals("SET")) {
             hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
             ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
             hBox.getChildren().add(comboBox);
 
@@ -856,7 +871,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Rectangle blockBorder = new Rectangle(80, 40);
 
         Label blockText = new Label(blockName);
-        if(blockName.equals("SPEAK")) {
+        if(blockName.equals("SPEAK") || blockName.equals("ASK")) {
             blockText.setTextFill(Color.color(1,1,1));
         }
 
@@ -913,7 +928,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 generateQRCode();
                 hBox.getChildren().clear();
-                Image qrCode = new Image("Cache\\qrcode.png");
+                String path = getAbsolutePath() + "\\Cache\\qrcode.png";
+                System.out.println(path);
+                Image qrCode = new Image(path);
                 ImageView qrCodeViewer = new ImageView(qrCode);
                 qrCodeViewer.setFitHeight(120);
                 qrCodeViewer.setFitWidth(120);
@@ -1255,7 +1272,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (variableType == VariableType.String) {
             content = content +  variable.getContent();
         }
-        
+
         StackPane stackPane =  createStackPane(content, 255, 84, 56);
         variableBox.getChildren().add(stackPane);
 
@@ -1277,5 +1294,29 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static void setTerminalContent(String content) {
         String appendContent = terminal.getText() + content + "\n";
             terminal.setText(appendContent);
+    }
+
+    public static void askTerminalContent(String content) {
+        setTerminalContent(content);
+        String tmpContent = terminal.getText();
+        terminal.setOnMouseClicked(e -> {
+            terminal.clear();
+            terminal.setEditable(true);
+            e.consume();
+        });
+        terminal.setOnKeyPressed( e -> {
+            if(e.getCode() == KeyCode.ENTER) {
+                String userInput = terminal.getText();
+                terminal.clear();
+                terminal.setText(tmpContent + "\n" + userInput);
+                terminal.setEditable(false);
+                terminal.setOnMouseClicked(mouseEvent -> {mouseEvent.consume();});
+                terminal.setOnKeyPressed(keyEvent -> {keyEvent.consume();});
+
+                e.consume();
+
+            }
+
+        });
     }
 }

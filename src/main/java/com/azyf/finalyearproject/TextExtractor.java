@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class TextExtractor {
     WordProcessor wordProcessor;
+    String continueText = "";
 
 
     public TextExtractor() {
@@ -33,6 +34,14 @@ public class TextExtractor {
     }
     public String extractText(File imageFile) throws IOException {
         String extractedText = performOCR(imageFile.getPath());
+        String lastBlock = extractedText.substring(extractedText.lastIndexOf("\n") + 1);
+        if(lastBlock.equalsIgnoreCase("CONTINUE")) {
+            continueText = continueText + "\n" + extractedText;
+            return continueText;
+        } else if (lastBlock.equalsIgnoreCase("END")) {
+            extractedText = continueText+ "\n" + extractedText;
+            continueText = "";
+        }
         System.out.println(extractedText);
         return extractedText;
       //wordProcessor.processWord(extractedText);

@@ -245,7 +245,11 @@ public class Interpreter {
                 inputBoxValueIndex++;
 
                 if(blockName.equals("ASK")) {
-                    tmpVariable.setContent(amount);
+                    blocks.remove();
+                    StageInitializer.askTerminalContent(amount);
+
+
+
                 } else {
                     tmpVariable.setValue(Integer.parseInt(amount));
                 }
@@ -275,6 +279,9 @@ public class Interpreter {
                 inputBoxValueIndex++;
                 StageInitializer.setTerminalContent(amount);
 
+                break;
+            case "CONTINUE":
+                System.out.println("Detected continue block");
                 break;
             default:
                 System.out.println(blockName + " something went wrong");
