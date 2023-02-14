@@ -373,6 +373,7 @@ public class Interpreter {
         String spriteName = "";
         String inputBoxAsString = "";
         String blockName = "";
+        String content  = "";
         switch (condition) {
             case "NOT":
                 notActive = true;
@@ -481,9 +482,36 @@ public class Interpreter {
                     j++;
 
                 }
-
                 break;
+            case "VARIABLE":
+                Pair<Variable, Integer> variableIntegerPair = getVariable(variableManager);
+                Variable tmpVariable = variableIntegerPair.getKey();
+                int variableValue = tmpVariable.getValue();
 
+                blocks.remove();
+                blockName = blocks.remove().getName();
+                if(blockName.equals("NUMBER")) {
+                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                    content = inputBoxesValues.get(inputBoxAsString);
+                    inputBoxValueIndex++;
+
+                    blockName = blocks.remove().getName();
+                    if(variableValue == Integer.parseInt(content)) {
+                        if(blockName.equals("THEN")) {
+                            blockName = blocks.remove().getName();
+                            spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                        } else if(blockName.equals("AND")) {
+                            spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                        } else if (blockName.equals("OR")) {
+                            spriteController = ORCondition(blocks, spriteController, variableManager);
+                        }
+                    } else if(blockName.equals("OR")) {
+                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                    }else {
+                        checkConditionFinished(blocks);
+                    }
+                }
+                break;
             default:
                 System.out.println("something went wrong within condition");
                 break;
