@@ -806,6 +806,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
             } else if (secondBlockName.equals("VARIABLE")){
                 hBox = new HBox();
+                hBox.getChildren().add(stackPane);
 
                 ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
                 hBox.getChildren().add(comboBox);
@@ -816,6 +817,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 if (thirdBlockName.equals("NUMBER")) {
                     TextField textField = createTextField();
                     hBox.getChildren().add(textField);
+
+                    stackPane = createStackPane("THEN", red, green, blue);
+                    hBox.getChildren().add(stackPane);
                     return  hBox;
                 }
             }

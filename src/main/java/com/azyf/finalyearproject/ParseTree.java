@@ -142,7 +142,7 @@ public class  ParseTree {
                 String blockName = position.getChildren().get(i).getNode().name;
 
 
-                if(blockName.equals(block.getName())) {
+                    if(blockName.equals(block.getName())) {
                     System.out.println("Correct");
                     if(position.getChildren().get(i).getChildren().size() != 0) {
                         Pair pair = new Pair(position.getChildren().get(i), true);
