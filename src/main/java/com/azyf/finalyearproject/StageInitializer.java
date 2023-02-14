@@ -593,6 +593,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         hBox.getChildren().add(1,stackPane);
                         programBox.getChildren().add(hBox);
                         break;
+                    } else if (secondBlockName.equals("VARIABLE")) {
+                        blocks.remove();
+                        thirdBlockName = blocks.remove().getName();
+                        hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                        programBox.getChildren().add(hBox);
+                        break;
                     }
                     thirdBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31);
@@ -798,6 +804,20 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
 
+            } else if (secondBlockName.equals("VARIABLE")){
+                hBox = new HBox();
+
+                ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
+                hBox.getChildren().add(comboBox);
+
+                stackPane = createStackPane("EQUALS", red, green, blue);
+                hBox.getChildren().add(stackPane);
+
+                if (thirdBlockName.equals("NUMBER")) {
+                    TextField textField = createTextField();
+                    hBox.getChildren().add(textField);
+                    return  hBox;
+                }
             }
 
             stackPane = createStackPane(thirdBlockName, red, green, blue);
