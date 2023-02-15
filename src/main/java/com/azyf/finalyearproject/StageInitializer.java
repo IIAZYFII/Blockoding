@@ -596,9 +596,27 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     } else if (secondBlockName.equals("VARIABLE")) {
                         blocks.remove();
                         thirdBlockName = blocks.remove().getName();
-                        hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                        if(blocks.remove().getName().equals("ADD")) {
+
+
+                            stackPane = (StackPane) drawBlock("ADD", 0, 255, 0);
+                            hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+
+                            hBox.getChildren().add(4, stackPane);
+                           if(blocks.remove().getName().equals("NUMBER")) {
+                               TextField textField = createTextField();
+                               hBox.getChildren().add(5,textField);
+
+                           }
+
+
+                        } else {
+                            hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+
+                        }
                         programBox.getChildren().add(hBox);
                         break;
+
                     }
                     thirdBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31);
