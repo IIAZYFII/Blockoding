@@ -490,26 +490,55 @@ public class Interpreter {
 
                 blocks.remove();
                 blockName = blocks.remove().getName();
+
                 if(blockName.equals("NUMBER")) {
                     inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
                     content = inputBoxesValues.get(inputBoxAsString);
                     inputBoxValueIndex++;
 
-                    blockName = blocks.remove().getName();
-                    if(variableValue == Integer.parseInt(content)) {
-                        if(blockName.equals("THEN")) {
-                            blockName = blocks.remove().getName();
+                    String secondBlockName = blocks.remove().getName();
+                    if(secondBlockName.equals("THEN")) {
+
+                        blockName = blocks.remove().getName();
+                        if(variableValue == Integer.parseInt(content)) {
+                            if(blockName.equals("THEN")) {
+                                blockName = blocks.remove().getName();
+                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                            } else if(blockName.equals("AND")) {
+                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                            } else if (blockName.equals("OR")) {
+                                spriteController = ORCondition(blocks, spriteController, variableManager);
+                            }
+                        } else if(blockName.equals("OR")) {
                             spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                        } else if(blockName.equals("AND")) {
-                            spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                        } else if (blockName.equals("OR")) {
-                            spriteController = ORCondition(blocks, spriteController, variableManager);
+                        }else {
+                            checkConditionFinished(blocks);
                         }
-                    } else if(blockName.equals("OR")) {
-                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                    }else {
-                        checkConditionFinished(blocks);
+                    } else if(secondBlockName.equals("ADD")) {
+                        blockName = blocks.remove().getName();
+                        if(blockName.equals("NUMBER")) {
+                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                            String secondContent = inputBoxesValues.get(inputBoxAsString);
+                            inputBoxValueIndex++;
+                            if(variableValue == (Integer.parseInt(content) + Integer.parseInt(secondContent))) {
+                                if(blockName.equals("THEN")) {
+                                    blockName = blocks.remove().getName();
+                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                } else if(blockName.equals("AND")) {
+                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                } else if (blockName.equals("OR")) {
+                                    spriteController = ORCondition(blocks, spriteController, variableManager);
+                                }
+                            } else if(blockName.equals("OR")) {
+                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                            }else {
+                                checkConditionFinished(blocks);
+                            }
+
+
+                        }
                     }
+
                 }
                 break;
             default:
