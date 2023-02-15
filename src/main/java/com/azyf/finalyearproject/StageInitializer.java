@@ -596,10 +596,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     } else if (secondBlockName.equals("VARIABLE")) {
                         blocks.remove();
                         thirdBlockName = blocks.remove().getName();
-                        if(blocks.remove().getName().equals("ADD")) {
+
+                        String tmpBlockName = blocks.remove().getName();
+                        if(!(tmpBlockName.equals("THEN"))) {
 
 
-                            stackPane = (StackPane) drawBlock("ADD", 0, 255, 0);
+                            stackPane = (StackPane) drawBlock(tmpBlockName, 0, 255, 0);
                             hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
 
                             hBox.getChildren().add(4, stackPane);

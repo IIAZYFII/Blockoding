@@ -521,6 +521,7 @@ public class Interpreter {
                             String secondContent = inputBoxesValues.get(inputBoxAsString);
                             inputBoxValueIndex++;
                             if(variableValue == (Integer.parseInt(content) + Integer.parseInt(secondContent))) {
+                                blockName = blocks.remove().getName();
                                 if(blockName.equals("THEN")) {
                                     blockName = blocks.remove().getName();
                                     spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
