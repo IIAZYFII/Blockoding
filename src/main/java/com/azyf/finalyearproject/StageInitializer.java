@@ -594,27 +594,39 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         programBox.getChildren().add(hBox);
                         break;
                     } else if (secondBlockName.equals("VARIABLE")) {
-                        blocks.remove();
-                        thirdBlockName = blocks.remove().getName();
+                        String checkEquals = blocks.remove().getName();
+                        if(checkEquals.equals("EQUALS")) {
+                            thirdBlockName = blocks.remove().getName();
 
-                        String tmpBlockName = blocks.remove().getName();
-                        if(!(tmpBlockName.equals("THEN"))) {
+                            String tmpBlockName = blocks.remove().getName();
+                            if(!(tmpBlockName.equals("THEN"))) {
 
+                                stackPane = (StackPane) drawBlock(tmpBlockName, 0, 255, 0);
+                                hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                                hBox.getChildren().add(4, stackPane);
+                                if(blocks.remove().getName().equals("NUMBER")) {
+                                    TextField textField = createTextField();
+                                    hBox.getChildren().add(5,textField);
 
-                            stackPane = (StackPane) drawBlock(tmpBlockName, 0, 255, 0);
-                            hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                                }
 
-                            hBox.getChildren().add(4, stackPane);
-                           if(blocks.remove().getName().equals("NUMBER")) {
-                               TextField textField = createTextField();
-                               hBox.getChildren().add(5,textField);
+                            } else {
+                                hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
 
-                           }
-
+                            }
 
                         } else {
-                            hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
+                            thirdBlockName = blocks.remove().getName();
+                            stackPane = (StackPane) drawBlock(thirdBlockName, 0, 255, 0);
+                            hBox = (HBox) drawBlock(blockName, secondBlockName,checkEquals , 192, 240, 22);
+                            hBox.getChildren().add(stackPane);
+                            if(blocks.remove().getName().equals("NUMBER")) {
+                                TextField textField = createTextField();
+                                hBox.getChildren().add(4,textField);
 
+                            }
+                            stackPane = (StackPane) drawBlock(blocks.remove().getName(), 0, 255, 0);
+                            hBox.getChildren().add(stackPane);
                         }
                         programBox.getChildren().add(hBox);
                         break;
@@ -830,9 +842,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
                 ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
                 hBox.getChildren().add(comboBox);
+                if(!(thirdBlockName.equals("LESS") || thirdBlockName.equals("GREATER"))){
+                    stackPane = createStackPane("EQUALS", red, green, blue);
+                    hBox.getChildren().add(stackPane);
+                }
 
-                stackPane = createStackPane("EQUALS", red, green, blue);
-                hBox.getChildren().add(stackPane);
 
                 if (thirdBlockName.equals("NUMBER")) {
                     TextField textField = createTextField();

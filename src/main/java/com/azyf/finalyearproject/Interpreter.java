@@ -488,132 +488,200 @@ public class Interpreter {
                 Variable tmpVariable = variableIntegerPair.getKey();
                 int variableValue = tmpVariable.getValue();
 
-                blocks.remove();
-                blockName = blocks.remove().getName();
+               String checkEquals=  blocks.remove().getName();
+               if(checkEquals.equals("EQUALS")) {
+                   blockName = blocks.remove().getName();
 
-                if(blockName.equals("NUMBER")) {
-                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                    content = inputBoxesValues.get(inputBoxAsString);
-                    inputBoxValueIndex++;
+                   if(blockName.equals("NUMBER")) {
+                       inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                       content = inputBoxesValues.get(inputBoxAsString);
+                       inputBoxValueIndex++;
 
-                    String secondBlockName = blocks.remove().getName();
-                    if(secondBlockName.equals("THEN")) {
+                       String secondBlockName = blocks.remove().getName();
+                       if(secondBlockName.equals("THEN")) {
 
-                        blockName = blocks.remove().getName();
-                        if(variableValue == Integer.parseInt(content)) {
-                            if(blockName.equals("THEN")) {
-                                blockName = blocks.remove().getName();
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            } else if(blockName.equals("AND")) {
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            } else if (blockName.equals("OR")) {
-                                spriteController = ORCondition(blocks, spriteController, variableManager);
-                            }
-                        } else if(blockName.equals("OR")) {
-                            spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                        }else {
-                            checkConditionFinished(blocks);
-                        }
-                    } else if(secondBlockName.equals("ADD")) {
-                        blockName = blocks.remove().getName();
-                        if(blockName.equals("NUMBER")) {
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String secondContent = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-                            if(variableValue == (Integer.parseInt(content) + Integer.parseInt(secondContent))) {
-                                blockName = blocks.remove().getName();
-                                if(blockName.equals("THEN")) {
-                                    blockName = blocks.remove().getName();
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if(blockName.equals("AND")) {
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if (blockName.equals("OR")) {
-                                    spriteController = ORCondition(blocks, spriteController, variableManager);
-                                }
-                            } else if(blockName.equals("OR")) {
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            }else {
-                                checkConditionFinished(blocks);
-                            }
-
-
-                        }
-                    } else if (secondBlockName.equals("SUBTRACT")) {
-                        blockName = blocks.remove().getName();
-                        if(blockName.equals("NUMBER")) {
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String secondContent = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-                            if(variableValue == (Integer.parseInt(content) - Integer.parseInt(secondContent))) {
-                                blockName = blocks.remove().getName();
-                                if(blockName.equals("THEN")) {
-                                    blockName = blocks.remove().getName();
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if(blockName.equals("AND")) {
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if (blockName.equals("OR")) {
-                                    spriteController = ORCondition(blocks, spriteController, variableManager);
-                                }
-                            } else if(blockName.equals("OR")) {
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            }else {
-                                checkConditionFinished(blocks);
-                            }
+                           blockName = blocks.remove().getName();
+                           if(variableValue == Integer.parseInt(content)) {
+                               if(blockName.equals("THEN")) {
+                                   blockName = blocks.remove().getName();
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               } else if(blockName.equals("AND")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               } else if (blockName.equals("OR")) {
+                                   spriteController = ORCondition(blocks, spriteController, variableManager);
+                               }
+                           } else if(blockName.equals("OR")) {
+                               spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                           }else {
+                               checkConditionFinished(blocks);
+                           }
+                       } else if(secondBlockName.equals("ADD")) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("NUMBER")) {
+                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                               String secondContent = inputBoxesValues.get(inputBoxAsString);
+                               inputBoxValueIndex++;
+                               if(variableValue == (Integer.parseInt(content) + Integer.parseInt(secondContent))) {
+                                   blockName = blocks.remove().getName();
+                                   if(blockName.equals("THEN")) {
+                                       blockName = blocks.remove().getName();
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if(blockName.equals("AND")) {
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if (blockName.equals("OR")) {
+                                       spriteController = ORCondition(blocks, spriteController, variableManager);
+                                   }
+                               } else if(blockName.equals("OR")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               }else {
+                                   checkConditionFinished(blocks);
+                               }
 
 
-                        }
-
-                    } else if((secondBlockName.equals("MULTIPLY"))) {
-                        blockName = blocks.remove().getName();
-                        if(blockName.equals("NUMBER")) {
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String secondContent = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-                            if(variableValue == (Integer.parseInt(content) * Integer.parseInt(secondContent))) {
-                                blockName = blocks.remove().getName();
-                                if(blockName.equals("THEN")) {
-                                    blockName = blocks.remove().getName();
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if(blockName.equals("AND")) {
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if (blockName.equals("OR")) {
-                                    spriteController = ORCondition(blocks, spriteController, variableManager);
-                                }
-                            } else if(blockName.equals("OR")) {
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            }else {
-                                checkConditionFinished(blocks);
-                            }
-
-
-                        }
-                    } else if((secondBlockName.equals("DIVIDE"))) {
-                        blockName = blocks.remove().getName();
-                        if(blockName.equals("NUMBER")) {
-                            inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                            String secondContent = inputBoxesValues.get(inputBoxAsString);
-                            inputBoxValueIndex++;
-                            if(variableValue == (Integer.parseInt(content) / Integer.parseInt(secondContent))) {
-                                blockName = blocks.remove().getName();
-                                if(blockName.equals("THEN")) {
-                                    blockName = blocks.remove().getName();
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if(blockName.equals("AND")) {
-                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                                } else if (blockName.equals("OR")) {
-                                    spriteController = ORCondition(blocks, spriteController, variableManager);
-                                }
-                            } else if(blockName.equals("OR")) {
-                                spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
-                            }else {
-                                checkConditionFinished(blocks);
-                            }
+                           }
+                       } else if (secondBlockName.equals("SUBTRACT")) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("NUMBER")) {
+                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                               String secondContent = inputBoxesValues.get(inputBoxAsString);
+                               inputBoxValueIndex++;
+                               if(variableValue == (Integer.parseInt(content) - Integer.parseInt(secondContent))) {
+                                   blockName = blocks.remove().getName();
+                                   if(blockName.equals("THEN")) {
+                                       blockName = blocks.remove().getName();
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if(blockName.equals("AND")) {
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if (blockName.equals("OR")) {
+                                       spriteController = ORCondition(blocks, spriteController, variableManager);
+                                   }
+                               } else if(blockName.equals("OR")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               }else {
+                                   checkConditionFinished(blocks);
+                               }
 
 
-                        }
-                    }
+                           }
 
-                }
+                       } else if((secondBlockName.equals("MULTIPLY"))) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("NUMBER")) {
+                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                               String secondContent = inputBoxesValues.get(inputBoxAsString);
+                               inputBoxValueIndex++;
+                               if(variableValue == (Integer.parseInt(content) * Integer.parseInt(secondContent))) {
+                                   blockName = blocks.remove().getName();
+                                   if(blockName.equals("THEN")) {
+                                       blockName = blocks.remove().getName();
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if(blockName.equals("AND")) {
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if (blockName.equals("OR")) {
+                                       spriteController = ORCondition(blocks, spriteController, variableManager);
+                                   }
+                               } else if(blockName.equals("OR")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               }else {
+                                   checkConditionFinished(blocks);
+                               }
+
+
+                           }
+                       } else if((secondBlockName.equals("DIVIDE"))) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("NUMBER")) {
+                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                               String secondContent = inputBoxesValues.get(inputBoxAsString);
+                               inputBoxValueIndex++;
+                               if(variableValue == (Integer.parseInt(content) / Integer.parseInt(secondContent))) {
+                                   blockName = blocks.remove().getName();
+                                   if(blockName.equals("THEN")) {
+                                       blockName = blocks.remove().getName();
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if(blockName.equals("AND")) {
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if (blockName.equals("OR")) {
+                                       spriteController = ORCondition(blocks, spriteController, variableManager);
+                                   }
+                               } else if(blockName.equals("OR")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               }else {
+                                   checkConditionFinished(blocks);
+                               }
+
+
+                           }
+                       } else if((secondBlockName.equals("MODULUS"))) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("NUMBER")) {
+                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                               String secondContent = inputBoxesValues.get(inputBoxAsString);
+                               inputBoxValueIndex++;
+                               if(variableValue == (Integer.parseInt(content) % Integer.parseInt(secondContent))) {
+                                   blockName = blocks.remove().getName();
+                                   if(blockName.equals("THEN")) {
+                                       blockName = blocks.remove().getName();
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if(blockName.equals("AND")) {
+                                       spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                                   } else if (blockName.equals("OR")) {
+                                       spriteController = ORCondition(blocks, spriteController, variableManager);
+                                   }
+                               } else if(blockName.equals("OR")) {
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                               }else {
+                                   checkConditionFinished(blocks);
+                               }
+
+
+                           }
+                       }
+
+                   }
+
+               } else {
+                   blocks.remove();
+                   blocks.remove();
+                   inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                   content = inputBoxesValues.get(inputBoxAsString);
+                   inputBoxValueIndex++;
+                   if(checkEquals.equals("LESS")) {
+                       if(variableValue < Integer.parseInt(content)) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("THEN")) {
+                               blockName = blocks.remove().getName();
+                               spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                           } else if(blockName.equals("AND")) {
+                               spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                           } else if (blockName.equals("OR")) {
+                               spriteController = ORCondition(blocks, spriteController, variableManager);
+                           }
+                       } else if(blockName.equals("OR")) {
+                           spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                       }else {
+                           checkConditionFinished(blocks);
+                       }
+                   } else if(checkEquals.equals("GREATER")) {
+                       if(variableValue > Integer.parseInt(content)) {
+                           blockName = blocks.remove().getName();
+                           if(blockName.equals("THEN")) {
+                               blockName = blocks.remove().getName();
+                               spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                           } else if(blockName.equals("AND")) {
+                               spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                           } else if (blockName.equals("OR")) {
+                               spriteController = ORCondition(blocks, spriteController, variableManager);
+                           }
+                       } else if(blockName.equals("OR")) {
+                           spriteController = switchStatement(blockName, blocks, spriteController, variableManager);
+                       }else {
+                           checkConditionFinished(blocks);
+                       }
+                   }
+
+               }
+
                 break;
             default:
                 System.out.println("something went wrong within condition");
