@@ -672,6 +672,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, secondBlockName, 19, 3, 252);
                     programBox.getChildren().add(hBox);
                     break;
+                case "PLAY":
+                    hBox = (HBox) drawBlock(blockName, 252, 3, 136);
+                    programBox.getChildren().add(hBox);
+                    break;
                 default:
                     System.out.println("test    ");
                     break;
@@ -688,6 +692,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             TextField textField = createTextField();
             hBox.getChildren().add(textField);
+
+            return hBox;
+        } else if (blockName.equals("PLAY")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
 
             return hBox;
         }
