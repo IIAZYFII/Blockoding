@@ -19,6 +19,8 @@ public class Interpreter {
     private boolean terminated = false;
     private boolean notActive = false;
     private Queue<Block> storedBlocks = new LinkedList<>();
+    private int numberOfConditionBlocks = 0;
+
 
 
 
@@ -80,10 +82,25 @@ public class Interpreter {
         Pair pair = new Pair(position, true);
          for(int i = 0; i < numberOfLoops; i++) {
              Block block = syntaxBlocks.remove();
+
+             if(block.getName().equals("WHENEVER")) {
+                 numberOfConditionBlocks++;
+                 numberOfConditionBlocks++;
+             } else if (block.getName().equals("CONDITION")) {
+                 numberOfConditionBlocks--;
+             } else if(block.getName().equals("THEN")) {
+                 numberOfConditionBlocks--;
+             }
+
+
              pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
              if( (boolean) pair.getValue() == false) {
                  return false;
              }
+         }
+         if(numberOfConditionBlocks != 0) {
+             System.out.println("Syntax Error Whenever and condition finished statemetn notmatchign");
+             return false;
          }
          return (boolean) pair.getValue();
     }

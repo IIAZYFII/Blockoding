@@ -20,6 +20,8 @@ public class  ParseTree {
     private TreeNode currentParentNode = null;
     private HashMap<String,Block> Blocks = new HashMap<>();
 
+
+
     /**
      * An empty constructor to create an empty Parse Tree
      * @throws FileNotFoundException
@@ -133,6 +135,9 @@ public class  ParseTree {
     }
 
     public Pair<TreeNode, Boolean> compileProgram(Block block, TreeNode position) {
+
+
+
         if(position.getNode().getName().equals(block.getName())) {
             System.out.println("correct position");
             Pair pair = new Pair(root, true);
