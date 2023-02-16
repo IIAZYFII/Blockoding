@@ -21,6 +21,7 @@ public class Interpreter {
     private Queue<Block> storedBlocks = new LinkedList<>();
     private int numberOfConditionBlocks = 0;
 
+    private int numberOfWhileBlocks = 0;
 
 
 
@@ -90,6 +91,10 @@ public class Interpreter {
                  numberOfConditionBlocks--;
              } else if(block.getName().equals("THEN")) {
                  numberOfConditionBlocks--;
+             } else if (block.getName().equals("LOOP")) {
+                 numberOfLoops++;
+             } else if (block.getName().equals("TERMINATE")) {
+                 numberOfLoops--;
              }
 
 
