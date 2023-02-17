@@ -17,5 +17,6 @@ public class MainTest {
         //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0))
         int finalNumber = 20 % 3;
         System.out.println(finalNumber);
+
     }
 }
