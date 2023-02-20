@@ -680,7 +680,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, 252, 3, 136);
                     programBox.getChildren().add(hBox);
 
-
                     break;
                 default:
                     System.out.println("test    ");
