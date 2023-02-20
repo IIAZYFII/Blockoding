@@ -17,6 +17,7 @@ import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -47,6 +48,7 @@ public class javaFXTest extends Application {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();
+
     }
     public BorderPane buildGUI() throws IOException {
         BorderPane root = new BorderPane();

@@ -75,6 +75,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Image OCRButtonImg;
     private Image defaultSprite;
     private SpriteController spriteController = new SpriteController();
+
+    private SoundController soundController = new SoundController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
     private VBox programBox;
@@ -85,6 +87,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static Timeline frameTimeline;
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
+
+
 
 
     private static KeyCode currentKey;
@@ -130,7 +134,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String blockName = "";
         while (interpreter.isTerminated() == false) {
             blockName = loopBlocks.remove().getName();
-            interpreter.switchStatement(blockName, loopBlocks, spriteController, variableManager);
+            interpreter.switchStatement(blockName, loopBlocks, spriteController, variableManager, soundController);
         }
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
@@ -460,7 +464,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
            // System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
-                        inputBoxes, variableManager);
+                        inputBoxes, variableManager, soundController);
                 drawScene();
                 drawVariableBox();
                // System.out.println("Post " + variableManager.getVariables().get(0).getValue());
@@ -675,6 +679,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "PLAY":
                     hBox = (HBox) drawBlock(blockName, 252, 3, 136);
                     programBox.getChildren().add(hBox);
+
+
                     break;
                 default:
                     System.out.println("test    ");
@@ -697,6 +703,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         } else if (blockName.equals("PLAY")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
+
+
+            ComboBox comboBox = createComboBox(soundController.getSoundFileNamesAsArray());
+            hBox.getChildren().add(comboBox);
 
             return hBox;
         }

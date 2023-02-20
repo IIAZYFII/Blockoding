@@ -21,5 +21,5 @@ public class SceneController {
         scenes.add(scene);
     }
 
-    
+
 }
