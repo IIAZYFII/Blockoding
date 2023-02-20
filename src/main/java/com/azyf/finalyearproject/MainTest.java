@@ -11,12 +11,14 @@ public class MainTest {
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, UnknownHostException {
         //String localIP = InetAddress.getLocalHost().getHostAddress();
         //System.out.println(localIP);
-        Interpreter interpreter = new Interpreter();
-        interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
-         System.out.println(interpreter.getParseTree().root);
+        //Interpreter interpreter = new Interpreter();
+        //interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
+         //System.out.println(interpreter.getParseTree().root);
         //System.out.println(interpreter.getParseTree().root.getChildren().get(3).getChildren().get(0))
-        int finalNumber = 20 % 3;
-        System.out.println(finalNumber);
+        //int finalNumber = 20 % 3;
+        //System.out.println(finalNumber);
+
+
 
     }
 }

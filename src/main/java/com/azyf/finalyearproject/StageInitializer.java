@@ -246,7 +246,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             currentMouseXPos = e.getX();
             currentMouseYPos = e.getY();
         });
+        canvas.setOnMouseClicked(e-> {
+            if(e.getButton() ==MouseButton.SECONDARY) {
+                System.out.println("second mouse clicked");
+            }
+        });
         root.setCenter(canvas);
+
 
 
         HBox sceneBox = new HBox();
@@ -312,13 +318,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         leftPane.getChildren().add(programBox);
         root.setLeft(leftPane);
 
-
-        //playButton.setStyle("-fx-background-color: transparent;");
-
-
-        //stopButton.setStyle("-fx-background-color: transparent;");
-
-
         Button compileButton = new Button();
         String pathCompileButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
         compileButtonImg = new Image(pathCompileButton);
@@ -337,7 +336,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         topBar.getChildren().add(OCRButton);
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
-            //textExtractor.setDataPath("C:\\Users\\hussa\\OneDrive\\Desktop\\Tess4J\\tessdata");
+
             String pathTempIMG = StageInitializer.getAbsolutePath() + "/Cache/img.png";
             File image = new File(pathTempIMG);
             try {
@@ -383,12 +382,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         Button variableButton = new Button();
-        //String pathVariableButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
-        //variableButtonImg = new Image(pathCompileButton);
-        //ImageView variableButtonView = new ImageView(compileButtonImg);
-        //comButtonView.setFitHeight(50);
-        //compileButtonView.setFitWidth(50);
-        //compileButton.setGraphic(compileButtonView);
+        String pathVariableButton = getAbsolutePath() + "/Assets/Images/VariableButton.png";
+        variableButtonImg = new Image(pathVariableButton);
+        ImageView variableButtonView = new ImageView(variableButtonImg);
+        variableButtonView.setFitHeight(50);
+        variableButtonView.setFitWidth(50);
+        variableButton.setGraphic(variableButtonView);
 
         variableButton.setOnAction(e-> {
             drawVariableManager();
@@ -397,6 +396,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         topBar.getChildren().add(variableButton);
 
+
+        Button sceneButton = new Button();
+        topBar.getChildren().add(sceneButton);
+        sceneButton.setOnAction(e-> {
+            drawSceneController();
+        });
 
 
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
@@ -1044,6 +1049,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         settingStage.showAndWait();
     }
 
+    private void drawSceneController() {
+        Stage sceneControllerStage = new Stage();
+        sceneControllerStage.setResizable(false);
+        BorderPane sceneControllerRoot = new BorderPane();
+       sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
+
+        Scene scene = new Scene( sceneControllerRoot, 350, 350);
+        sceneControllerStage.setScene(scene);
+        sceneControllerStage.showAndWait();
+
+    }
     private void drawVariableManager(){
         Stage variableManagerStage = new Stage();
         variableManagerStage.setResizable(false);
@@ -1354,6 +1370,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             addVariableToCanvas(variableManager.getVariables().get(i));
         }
     }
+
 
     private void addVariableToCanvas(Variable variable) {
         VariableType variableType = variable.getType();

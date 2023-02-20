@@ -6,7 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -135,6 +137,18 @@ public class ImageProcessor {
         Imgcodecs.imwrite(sprite.getUrl(), newSprite);
         sprite = new Image(sprite.getUrl());
         return sprite;
+    }
+
+    public static void produceImageThumbnails(Image image) {
+       Mat srcImage = Imgcodecs.imread(image.getUrl());
+       Mat dstThumbnail = new Mat();
+       Imgproc.resize(srcImage, dstThumbnail, new Size(75,75), Imgproc.INTER_CUBIC);
+
+        String imagePath  = image.getUrl();
+        String fileName = imagePath.substring(imagePath.lastIndexOf('\\'));
+        String path = StageInitializer.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails/" + fileName;
+        //String path = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Scenes\\Thumbnails\\test.png";
+       Imgcodecs.imwrite(path, dstThumbnail);
     }
 }
 
