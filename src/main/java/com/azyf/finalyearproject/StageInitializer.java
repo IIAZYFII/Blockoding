@@ -681,6 +681,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "LOOPS":
                     hBox = (HBox) drawBlock(blockName, 252, 3, 136);
                     programBox.getChildren().add(hBox);
+
                     break;
                 case "INCREASE":
                 case "DECREASE":

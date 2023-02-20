@@ -83,7 +83,7 @@ public class Interpreter {
         Pair pair = new Pair(position, true);
          for(int i = 0; i < numberOfLoops; i++) {
              Block block = syntaxBlocks.remove();
-
+             /**
              if(block.getName().equals("WHENEVER")) {
                  numberOfConditionBlocks++;
                  numberOfConditionBlocks++;
@@ -96,6 +96,7 @@ public class Interpreter {
              } else if (block.getName().equals("TERMINATE")) {
                  numberOfLoops--;
              }
+              */
 
 
              pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());

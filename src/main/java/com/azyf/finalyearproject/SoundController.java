@@ -9,9 +9,8 @@ import java.net.URI;
 import java.util.ArrayList;
 
 
-
-
 public class SoundController {
+<<<<<<< HEAD
        private ArrayList<String> sounds;
        private  File[] files;
 
@@ -20,12 +19,19 @@ public class SoundController {
 
        private double volumeLevel;
 
+=======
+        ArrayList<String> sounds;
+        File[] files;
+        MediaPlayer player;
+        MediaPlayer loopSound;
+>>>>>>> accb1db992d791c84ee4f8a4aac1cd133ad6d039
 
     public SoundController() {
         sounds = new ArrayList<>();
         String filePath = StageInitializer.getAbsolutePath() + "/Assets/Sounds";
         File dir = new File(filePath);
         files = dir.listFiles();
+
 
         for(int i =0; i < files.length; i++) {
             sounds.add(files[i].getName());
