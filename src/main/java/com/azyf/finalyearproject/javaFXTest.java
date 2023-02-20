@@ -49,8 +49,6 @@ public class javaFXTest extends Application {
         stage.setScene(scene);
         stage.show();
 
-        SceneController sceneController = new SceneController();
-        sceneController.loadDefaultScenes();
 
     }
     public BorderPane buildGUI() throws IOException {

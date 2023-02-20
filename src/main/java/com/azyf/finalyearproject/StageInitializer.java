@@ -88,6 +88,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
 
+    private SceneController sceneController  = new SceneController();
+
 
 
 
@@ -1053,11 +1055,28 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         Stage sceneControllerStage = new Stage();
         sceneControllerStage.setResizable(false);
         BorderPane sceneControllerRoot = new BorderPane();
-       sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
+        sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
 
+        File dir = new File(getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails");
+        File[] files = dir.listFiles();
+        VBox vBox = new VBox();
+        for(int i = 0; i < files.length; i++) {
+            Image image = new Image(files[i].getAbsolutePath());
+            ImageView imageView = new ImageView(image);
+            HBox hBox = new HBox();
+            hBox.getChildren().add(imageView);
+            Label label = new Label(files[i].getName().substring(0, files[i].getName().lastIndexOf(".")));
+            label.setMinSize(75,50);
+            hBox.getChildren().add(label);
+            vBox.getChildren().add(hBox);
+        }
+        sceneControllerRoot.getChildren().add(vBox);
         Scene scene = new Scene( sceneControllerRoot, 350, 350);
+
+
         sceneControllerStage.setScene(scene);
         sceneControllerStage.showAndWait();
+
 
     }
     private void drawVariableManager(){

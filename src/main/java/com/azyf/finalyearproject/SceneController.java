@@ -33,6 +33,7 @@ public class SceneController {
                 return false;
             }
         };
+        loadDefaultScenes();
 
     }
 
@@ -55,7 +56,7 @@ public class SceneController {
         scenes.add(scene);
     }
 
-    public void loadDefaultScenes() {
+    private void loadDefaultScenes() {
         File dir = new File(dirPath);
         files =  dir.listFiles(imageFileFilter);
         for(int i = 0; i < files.length; i++) {
