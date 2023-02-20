@@ -312,9 +312,23 @@ public class Interpreter {
                 amount = inputBoxesValues.get(inputBoxAsString);
                 inputBoxValueIndex++;
 
-
                 soundController.playSound(amount);
+                break;
+            case "LOOPS":
+                blocks.remove();
+                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+                amount = inputBoxesValues.get(inputBoxAsString);
+                inputBoxValueIndex++;
 
+                soundController.loopSound(amount);
+                break;
+            case "INCREASE":
+                blocks.remove();
+                soundController.increaseVolume();
+                break;
+            case "DECREASE":
+                blocks.remove();
+                soundController.decreaseVolume();
                 break;
             default:
                 System.out.println(blockName + " something went wrong");

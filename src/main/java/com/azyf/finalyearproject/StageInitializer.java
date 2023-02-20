@@ -486,6 +486,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             drawVariableBox();
             playButton.setDisable(false);
             stopButton.setDisable(true);
+            soundController.pressedStopButton();
             terminal.clear();
         });
 
@@ -677,10 +678,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     programBox.getChildren().add(hBox);
                     break;
                 case "PLAY":
+                case "LOOPS":
                     hBox = (HBox) drawBlock(blockName, 252, 3, 136);
                     programBox.getChildren().add(hBox);
-
-
+                    break;
+                case "INCREASE":
+                case "DECREASE":
+                    hBox = (HBox) drawBlock(blockName, blocks.remove().getName(), 252, 3, 136);
+                    programBox.getChildren().add(hBox);
                     break;
                 default:
                     System.out.println("test    ");
@@ -700,7 +705,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(textField);
 
             return hBox;
-        } else if (blockName.equals("PLAY")) {
+        } else if (blockName.equals("PLAY") || blockName.equals("LOOPS")) {
             HBox hBox = new HBox();
             hBox.getChildren().add(stackPane);
 
@@ -829,6 +834,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             TextField textField = createTextField();
             hBox.getChildren().add(textField);
             return hBox;
+
+        } else if (blockName.equals("DECREASE") || blockName.equals("INCREASE")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+
+            stackPane = createStackPane(secondBlockName, red,green, blue);
+            hBox.getChildren().add(stackPane);
+            return  hBox;
 
         }
         return stackPane;

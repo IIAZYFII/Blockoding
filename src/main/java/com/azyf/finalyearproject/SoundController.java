@@ -2,6 +2,7 @@ package com.azyf.finalyearproject;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URI;
@@ -11,11 +12,15 @@ import java.util.ArrayList;
 
 
 public class SoundController {
-        ArrayList<String> sounds;
-        File[] files;
+       private ArrayList<String> sounds;
+       private  File[] files;
 
-        MediaPlayer player;
-        MediaPlayer loopSound;
+       private  MediaPlayer player;
+       private  MediaPlayer loopSound;
+
+       private double volumeLevel;
+
+
     public SoundController() {
         sounds = new ArrayList<>();
         String filePath = StageInitializer.getAbsolutePath() + "/Assets/Sounds";
@@ -25,7 +30,7 @@ public class SoundController {
         for(int i =0; i < files.length; i++) {
             sounds.add(files[i].getName());
         }
-
+        volumeLevel = 1.0;
 
     }
 
@@ -46,8 +51,28 @@ public class SoundController {
     public void loopSound(String soundName) {
 
         loopSound = new MediaPlayer(getMedia(soundName));
-        loopSound.getOnRepeat();
+        loopSound.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                loopSound.seek(Duration.ZERO);
+                loopSound.play();
+            }
+        });
+
         loopSound.play();
+        System.out.println(loopSound.getVolume());
+
+    }
+
+    public void pressedStopButton() {
+        if(loopSound != null) {
+            loopSound.stop();
+        }
+        if(player != null) {
+            player.stop();
+        }
+
+
     }
 
 
@@ -62,6 +87,26 @@ public class SoundController {
 
         Media sound = new Media(tmpURI.toString());
         return  sound;
+    }
+
+    public void increaseVolume() {
+        volumeLevel = volumeLevel + 0.1;
+        setVolumeLevel();
+    }
+
+    public void decreaseVolume() {
+        volumeLevel = volumeLevel - 0.1;
+       setVolumeLevel();
+    }
+
+    private void setVolumeLevel() {
+        if(loopSound != null) {
+            loopSound.setVolume(volumeLevel);
+        }
+        if(player != null) {
+           player.setVolume(volumeLevel);
+
+        }
     }
 
 
