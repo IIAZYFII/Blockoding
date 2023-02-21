@@ -90,6 +90,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private SceneController sceneController  = new SceneController();
 
+    private Image sceneBackground;
+
 
 
 
@@ -211,6 +213,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         gc.setFill(Color.rgb(255, 253, 208));
         gc.fillRoundRect(0, 0, 728, 597, 20.0, 20.0);
         gc.strokeRoundRect(0, 0, 728, 597, 20.0, 20.0);
+        if(sceneBackground != null) {
+            gc.drawImage(sceneBackground,0,0);
+        }
+
 
         if (spriteController.size() != 0) {
             for (int i = 0; i < spriteController.size(); i++) {
@@ -1065,11 +1071,31 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             ImageView imageView = new ImageView(image);
             HBox hBox = new HBox();
             hBox.getChildren().add(imageView);
+
             Label label = new Label(files[i].getName().substring(0, files[i].getName().lastIndexOf(".")));
             label.setMinSize(75,50);
             hBox.getChildren().add(label);
+
+            Button sceneBtn = new Button();
+            sceneBtn.setMinSize(100,25);
+            sceneBtn.setText("Choose Scene");
+            int finalI = i;
+            sceneBtn.setOnAction(e-> {
+               sceneBackground = new Image(getAbsolutePath() + "/Assets/Images/Scenes/" + files[finalI].getName());
+               drawScene();
+                e.consume();
+            });
+            hBox.getChildren().add(sceneBtn);
             vBox.getChildren().add(hBox);
         }
+        Button removeSceneBtn = new Button();
+        removeSceneBtn.setMinSize(100,25);
+        removeSceneBtn.setText("Remove scene");
+        removeSceneBtn.setOnAction(e->{
+            sceneBackground = null;
+            drawScene();
+        });
+        vBox.getChildren().add(removeSceneBtn);
         sceneControllerRoot.getChildren().add(vBox);
         Scene scene = new Scene( sceneControllerRoot, 350, 350);
 
