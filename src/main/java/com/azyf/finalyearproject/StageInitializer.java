@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -424,9 +425,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 menuItem1.setOnAction(actionEvent -> {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Upload Sprite");
-                    FileChooser.ExtensionFilter extFilter =
+                    FileChooser.ExtensionFilter extensionFilter =
                             new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
-                    fileChooser.getExtensionFilters().add(extFilter);
+                    fileChooser.getExtensionFilters().add(extensionFilter);
                     File file = fileChooser.showOpenDialog(stage);
                     if (file != null) {
                         Image createdSprite = new Image(file.getPath());
@@ -1060,7 +1061,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawSceneController() {
         Stage sceneControllerStage = new Stage();
         sceneControllerStage.setResizable(false);
+        ScrollPane basePane = new ScrollPane();
+        basePane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        basePane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         BorderPane sceneControllerRoot = new BorderPane();
+
+        basePane.setContent(sceneControllerRoot);
+        sceneControllerRoot.setPrefSize(350,350);
         sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
 
         File dir = new File(getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails");
@@ -1095,13 +1102,44 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             sceneBackground = null;
             drawScene();
         });
-        vBox.getChildren().add(removeSceneBtn);
+
+        Button addSceneBtn = new Button();
+        addSceneBtn.setMinSize(125,25);
+        addSceneBtn.setText("Add custom scene");
+        addSceneBtn.setOnAction(e->{
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Upload Scene");
+            FileChooser.ExtensionFilter extensionFilter =
+                    new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            File file = fileChooser.showOpenDialog(sceneControllerStage);
+            if (file != null) {
+               Image image = new Image(file.getAbsolutePath());
+               File copyImage = new File(getAbsolutePath() + "/Assets/Images/Scenes/" + file.getName());
+                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+                try {
+                    ImageIO.write(bufferedImage,"png",copyImage);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                imageProcessor.produceImageThumbnails(image);
+                drawSceneController();
+                sceneControllerStage.close();
+            }
+
+        });
+        HBox hBox = new HBox();
+        hBox.getChildren().add(removeSceneBtn);
+        hBox.getChildren().add(addSceneBtn);
+
+        vBox.getChildren().add(hBox);
         sceneControllerRoot.getChildren().add(vBox);
-        Scene scene = new Scene( sceneControllerRoot, 350, 350);
+        Scene scene = new Scene(basePane, 350, 350);
 
 
         sceneControllerStage.setScene(scene);
-        sceneControllerStage.showAndWait();
+        sceneControllerStage.show();
 
 
     }
