@@ -4,17 +4,29 @@ import javafx.scene.image.Image;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SceneController {
-    ArrayList<Scene> scenes;
-    File[] files;
-    String dirPath;
+    private ArrayList<Scene> scenes;
+  private  File[] files;
+   private String dirPath;
     FileFilter imageFileFilter;
+    private  String changeSceneTo;
+
+
+    public String getChangeSceneTo() {
+        return changeSceneTo;
+    }
+
+    public void setChangeSceneTo(String changeSceneTo) {
+        this.changeSceneTo = changeSceneTo;
+    }
+
 
     public SceneController() {
         scenes = new ArrayList<>();
-//        dirPath = StageInitializer.getAbsolutePath() + "/Assets/Scenes";
+
         dirPath = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Scenes";
         imageFileFilter = new FileFilter() {
             @Override
@@ -33,12 +45,22 @@ public class SceneController {
                 return false;
             }
         };
+        Scene scene = new Scene( "Default");
+        this.addScene(scene);
         loadDefaultScenes();
 
     }
 
     public ArrayList<Scene> getScenes() {
         return scenes;
+    }
+
+    public String[] getScenesAsList() {
+        String[] listOfScenes = new String[scenes.size()];
+        for (int i = 0; i < scenes.size(); i++) {
+            listOfScenes[i] = scenes.get(i).getName();
+        }
+        return listOfScenes;
     }
 
     public Scene getScene(int i) {
@@ -51,7 +73,7 @@ public class SceneController {
 
     private void addScene(String filePath) {
         Image image  = new Image(filePath);
-        String name = filePath.substring(0,  filePath.lastIndexOf("."));
+        String name = filePath.substring(filePath.lastIndexOf("\\") + 1,  filePath.lastIndexOf("."));
         Scene scene = new Scene(image, name);
         scenes.add(scene);
     }
@@ -61,7 +83,10 @@ public class SceneController {
         files =  dir.listFiles(imageFileFilter);
         for(int i = 0; i < files.length; i++) {
             addScene(files[i].getAbsolutePath());
-           ImageProcessor.produceImageThumbnails(scenes.get(i).getImage());
+            if(!(scenes.get(i).getName().equals("Default"))) {
+                ImageProcessor.produceImageThumbnails(scenes.get(i).getImage());
+            }
+
         }
 
 

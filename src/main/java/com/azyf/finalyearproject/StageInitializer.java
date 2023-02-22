@@ -96,6 +96,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
+
     private static KeyCode currentKey;
     private static int frameCounter = 0;
 
@@ -139,7 +140,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         String blockName = "";
         while (interpreter.isTerminated() == false) {
             blockName = loopBlocks.remove().getName();
-            interpreter.switchStatement(blockName, loopBlocks, spriteController, variableManager, soundController);
+            interpreter.switchStatement(blockName, loopBlocks, spriteController, variableManager, soundController, sceneController);
         }
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
@@ -208,6 +209,14 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      * Draws the scene for the canvas.
      */
     private void drawScene() {
+        if(sceneController.getChangeSceneTo() != null || !(sceneController.getChangeSceneTo().equals("Default"))) {
+            for(int i =0; i < sceneController.getScenes().size(); i++) {
+                if(sceneController.getScene(i).getName().equals(sceneController.getChangeSceneTo())) {
+                    sceneBackground = sceneController.getScene(i).getImage();
+                }
+            }
+           sceneController.setChangeSceneTo(null);
+        }
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -478,7 +487,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
            // System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
-                        inputBoxes, variableManager, soundController);
+                        inputBoxes, variableManager, soundController, sceneController);
                 drawScene();
                 drawVariableBox();
                // System.out.println("Post " + variableManager.getVariables().get(0).getValue());
@@ -702,8 +711,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     hBox = (HBox) drawBlock(blockName, blocks.remove().getName(), 252, 3, 136);
                     programBox.getChildren().add(hBox);
                     break;
+                case "CHANGE":
+                    hBox = (HBox) drawBlock(blockName, blocks.remove().getName(), 119, 3, 252);
+                    programBox.getChildren().add(hBox);
+                    break;
                 default:
-                    System.out.println("test    ");
+                    System.out.println("test");
                     break;
 
 
@@ -858,6 +871,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             hBox.getChildren().add(stackPane);
             return  hBox;
 
+        } else if (blockName.equals("CHANGE")) {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(stackPane);
+            ComboBox comboBox = createComboBox(sceneController.getScenesAsList());
+            hBox.getChildren().add(comboBox);
+            return hBox;
         }
         return stackPane;
     }
@@ -1510,4 +1529,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
     }
+
+
 }
