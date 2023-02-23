@@ -215,7 +215,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     sceneBackground = sceneController.getScene(i).getImage();
                 }
             }
-           sceneController.setChangeSceneTo(null);
+           sceneController.setChangeSceneTo("Default");
         }
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -557,6 +557,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 case "START":
                 case "END":
                     stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
+                    programBox.getChildren().add(stackPane);
+                    break;
+                case "DO":
+                case "ONCE":
+                    stackPane = (StackPane) drawBlock(blockName, 255, 95, 31);
                     programBox.getChildren().add(stackPane);
                     break;
                 case "ROTATE":

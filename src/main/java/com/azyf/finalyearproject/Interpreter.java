@@ -20,8 +20,8 @@ public class Interpreter {
     private boolean notActive = false;
     private Queue<Block> storedBlocks = new LinkedList<>();
     private int numberOfConditionBlocks = 0;
-
     private int numberOfWhileBlocks = 0;
+    private boolean doOnce = false;
 
 
 
@@ -119,6 +119,7 @@ public class Interpreter {
         inputBoxes = inputBxs;
         mouseX = xMouse;
         mouseY = yMouse;
+        doOnce = false;
         Queue<Block> blocks = new LinkedList<>(storedBlocks);
             while(blocks.size() > 0) {
                 Block block = blocks.remove();
@@ -340,7 +341,18 @@ public class Interpreter {
 
                 sceneController.setChangeSceneTo(scene);
                 break;
-
+            case "DO":
+                if(doOnce == false) {
+                    switchStatement(blocks.remove().getName(), blocks, spriteController,
+                            variableManager, soundController, sceneController);
+                    doOnce = true;
+                } else {
+                    skipOnce(blocks);
+                }
+                break;
+            case "ONCE":
+                doOnce = true;
+                break;
             default:
                 System.out.println(blockName + " something went wrong");
                 break;
@@ -773,6 +785,16 @@ public class Interpreter {
         spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
         return spriteController;
     }
+
+    private void skipOnce(Queue<Block> blocks) {
+        boolean skipped = false;
+        while (!skipped) {
+            if(blocks.remove().getName().equals("ONCE")) {
+                skipped = true;
+            }
+        }
+    }
+
 
 
     public boolean isTerminated() {
