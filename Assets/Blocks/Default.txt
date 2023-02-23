@@ -17,6 +17,7 @@ Start Commands
 Pause Commands
 End Commands
 Once Commands
+Do Commands
 Presses Commands
 Key Commands
 Clicks Commands
