@@ -665,10 +665,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     programBox.getChildren().add(hBox);
                     break;
                 case "ELSE":
-                case "LOOP":
                 case "TERMINATE":
                     stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
                     programBox.getChildren().add(stackPane);
+                    break;
+                case "LOOP":
+                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
+                    hBox = new HBox();
+                    hBox.getChildren().add(stackPane);
+                    stackPane = (StackPane) drawBlock(blocks.remove().getName(), 192, 240, 22);
+                    hBox.getChildren().add(stackPane);
+                    programBox.getChildren().add(hBox);
                     break;
                 case "HOVERS":
                 case "PRESSES":
