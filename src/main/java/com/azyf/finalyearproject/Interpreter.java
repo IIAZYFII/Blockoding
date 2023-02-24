@@ -33,10 +33,11 @@ public class Interpreter {
         parseTree = new ParseTree();
     }
 
-    public void runCode() {
-    }
-
-
+    /**
+     * Passes the tree data and initialises the parse tree
+     * @param treeData The tree data file
+     * @throws UnsupportedEncodingException
+     */
     public void loadTree(File treeData) throws UnsupportedEncodingException {
         parseTree.initialiseParseTree(treeData);
     }
@@ -111,6 +112,17 @@ public class Interpreter {
          return (boolean) pair.getValue();
     }
 
+    /**
+     * Runs the Program.
+     * @param spriteController The controller for the sprites.
+     * @param xMouse The current x position of the mouse.
+     * @param yMouse The current y position of the mouse.
+     * @param inputBxsVls
+     * @param inputBxs
+     * @param variableManager The controller for the variables.
+     * @param soundController The controller for the sound files.
+     * @param sceneController the controller for the scenes.
+     */
     public void compileAndRun(SpriteController spriteController, double xMouse, double yMouse, HashMap<String, String> inputBxsVls,
                               ArrayList<String> inputBxs, VariableManager variableManager,
                               SoundController soundController, SceneController sceneController) {
@@ -346,12 +358,25 @@ public class Interpreter {
         return sprite;
     }
 
-    private static Sprite flipSprite(Sprite sprite, String direction) {
+    /**
+     * Flips the sprite in the respective direction.
+     * @param sprite The sprite that will be flipped.
+     * @param direction The direction in which the sprite wil be flipped.
+     * @return The flipped sprite.
+     */
+    private Sprite flipSprite(Sprite sprite, String direction) {
       sprite.setSpriteOutfit(0, ImageProcessor.flipImage(sprite.getSpriteOutfit(0), direction));
         return sprite;
     }
 
-    private static Sprite teleportSprite(Sprite sprite, String x, String y) {
+    /**
+     * Teleports the sprite at coordinates X,Y.
+     * @param sprite The sprite that will be teleported.
+     * @param x The new x pos of the sprite.
+     * @param y The new y pos of the sprite.
+     * @return The sprite with new X,Y coords.
+     */
+    private Sprite teleportSprite(Sprite sprite, String x, String y) {
         System.out.println(x);
         int xCoord = Integer.parseInt(x);
         int yCoord = Integer.parseInt(y);
@@ -361,7 +386,12 @@ public class Interpreter {
 
     }
 
-    private static Sprite teleportSprite(Sprite sprite) {
+    /**
+     * Teleports the sprite in a random position.
+     * @param sprite The sprite that will be teleported.
+     * @return The sprite with random coords.
+     */
+    private Sprite teleportSprite(Sprite sprite) {
             Random rand = new Random();
             double  xPos = rand.nextDouble(728 - 50);
             double yPos = rand.nextDouble(597 - 50);
@@ -371,7 +401,15 @@ public class Interpreter {
         return sprite;
     }
 
-    private static Sprite teleportSprite(Sprite sprite, double xPos, double yPos) {
+
+    /**
+     * Teleports the sprite to the current mouse position.
+     * @param sprite The sprite that will be teleported.
+     * @param xPos The X pos of the mouse.
+     * @param yPos The Y pos of the mouse.
+     * @return The sprite with the coords set to the mouse position.
+     */
+    private Sprite teleportSprite(Sprite sprite, double xPos, double yPos) {
         System.out.println("---mouse--");
         if(yPos < 0) {
            yPos = 10;
@@ -389,6 +427,14 @@ public class Interpreter {
         return sprite;
     }
 
+
+    /**
+     * Rotates the sprite in a given orientation by a certain amount.
+     * @param sprite The sprite that will be rotated.
+     * @param orientation The orientation that the sprite will be rotated in.
+     * @param amount The amount the sprite will be rotated by in degrees.
+     * @return The rotated Sprite.
+     */
     private static Sprite rotateSprite(Sprite sprite, String orientation, String amount) {
         sprite.setSpriteOutfit(0, ImageProcessor.rotateImage(sprite.getSpriteOutfit(0), orientation , amount));
         return sprite;
@@ -396,6 +442,10 @@ public class Interpreter {
 
     //add teleport to spirte
 
+    /**
+     * Pauses the running program.
+     * @param number The amount of time the program will be paused for in seconds.
+     */
     private static void pauseProgram(String number) {
         int delay = (Integer.parseInt(number) * 1000);
         try {
