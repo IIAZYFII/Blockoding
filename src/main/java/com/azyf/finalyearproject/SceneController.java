@@ -26,8 +26,8 @@ public class SceneController {
 
     public SceneController() {
         scenes = new ArrayList<>();
-
-        dirPath = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Scenes";
+        changeSceneTo = "Default";
+        dirPath =  StageInitializer.getAbsolutePath() + "/Assets/Images/Scenes";
         imageFileFilter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {
