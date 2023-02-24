@@ -249,9 +249,11 @@ public class Interpreter {
                 checkConditionFinished(blocks);
                 break;
             case "LOOP":
-                StageInitializer.setEmptyLoopBlocks(getLoopBlocks(blocks));
-                StageInitializer.frameTimeline.playFromStart();
-                enterLoop(blocks);
+                if(blocks.remove().getName().equals("ALWAYS")) {
+                    StageInitializer.setEmptyLoopBlocks(getLoopBlocks(blocks));
+                    StageInitializer.frameTimeline.playFromStart();
+                    enterLoop(blocks);
+                }
                 break;
             case "TERMINATE":
                 System.out.println("Reached Terminate");

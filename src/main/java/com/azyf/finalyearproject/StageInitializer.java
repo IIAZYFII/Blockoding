@@ -538,13 +538,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     private void drawProgramBox(Queue<Block> blocks) {
         programBox.getChildren().clear();
-        Text programText = new Text(spriteController.getSprite(currentSpriteIndex).getSpriteName() + " Program Box");
         programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        programBox.getChildren().add(programText);
-
-        //Rectangle rect = new Rectangle(30,40);
-        //programBox.getChildren().add(rect);
-
+        
 
         while (blocks.size() > 0) {
             Block block = blocks.remove();
