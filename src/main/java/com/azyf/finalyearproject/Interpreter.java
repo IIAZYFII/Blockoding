@@ -193,6 +193,7 @@ public class Interpreter {
                 String position = block.getName();
                 spriteIntegerPair = getSprite(spriteController);
                 tmpSprite = spriteIntegerPair.getKey();
+                index = spriteIntegerPair.getValue();
                 if (position.equals("X")) {
                     block = blocks.remove();
                     String xCoord = getContent();
@@ -203,8 +204,13 @@ public class Interpreter {
                     tmpSprite = teleportSprite(tmpSprite);
                 } else if (position.equals("MOUSE")) {
                     tmpSprite = teleportSprite(tmpSprite, mouseX, mouseY);
+                } else if (position.equals("SPRITE")) {
+                    spriteIntegerPair = getSprite(spriteController);
+                    Sprite secondSprite = spriteIntegerPair.getKey();
+                    tmpSprite = teleportSprite(tmpSprite, secondSprite);
+
                 }
-                index = spriteIntegerPair.getValue();
+
                 spriteController.setSprite(index, tmpSprite);
                 StageInitializer.setCurrentKey(null);
                 break;
@@ -392,9 +398,9 @@ public class Interpreter {
      * @return The sprite with random coords.
      */
     private Sprite teleportSprite(Sprite sprite) {
-            Random rand = new Random();
-            double  xPos = rand.nextDouble(728 - 50);
-            double yPos = rand.nextDouble(597 - 50);
+        Random rand = new Random();
+        double  xPos = rand.nextDouble(728 - 50);
+        double yPos = rand.nextDouble(597 - 50);
         sprite.setXPos(xPos);
         sprite.setYPos(yPos);
 
@@ -435,12 +441,20 @@ public class Interpreter {
      * @param amount The amount the sprite will be rotated by in degrees.
      * @return The rotated Sprite.
      */
-    private static Sprite rotateSprite(Sprite sprite, String orientation, String amount) {
+    private  Sprite rotateSprite(Sprite sprite, String orientation, String amount) {
         sprite.setSpriteOutfit(0, ImageProcessor.rotateImage(sprite.getSpriteOutfit(0), orientation , amount));
         return sprite;
     }
 
     //add teleport to spirte
+
+    private Sprite teleportSprite(Sprite sprite, Sprite sprite2) {
+        double xPos = sprite2.getXPos();
+        double yPos = sprite2.getYPos();
+        sprite.setXPos(xPos);
+        sprite.setYPos(yPos);
+        return sprite;
+    }
 
     /**
      * Pauses the running program.

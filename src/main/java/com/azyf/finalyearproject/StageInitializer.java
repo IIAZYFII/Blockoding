@@ -813,8 +813,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             } else if (secondBlockName.equals("SPRITE")) {
                 stackPane = createStackPane(secondBlockName, red, green, blue);
                 hBox.getChildren().add(stackPane);
-                String options[] = {"no options"};
-                comboBox = new ComboBox(FXCollections.observableArrayList(options));
+                comboBox = createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
                 return hBox;
             } else if (secondBlockName.equals("RANDOM")) {
