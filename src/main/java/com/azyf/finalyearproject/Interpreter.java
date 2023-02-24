@@ -134,8 +134,7 @@ public class Interpreter {
     public SpriteController switchStatement(String blockName, Queue<Block> blocks, SpriteController spriteController,
                                             VariableManager variableManager, SoundController soundController, SceneController sceneController) {
         String direction = "";
-        String inputBoxAsString = "";
-        String amount = "";
+        String content = "";
         Block block;
         Sprite tmpSprite;
         int index;
@@ -153,13 +152,9 @@ public class Interpreter {
                 tmpSprite = spriteIntegerPair.getKey();
                 index = spriteIntegerPair.getValue();
 
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                String steps = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
 
 
-
-                tmpSprite = moveSprite(tmpSprite, direction, steps);
+                tmpSprite = moveSprite(tmpSprite, direction, getContent());
                 spriteController.setSprite(index, tmpSprite);
                 StageInitializer.setCurrentKey(null);
                 break;
@@ -188,16 +183,8 @@ public class Interpreter {
                 tmpSprite = spriteIntegerPair.getKey();
                 if (position.equals("X")) {
                     block = blocks.remove();
-                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                    String xCoord = inputBoxesValues.get(inputBoxAsString);
-                    inputBoxValueIndex++;
-
-                    inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                    String yCoord = inputBoxesValues.get(inputBoxAsString);
-                    inputBoxValueIndex++;
-
-
-
+                    String xCoord = getContent();
+                    String yCoord = getContent();
 
                     tmpSprite = teleportSprite(tmpSprite, xCoord, yCoord);
                 } else if (position.equals("RANDOM")) {
@@ -220,21 +207,17 @@ public class Interpreter {
                 index = spriteIntegerPair.getValue();
 
 
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+                content = getContent();
 
-                tmpSprite = rotateSprite(tmpSprite, orientation, amount);
+                tmpSprite = rotateSprite(tmpSprite, orientation, content);
 
                 spriteController.setSprite(index, tmpSprite);
 
                 StageInitializer.setCurrentKey(null);
                 break;
             case "PAUSE":
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
-                pauseProgram(amount);
+                content = getContent();
+                pauseProgram(content);
                 StageInitializer.setCurrentKey(null);
                 break;
             case "WHENEVER":
@@ -268,27 +251,16 @@ public class Interpreter {
                 tmpVariable = variableIntegerPair.getKey();
                 index = variableIntegerPair.getValue();
 
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
-
+               content = getContent();
                 if(blockName.equals("ASK")) {
                     blocks.remove();
-                    StageInitializer.askTerminalContent(amount);
-
-
+                    StageInitializer.askTerminalContent(content);
 
                 } else {
-                    tmpVariable.setValue(Integer.parseInt(amount));
+                    tmpVariable.setValue(Integer.parseInt(content));
                 }
 
                 variableManager.getVariables().set(index, tmpVariable);
-
-
-
-
-
-
 
                 break;
             case "VARIABLE":
@@ -302,10 +274,8 @@ public class Interpreter {
                 break;
             case "SPEAK":
                 blocks.remove();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
-                StageInitializer.setTerminalContent(amount);
+                content = getContent();
+                StageInitializer.setTerminalContent(content);
 
                 break;
             case "CONTINUE":
@@ -313,19 +283,17 @@ public class Interpreter {
                 break;
             case "PLAY":
                 blocks.remove();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+                content = getContent();
 
-                soundController.playSound(amount);
+                soundController.playSound(content);
                 break;
             case "LOOPS":
                 blocks.remove();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                amount = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
 
-                soundController.loopSound(amount);
+               content = getContent();
+
+
+                soundController.loopSound(content);
                 break;
             case "INCREASE":
                 blocks.remove();
@@ -337,9 +305,8 @@ public class Interpreter {
                 break;
             case "CHANGE":
                 blocks.remove();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                String scene= inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+
+                String scene= getContent();
 
                 sceneController.setChangeSceneTo(scene);
                 break;
@@ -456,9 +423,8 @@ public class Interpreter {
             case "PRESSES":
                 blocks.remove();
                 blockName = blocks.remove().getName();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                String key = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+                String key = getContent();
+
                 KeyCode keyCondition = KeyCode.getKeyCode(key);
                 System.out.println(keyCondition);
                 System.out.println(StageInitializer.getCurrentKey());
@@ -492,10 +458,7 @@ public class Interpreter {
                     tmpSpriteName = spriteController.getSprite(spriteIndex).getSpriteName();
                 }
 
-
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                spriteName = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+                spriteName = getContent();
 
                 if((tmpSpriteName.equals(spriteName) && notActive == false) ||
                         (!(tmpSpriteName.equals(spriteName)) && notActive == true)) {
@@ -520,9 +483,8 @@ public class Interpreter {
             case "CLICKS":
                 blocks.remove();
                 blockName = blocks.remove().getName();
-                inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                spriteName = inputBoxesValues.get(inputBoxAsString);
-                inputBoxValueIndex++;
+                spriteName = getContent();
+
                 Sprite tmpSprite = null;
                 boolean found = false;
                 int j = 0;
@@ -567,9 +529,8 @@ public class Interpreter {
                    blockName = blocks.remove().getName();
 
                    if(blockName.equals("NUMBER")) {
-                       inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                       content = inputBoxesValues.get(inputBoxAsString);
-                       inputBoxValueIndex++;
+
+                       content = getContent();
 
                        String secondBlockName = blocks.remove().getName();
                        if(secondBlockName.equals("THEN")) {
@@ -592,9 +553,9 @@ public class Interpreter {
                        } else if(secondBlockName.equals("ADD")) {
                            blockName = blocks.remove().getName();
                            if(blockName.equals("NUMBER")) {
-                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                               String secondContent = inputBoxesValues.get(inputBoxAsString);
-                               inputBoxValueIndex++;
+
+                               String secondContent = getContent();
+
                                if(variableValue == (Integer.parseInt(content) + Integer.parseInt(secondContent))) {
                                    spriteController = performWheneverStatement(blocks, spriteController, variableManager, soundController, sceneController);
                                } else if(blockName.equals("OR")) {
@@ -608,9 +569,9 @@ public class Interpreter {
                        } else if (secondBlockName.equals("SUBTRACT")) {
                            blockName = blocks.remove().getName();
                            if(blockName.equals("NUMBER")) {
-                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                               String secondContent = inputBoxesValues.get(inputBoxAsString);
-                               inputBoxValueIndex++;
+
+                               String secondContent = getContent();
+
                                if(variableValue == (Integer.parseInt(content) - Integer.parseInt(secondContent))) {
                                    spriteController = performWheneverStatement(blocks, spriteController, variableManager, soundController, sceneController);
                                } else if(blockName.equals("OR")) {
@@ -625,9 +586,8 @@ public class Interpreter {
                        } else if((secondBlockName.equals("MULTIPLY"))) {
                            blockName = blocks.remove().getName();
                            if(blockName.equals("NUMBER")) {
-                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                               String secondContent = inputBoxesValues.get(inputBoxAsString);
-                               inputBoxValueIndex++;
+                               String secondContent = getContent();
+
                                if(variableValue == (Integer.parseInt(content) * Integer.parseInt(secondContent))) {
                                    spriteController = performWheneverStatement(blocks, spriteController, variableManager, soundController, sceneController);
                                } else if(blockName.equals("OR")) {
@@ -641,9 +601,9 @@ public class Interpreter {
                        } else if((secondBlockName.equals("DIVIDE"))) {
                            blockName = blocks.remove().getName();
                            if(blockName.equals("NUMBER")) {
-                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                               String secondContent = inputBoxesValues.get(inputBoxAsString);
-                               inputBoxValueIndex++;
+
+                               String secondContent = getContent();
+
                                if(variableValue == (Integer.parseInt(content) / Integer.parseInt(secondContent))) {
                                    spriteController = performWheneverStatement(blocks, spriteController, variableManager, soundController,sceneController);
                                } else if(blockName.equals("OR")) {
@@ -657,9 +617,9 @@ public class Interpreter {
                        } else if((secondBlockName.equals("MODULUS"))) {
                            blockName = blocks.remove().getName();
                            if(blockName.equals("NUMBER")) {
-                               inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-                               String secondContent = inputBoxesValues.get(inputBoxAsString);
-                               inputBoxValueIndex++;
+
+                               String secondContent = getContent();
+
                                if(variableValue == (Integer.parseInt(content) % Integer.parseInt(secondContent))) {
                                    spriteController = performWheneverStatement(blocks, spriteController, variableManager, soundController,sceneController);
                                } else if(blockName.equals("OR")) {
@@ -873,6 +833,13 @@ public class Interpreter {
         }
         Pair<Variable, Integer> variableIntegerPair = new Pair<>(tmpVariable, count);
         return variableIntegerPair;
+    }
+
+    private String getContent() {
+        String  inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
+        String content = inputBoxesValues.get(inputBoxAsString);
+        inputBoxValueIndex++;
+        return content;
     }
 
 

@@ -539,7 +539,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private void drawProgramBox(Queue<Block> blocks) {
         programBox.getChildren().clear();
         programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        
+
 
         while (blocks.size() > 0) {
             Block block = blocks.remove();
