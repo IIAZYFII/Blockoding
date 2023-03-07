@@ -1,5 +1,6 @@
 package com.azyf.finalyearproject;
 
+import com.google.api.client.http.FileContent;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -118,6 +119,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
         scene = new Scene(scrollPane, screenWidth, screenHeight);
+        stage.setMaximized(true);
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
         stage.show();
@@ -307,7 +309,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        String pathDS = getAbsolutePath() + "/Assets/Images/Sprites/default.png";
+        String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
         defaultSprite = new Image(pathDS);
         ImageView defaultSpriteViewer = new ImageView();
         defaultSpriteViewer.setImage(defaultSprite);
@@ -337,7 +339,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setLeft(leftPane);
 
         Button compileButton = new Button();
-        String pathCompileButton = getAbsolutePath() + "/Assets/Images/CompileButton.png";
+        String pathCompileButton = FileController.getAbsolutePath() + "/Assets/Images/CompileButton.png";
         compileButtonImg = new Image(pathCompileButton);
         ImageView compileButtonView = new ImageView(compileButtonImg);
         compileButtonView.setFitHeight(50);
@@ -345,7 +347,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         compileButton.setGraphic(compileButtonView);
 
         Button OCRButton = new Button();
-        String pathOCRButton = getAbsolutePath() + "/Assets/Images/OCRButton.png";
+        String pathOCRButton = FileController.getAbsolutePath() + "/Assets/Images/OCRButton.png";
         OCRButtonImg = new Image(pathOCRButton);
         ImageView OCRButtonView = new ImageView(OCRButtonImg);
         OCRButtonView.setFitHeight(50);
@@ -355,7 +357,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
 
-            String pathTempIMG = StageInitializer.getAbsolutePath() + "/Cache/img.png";
+            String pathTempIMG = FileController.getAbsolutePath() + "/Cache/img.png";
             File image = new File(pathTempIMG);
             try {
                 image = imageProcessor.processImage(image);
@@ -400,7 +402,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
         Button variableButton = new Button();
-        String pathVariableButton = getAbsolutePath() + "/Assets/Images/VariableButton.png";
+        String pathVariableButton = FileController.getAbsolutePath() + "/Assets/Images/VariableButton.png";
         variableButtonImg = new Image(pathVariableButton);
         ImageView variableButtonView = new ImageView(variableButtonImg);
         variableButtonView.setFitHeight(50);
@@ -473,7 +475,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         playButton.setDisable(true);
-        String pathPlayButton = getAbsolutePath() + "/Assets/Images/PlayButton.png";
+        String pathPlayButton = FileController.getAbsolutePath() + "/Assets/Images/PlayButton.png";
         playButtonImg = new Image(pathPlayButton);
         ImageView playButtonView = new ImageView(playButtonImg);
         playButton.setGraphic(playButtonView);
@@ -497,7 +499,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         stopButton.setDisable(true);
-        String pathStopButton = getAbsolutePath() + "/Assets/Images/StopButton.png";
+        String pathStopButton = FileController.getAbsolutePath() + "/Assets/Images/StopButton.png";
         stopButtonImg = new Image(pathStopButton);
         ImageView stopButtonView = new ImageView(stopButtonImg);
         stopButton.setGraphic(stopButtonView);
@@ -514,7 +516,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
         Button settingButton = new Button();
-        String pathSettingButton = getAbsolutePath() + "/Assets/Images/SettingsButton.png";
+        String pathSettingButton = FileController.getAbsolutePath() + "/Assets/Images/SettingsButton.png";
         Image settingButtonImg = new Image(pathSettingButton);
         ImageView settingButtonView = new ImageView(settingButtonImg);
         settingButtonView.setFitHeight(50);
@@ -1058,7 +1060,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             try {
                 generateQRCode();
                 hBox.getChildren().clear();
-                String path = getAbsolutePath() + "\\Cache\\qrcode.png";
+                String path = FileController.getAbsolutePath() + "\\Cache\\qrcode.png";
                 System.out.println(path);
                 Image qrCode = new Image(path);
                 ImageView qrCodeViewer = new ImageView(qrCode);
@@ -1095,7 +1097,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         sceneControllerRoot.setPrefSize(350,350);
         sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
 
-        File dir = new File(getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails");
+        File dir = new File(FileController.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails");
         File[] files = dir.listFiles();
         VBox vBox = new VBox();
         for(int i = 0; i < files.length; i++) {
@@ -1113,7 +1115,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             sceneBtn.setText("Choose Scene");
             int finalI = i;
             sceneBtn.setOnAction(e-> {
-               sceneBackground = new Image(getAbsolutePath() + "/Assets/Images/Scenes/" + files[finalI].getName());
+               sceneBackground = new Image(FileController.getAbsolutePath() + "/Assets/Images/Scenes/" + files[finalI].getName());
                drawScene();
                 e.consume();
             });
@@ -1140,7 +1142,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             File file = fileChooser.showOpenDialog(sceneControllerStage);
             if (file != null) {
                Image image = new Image(file.getAbsolutePath());
-               File copyImage = new File(getAbsolutePath() + "/Assets/Images/Scenes/" + file.getName());
+               File copyImage = new File(FileController.getAbsolutePath() + "/Assets/Images/Scenes/" + file.getName());
                 BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
                 try {
                     ImageIO.write(bufferedImage,"png",copyImage);
@@ -1465,12 +1467,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
 
-    public static String getAbsolutePath() {
-        File path = new File("");
-        String systemPath = path.getAbsolutePath();
-        System.out.println(systemPath);
-        return systemPath;
-    }
 
     private void drawVariableBox() {
         variableBox.getChildren().clear();

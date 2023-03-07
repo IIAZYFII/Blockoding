@@ -28,7 +28,7 @@ public class ImageProcessor {
         System.out.println("Converting to Gray Scale");
         convertToGrayScale(imageFile);
         System.out.println("Zooming into image");
-        String pathTempRotateImg =  StageInitializer.getAbsolutePath() + "/Cache/rotateimg.png";
+        String pathTempRotateImg =  FileController.getAbsolutePath() + "/Cache/rotateimg.png";
         imageFile = zoomImage(pathTempRotateImg);
         return imageFile;
     }
@@ -146,7 +146,7 @@ public class ImageProcessor {
 
         String imagePath  = image.getUrl();
         String fileName = imagePath.substring(imagePath.lastIndexOf('\\'));
-        String path = StageInitializer.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails/" + fileName;
+        String path = FileController.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails/" + fileName;
         //String path = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Scenes\\Thumbnails\\test.png";
        Imgcodecs.imwrite(path, dstThumbnail);
     }
