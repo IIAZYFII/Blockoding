@@ -40,6 +40,7 @@ public class javaFXTest extends Application {
         System.out.println(Core.VERSION);
 
         launch(args);
+
     }
 
     @Override
@@ -48,6 +49,8 @@ public class javaFXTest extends Application {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();
+        FileController fileController = new FileController();
+        fileController.setupSprite();
 
 
     }

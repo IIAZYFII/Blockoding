@@ -27,7 +27,7 @@ public class SceneController {
     public SceneController() {
         scenes = new ArrayList<>();
         changeSceneTo = "Default";
-        dirPath =  StageInitializer.getAbsolutePath() + "/Assets/Images/Scenes";
+        dirPath =  FileController.getAbsolutePath() + "/Assets/Images/Scenes";
         imageFileFilter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {

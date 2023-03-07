@@ -22,7 +22,7 @@ public class SoundController {
 
     public SoundController() {
         sounds = new ArrayList<>();
-        String filePath = StageInitializer.getAbsolutePath() + "/Assets/Sounds";
+        String filePath = FileController.getAbsolutePath() + "/Assets/Sounds";
         File dir = new File(filePath);
         files = dir.listFiles();
 
