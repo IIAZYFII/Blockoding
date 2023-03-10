@@ -113,12 +113,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         frameTimeline.setCycleCount(Animation.INDEFINITE);
         Stage stage = event.getStage();
         root = (BorderPane) buildGUI(stage);
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(root);
+
 
         int screenWidth = (int) Screen.getPrimary().getBounds().getWidth();
         int screenHeight = (int) Screen.getPrimary().getBounds().getHeight();
-        scene = new Scene(scrollPane, screenWidth, screenHeight);
+        scene = new Scene(root, screenWidth, screenHeight);
         stage.setMaximized(true);
         stage.setScene(scene);
         dragSpriteAroundCanvas(scene);
@@ -243,7 +242,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
-
+/**
+ *
+ */
     /**
      * Builds the Pane for the GUI.
      *
@@ -252,8 +253,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      */
     private Pane buildGUI(Stage stage) {
 
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #FF5438; ");
+        GUIBuilder builder = new GUIBuilder();
+       BorderPane root = new BorderPane();
+       root.setStyle("-fx-background-color: #FF5438; ");
+
 
 
         canvas = new Canvas(728, 597);
@@ -271,10 +274,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 System.out.println("second mouse clicked");
             }
         });
+
+
+        HBox topBar = builder.createTopBar();
+        root.setTop(topBar);
         root.setCenter(canvas);
+        return  root;
 
 
-
+/*
         HBox sceneBox = new HBox();
         sceneBox.setStyle("-fx-background-color: #FFFDD0");
         root.setLeft(sceneBox);
@@ -297,18 +305,16 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         bottomBar.getChildren().add(ioBar);
 
-        HBox topBar = new HBox();
-        topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
-        root.setTop(topBar);
+
 
         VBox rightPane = new VBox();
         HBox spriteBox = new HBox();
 
-        rightPane.setPadding(new Insets(50, 10, 50, 0));
-        rightPane.setSpacing(60);
+        //rightPane.setPadding(new Insets(50, 10, 50, 0));
+        //rightPane.setSpacing(60);
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
-        spriteBox.setPadding(new Insets(0, 0, 200, 350));
+        //spriteBox.setPadding(new Insets(0, 0, 200, 350));
         String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
         defaultSprite = new Image(pathDS);
         ImageView defaultSpriteViewer = new ImageView();
@@ -322,11 +328,13 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         variableText.setText("Variables");
         variableBox.getChildren().add(variableText);
         variableBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        variableBox.setPadding(new Insets(0, 0, 200, 350));
+        //variableBox.setPadding(new Insets(0, 0, 200, 350));
         rightPane.getChildren().add(variableBox);
         root.setRight(rightPane);
 
        VBox leftPane = new VBox();
+
+       ScrollPane programScroll = new ScrollPane();
 
         programBox = new VBox();
         Text programText = new Text();
@@ -334,25 +342,15 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         programBox.setStyle( "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
         programBox.setPadding(new Insets(0, 100, 600, 100));
-        leftPane.setPadding(new Insets(50, 50, 10, 50));
-        leftPane.getChildren().add(programBox);
+        leftPane.setPadding(new Insets(50, 0, 10, 50));
+        programScroll.setContent(programBox);
+        leftPane.getChildren().add(programScroll);
+
         root.setLeft(leftPane);
 
-        Button compileButton = new Button();
-        String pathCompileButton = FileController.getAbsolutePath() + "/Assets/Images/CompileButton.png";
-        compileButtonImg = new Image(pathCompileButton);
-        ImageView compileButtonView = new ImageView(compileButtonImg);
-        compileButtonView.setFitHeight(50);
-        compileButtonView.setFitWidth(50);
-        compileButton.setGraphic(compileButtonView);
 
-        Button OCRButton = new Button();
-        String pathOCRButton = FileController.getAbsolutePath() + "/Assets/Images/OCRButton.png";
-        OCRButtonImg = new Image(pathOCRButton);
-        ImageView OCRButtonView = new ImageView(OCRButtonImg);
-        OCRButtonView.setFitHeight(50);
-        OCRButtonView.setFitWidth(50);
-        OCRButton.setGraphic(OCRButtonView);
+
+
         topBar.getChildren().add(OCRButton);
         AtomicReference<String> text = new AtomicReference<>("");
         OCRButton.setOnAction(e -> {
@@ -401,13 +399,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        Button variableButton = new Button();
-        String pathVariableButton = FileController.getAbsolutePath() + "/Assets/Images/VariableButton.png";
-        variableButtonImg = new Image(pathVariableButton);
-        ImageView variableButtonView = new ImageView(variableButtonImg);
-        variableButtonView.setFitHeight(50);
-        variableButtonView.setFitWidth(50);
-        variableButton.setGraphic(variableButtonView);
+
 
         variableButton.setOnAction(e-> {
             drawVariableManager();
@@ -474,11 +466,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             }
         });
 
-        playButton.setDisable(true);
-        String pathPlayButton = FileController.getAbsolutePath() + "/Assets/Images/PlayButton.png";
-        playButtonImg = new Image(pathPlayButton);
-        ImageView playButtonView = new ImageView(playButtonImg);
-        playButton.setGraphic(playButtonView);
+
         topBar.getChildren().add(playButton);
         topBar.setMargin(playButton, new Insets(0, 0, 0, 700));
 
@@ -498,11 +486,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
 
-        stopButton.setDisable(true);
-        String pathStopButton = FileController.getAbsolutePath() + "/Assets/Images/StopButton.png";
-        stopButtonImg = new Image(pathStopButton);
-        ImageView stopButtonView = new ImageView(stopButtonImg);
-        stopButton.setGraphic(stopButtonView);
+
         topBar.getChildren().add(stopButton);
 
         stopButton.setOnAction(e -> {
@@ -515,14 +499,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             terminal.clear();
         });
 
-        Button settingButton = new Button();
-        String pathSettingButton = FileController.getAbsolutePath() + "/Assets/Images/SettingsButton.png";
-        Image settingButtonImg = new Image(pathSettingButton);
-        ImageView settingButtonView = new ImageView(settingButtonImg);
-        settingButtonView.setFitHeight(50);
-        settingButtonView.setFitWidth(50);
-        settingButton.setGraphic(settingButtonView);
-        topBar.getChildren().add(settingButton);
+           topBar.getChildren().add(settingButton);
         topBar.setMargin(settingButton, new Insets(0, 20, 0, 830));
 
         settingButton.setOnAction(e -> {
@@ -535,7 +512,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.getChildren().add(spriteContainer);
         dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
         return root;
-
+*/
     }
 
     private void drawProgramBox(Queue<Block> blocks) {
