@@ -65,17 +65,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private HashMap<String, String> inputBoxesValues = new HashMap<>();
     private ArrayList<String> inputBoxes = new ArrayList<>();
     private HBox variableBox;
-    private Image playButtonImg;
-    private Image stopButtonImg;
-    private Image compileButtonImg;
-    private Image variableButtonImg;
     private VariableManager variableManager = new VariableManager();
     private static TextArea terminal;
 
 
-
-    private Image OCRButtonImg;
-    private Image defaultSprite;
     private SpriteController spriteController = new SpriteController();
 
     private SoundController soundController = new SoundController();
@@ -84,8 +77,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private VBox programBox;
     boolean compiled = false;
     private static Scene scene;
-    public static Button playButton = new Button();
-    public static Button stopButton = new Button();
+   // public static Button playButton = new Button();
+   // public static Button stopButton = new Button();
     public static Timeline frameTimeline;
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
@@ -276,7 +269,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        HBox topBar = builder.createTopBar();
+        HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter);
         root.setTop(topBar);
         root.setCenter(canvas);
         return  root;
@@ -351,69 +344,21 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-        topBar.getChildren().add(OCRButton);
-        AtomicReference<String> text = new AtomicReference<>("");
-        OCRButton.setOnAction(e -> {
-
-            String pathTempIMG = FileController.getAbsolutePath() + "/Cache/img.png";
-            File image = new File(pathTempIMG);
-            try {
-                image = imageProcessor.processImage(image);
-                String tmpText = textExtractor.extractText(image);
-                String lastBlock = tmpText.substring(tmpText.lastIndexOf("\n") + 1);
-                if(lastBlock.equalsIgnoreCase("END")) {
-                    text.set(tmpText);
-                    compileButton.setDisable(false);
-                } else if (lastBlock.equalsIgnoreCase("CONTINUE")) {
-                    Alert moreCode = new Alert(Alert.AlertType.INFORMATION);
-                    moreCode.setTitle("Detected continue block");
-                    moreCode.setContentText("You have used a continue block. Please finish your code and send it through.");
-                    moreCode.showAndWait();
-                }
 
 
 
 
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        });
-        topBar.setMargin(OCRButton, new Insets(0, 20, 0, 40));
-
-
-        compileButton.setDisable(true);
-        topBar.getChildren().add(compileButton);
-
-        compileButton.setOnAction(e -> {
-            Queue<Block> blocks = interpreter.textToBlocks(text.get());
-            compiled = interpreter.checkSyntax(blocks);
-            Queue<Block> programBlock = new LinkedList<>(blocks);
-            drawProgramBox(programBlock);
-            System.out.println("-----------------------------------------");
-            if (compiled == true) {
-                interpreter.loadBlocks(blocks);
-            }
-            playButton.setDisable(false);
-            e.consume();
-        });
 
 
 
 
-        variableButton.setOnAction(e-> {
-            drawVariableManager();
-            e.consume();
-        });
-
-        topBar.getChildren().add(variableButton);
 
 
-        Button sceneButton = new Button();
-        topBar.getChildren().add(sceneButton);
-        sceneButton.setOnAction(e-> {
-            drawSceneController();
-        });
+
+
+
+
+
 
 
         AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
@@ -467,44 +412,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        topBar.getChildren().add(playButton);
-        topBar.setMargin(playButton, new Insets(0, 0, 0, 700));
 
 
-        playButton.setOnAction(e -> {
-            playButton.setDisable(true);
-            stopButton.setDisable(false);
-           // System.out.println("Pre " + variableManager.getVariables().get(0).getValue());
-            if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
-                        inputBoxes, variableManager, soundController, sceneController);
-                drawScene();
-                drawVariableBox();
-               // System.out.println("Post " + variableManager.getVariables().get(0).getValue());
-
-            }
-
-        });
 
 
-        topBar.getChildren().add(stopButton);
-
-        stopButton.setOnAction(e -> {
-            frameTimeline.stop();
-            variableManager.resetToInitialValues();
-            drawVariableBox();
-            playButton.setDisable(false);
-            stopButton.setDisable(true);
-            soundController.pressedStopButton();
-            terminal.clear();
-        });
-
-           topBar.getChildren().add(settingButton);
-        topBar.setMargin(settingButton, new Insets(0, 20, 0, 830));
-
-        settingButton.setOnAction(e -> {
-            drawSettings();
-        });
 
         VBox spriteContainer = createSpriteContainer("default", defaultSpriteViewer);
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);

@@ -11,6 +11,7 @@ public class ButtonCreator {
     private static final String SETTINGS_BUTTON_PATH = "/Assets/Images/SettingsButton.png";
     private static final String PLAY_BUTTON_PATH = "/Assets/Images/PlayButton.png";
     private static final String STOP_BUTTON_PATH = "/Assets/Images/StopButton.png";
+    private static final String Scene_BUTTON_PATH = "/Assets/Images/SceneButton.png";
     public ButtonCreator() {
 
     }
@@ -35,6 +36,15 @@ public class ButtonCreator {
         return createButton(PLAY_BUTTON_PATH);
     }
 
+    public Button createStopButton() {
+        return createButton(STOP_BUTTON_PATH);
+    }
+
+    public Button createSceneButton() {
+        return createButton(Scene_BUTTON_PATH);
+    }
+
+
 
     private Button createButton(String buttonImagePath) {
         Button button = new Button();
@@ -46,5 +56,8 @@ public class ButtonCreator {
         button.setGraphic(buttonView);
         return  button;
     }
+
+
+
 
 }

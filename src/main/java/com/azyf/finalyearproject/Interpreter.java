@@ -138,8 +138,8 @@ public class Interpreter {
                 String blockName = block.getName();
                 spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
             }
-        StageInitializer.playButton.setDisable(true);
-        StageInitializer.stopButton.setDisable(false);
+       // StageInitializer.playButton.setDisable(true);
+       // StageInitializer.stopButton.setDisable(false);
     }
 
 
