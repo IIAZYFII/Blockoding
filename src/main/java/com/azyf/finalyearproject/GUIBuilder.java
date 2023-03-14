@@ -4,7 +4,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -144,10 +146,33 @@ public class GUIBuilder {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(programBox);
         LeftPane.getChildren().add(scrollPane);
-        VBox.setMargin(scrollPane, new Insets(50,0,0,50));
+        LeftPane.setMargin(scrollPane, new Insets(50,0,0,50));
         programBox.setPrefSize(300,650);
 
 
         return LeftPane;
     }
+
+    public VBox buildRightPane() {
+        return  new VBox();
+    }
+
+    public  HBox buildBottomPane(TerminalComponent terminalComponent) {
+        HBox ioBar = new HBox();
+
+        TextArea tmp = new TextArea();
+        tmp.setEditable(false);
+        tmp.setPrefSize(700, 100);
+        tmp.setMinHeight(70);
+        tmp.setMaxHeight(70);
+        tmp.setMinWidth(Region.USE_COMPUTED_SIZE);
+        tmp.setMaxWidth(Region.USE_COMPUTED_SIZE);
+        terminalComponent.setTerminal(tmp);
+        ioBar.getChildren().add(terminalComponent.getTerminal());
+        ioBar.setMargin(terminalComponent.getTerminal(), new Insets(0,0,50,600));
+        return ioBar;
+
+    }
+
+
 }

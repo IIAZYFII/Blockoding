@@ -66,7 +66,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private ArrayList<String> inputBoxes = new ArrayList<>();
     private HBox variableBox;
     private VariableManager variableManager = new VariableManager();
-    private static TextArea terminal;
+    private static TerminalComponent terminal;
 
 
     private SpriteController spriteController = new SpriteController();
@@ -274,6 +274,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         VBox leftPanel = builder.buildLeftPane();
         root.setLeft(leftPanel);
+
+        HBox bottomPanel = builder.buildBottomPane(terminal);
+        root.setBottom(bottomPanel);
+
         root.setCenter(canvas);
         return  root;
 
@@ -1394,6 +1398,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return alreadyExist;
     }
 
+    /**
+
     public static void setTerminalContent(String content) {
         String appendContent = terminal.getText() + content + "\n";
             terminal.setText(appendContent);
@@ -1422,6 +1428,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         });
     }
-
+*/
 
 }

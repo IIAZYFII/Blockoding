@@ -272,7 +272,7 @@ public class Interpreter {
                content = getContent();
                 if(blockName.equals("ASK")) {
                     blocks.remove();
-                    StageInitializer.askTerminalContent(content);
+                    TerminalComponent.askTerminalContent(content);
 
                 } else {
                     tmpVariable.setValue(Integer.parseInt(content));
@@ -293,7 +293,7 @@ public class Interpreter {
             case "SPEAK":
                 blocks.remove();
                 content = getContent();
-                StageInitializer.setTerminalContent(content);
+                TerminalComponent.setTerminalContent(content);
 
                 break;
             case "CONTINUE":
