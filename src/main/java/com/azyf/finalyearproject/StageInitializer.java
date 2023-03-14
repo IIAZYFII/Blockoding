@@ -271,6 +271,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
         HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter);
         root.setTop(topBar);
+
+        VBox leftPanel = builder.buildLeftPane();
+        root.setLeft(leftPanel);
         root.setCenter(canvas);
         return  root;
 

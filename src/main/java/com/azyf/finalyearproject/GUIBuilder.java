@@ -3,7 +3,11 @@ package com.azyf.finalyearproject;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
 import java.io.File;
 
 import java.io.IOException;
@@ -119,11 +123,31 @@ public class GUIBuilder {
         topBar.getChildren().add(sceneButton);
         topBar.getChildren().add(playButton);
         topBar.getChildren().add(stopButton);
-        topBar.setMargin(OCRButton, new Insets(0, 0, 0, 20));
+        topBar.setMargin(OCRButton, new Insets(0, 20, 0, 20));
         topBar.setMargin(variableButton, new Insets(0, 20, 0, 20));;
         topBar.setMargin(playButton, new Insets(0, 0, 0, 300));
 
 
        return topBar;
+    }
+
+    public VBox buildLeftPane() {
+        VBox LeftPane = new VBox();
+
+        VBox programBox = new VBox();
+        Text programText = new Text();
+
+        programText.setText("Program Box");
+        programBox.setStyle( "-fx-background-color: #FFFDD0;");
+        programBox.getChildren().add(programText);
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(programBox);
+        LeftPane.getChildren().add(scrollPane);
+        VBox.setMargin(scrollPane, new Insets(50,0,0,50));
+        programBox.setPrefSize(300,650);
+
+
+        return LeftPane;
     }
 }
