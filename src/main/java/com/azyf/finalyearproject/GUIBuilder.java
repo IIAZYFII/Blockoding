@@ -27,7 +27,8 @@ public class GUIBuilder {
         windowBuilder = new WindowBuilder();
     }
 
-    public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor, Interpreter interpreter) {
+    public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor,
+                             Interpreter interpreter, VariableManager variableManager) {
         HBox topBar = new HBox();
         topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
 
@@ -78,7 +79,7 @@ public class GUIBuilder {
         });
 
         variableButton.setOnAction(e-> {
-            //drawVariableManager();
+            windowBuilder.drawVariableManager(variableManager);
             e.consume();
         });
         playButton.setOnAction(e -> {
@@ -111,12 +112,14 @@ public class GUIBuilder {
 
         settingButton.setOnAction(e -> {
             windowBuilder.drawSettings();
+            e.consume();
         });
 
 
 
         sceneButton.setOnAction(e-> {
             windowBuilder.drawSceneController(imageProcessor);
+            e.consume();
         });
 
 

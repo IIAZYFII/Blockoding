@@ -269,7 +269,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter);
+        HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter, variableManager);
         root.setTop(topBar);
 
         VBox leftPanel = builder.buildLeftPane();
@@ -948,124 +948,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-    private void drawVariableManager(){
-        Stage variableManagerStage = new Stage();
-        variableManagerStage.setResizable(false);
-        BorderPane variableManagerRoot = drawBaseVariableManager(variableManagerStage);
 
 
-        Scene scene = new Scene(variableManagerRoot, 350, 350);
-        variableManagerStage.setScene(scene);
-        variableManagerStage.showAndWait();
-    }
-
-    private BorderPane drawBaseVariableManager(Stage variableManagerStage) {
-        AtomicReference<BorderPane> variableManagerRoot  = new AtomicReference<>(new BorderPane());
-        variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
-
-        VBox content = new VBox();
-        Button create = new Button();
-        create.setText("Create Variable");
-        create.setMinSize(200,50);
-        create.setOnAction(e-> {
-            content.getChildren().clear();
-            Label variableName = new Label();
-            variableName.setText("Name of Variable");
-            variableName.setMinSize(100,50);
-            content.getChildren().add(variableName);
-
-
-            TextField enterVariableName = new TextField();
-            enterVariableName.setMinSize(200,50);
-            content.getChildren().add(enterVariableName);
-
-            Label initialType = new Label();
-            initialType.setText("Initial Type");
-            initialType.setMinSize(100,50);
-            content.getChildren().add(initialType);
-
-            String[] dropDown = {"Integer", "String"};
-
-            ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown));
-            content.getChildren().add(comboBox);
-
-            Label initialValue = new Label();
-            initialValue.setText("Initial Value");
-            initialValue.setMinSize(100,50);
-            content.getChildren().add(initialValue);
-
-            TextField enterInitialValue = new TextField();
-            enterInitialValue.setMinSize(200,50);
-            content.getChildren().add(enterInitialValue);
-
-
-            HBox buttonsBox = new HBox();
-            Button cancelButton = new Button();
-            cancelButton.setText("Cancel");
-            cancelButton.setMinSize(75,25);
-            cancelButton.setOnAction(event -> {
-                event.consume();
-            });
-            buttonsBox.getChildren().add(cancelButton);
-
-            Button confirmButton = new Button();
-            confirmButton.setText("OK");
-
-            confirmButton.setOnAction(event -> {
-                   String name =  enterVariableName.getText();
-                    String variableType = (String) comboBox.getValue();
-                    Variable variable = null;
-                    if(variableType.equals("Integer")) {
-                        int variableValue;
-                        try {
-                            variableValue = Integer.parseInt(enterInitialValue.getText());
-                            VariableType type = VariableType.Integer;
-                            variable = new Variable(variableValue, name, type);
-                            System.out.println("Added Variable");
-                            boolean alreadyExist = variableManager.addVariable(variable);
-                            if(alreadyExist == false) {
-                                addVariableToCanvas(variable);
-                            }
-
-
-                        } catch (Exception ex) {
-                            throw new IllegalArgumentException("Expected a number");
-                        } finally {
-                            variableManagerStage.close();
-                        }
-                    } else if(variableType.equals("String")) {
-                        String variableValue;
-                        variableValue = enterInitialValue.getText();
-                        variableValue = enterInitialValue.getText();
-                        VariableType type = VariableType.String;
-                        variable = new Variable(variableValue, name, type);
-                        System.out.println("Added Variable");
-                        boolean alreadyExist = variableManager.addVariable(variable);
-                        if(alreadyExist == false) {
-                            addVariableToCanvas(variable);
-                        }
-
-                    }
-
-
-
-
-            });
-            confirmButton.setMinSize(50,25);
-
-
-            buttonsBox.getChildren().add(confirmButton);
-
-            content.getChildren().add(buttonsBox);
-
-
-            e.consume();
-        });
-        content.getChildren().add(create);
-        content.setPadding(new Insets(0,0,0,0));
-        variableManagerRoot.get().getChildren().add(content);
-        return variableManagerRoot.get();
-    }
 
 
 
