@@ -278,6 +278,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         HBox bottomPanel = builder.buildBottomPane(terminal);
         root.setBottom(bottomPanel);
 
+        VBox rightPanel = builder.buildRightPane();
+        root.setRight(rightPanel);
+
         root.setCenter(canvas);
         return  root;
 
@@ -315,11 +318,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
         //spriteBox.setPadding(new Insets(0, 0, 200, 350));
-        String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
-        defaultSprite = new Image(pathDS);
+
+ String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
+        Image defaultSprite = new Image(pathDS);
         ImageView defaultSpriteViewer = new ImageView();
         defaultSpriteViewer.setImage(defaultSprite);
-
 
 
         rightPane.getChildren().add(spriteBox);

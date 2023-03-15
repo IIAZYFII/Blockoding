@@ -5,6 +5,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -154,7 +156,30 @@ public class GUIBuilder {
     }
 
     public VBox buildRightPane() {
-        return  new VBox();
+        VBox rightPane = new VBox();
+        HBox spriteBox = new HBox();
+
+        spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        spriteBox.setPrefSize(400,200);
+
+        ScrollPane scrollSpritePane = new ScrollPane();
+        scrollSpritePane.setContent(spriteBox);
+        rightPane.getChildren().add(scrollSpritePane);
+
+        HBox variableBox = new HBox();
+        Text variableText = new Text();
+        variableText.setText("Variables");
+        variableBox.getChildren().add(variableText);
+        variableBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        variableBox.setPrefSize(400,200);
+
+        ScrollPane variableScrollPane = new ScrollPane();
+        variableScrollPane.setContent(variableBox);
+        rightPane.getChildren().add(variableScrollPane);
+
+        rightPane.setMargin(scrollSpritePane, new Insets(50,10,0,0));
+        rightPane.setMargin(variableScrollPane, new Insets(50,10,0,0));
+        return  rightPane;
     }
 
     public  HBox buildBottomPane(TerminalComponent terminalComponent) {
@@ -173,6 +198,9 @@ public class GUIBuilder {
         return ioBar;
 
     }
+
+
+
 
 
 }
