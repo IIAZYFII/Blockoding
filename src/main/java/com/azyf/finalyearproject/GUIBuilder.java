@@ -116,7 +116,7 @@ public class GUIBuilder {
 
 
         sceneButton.setOnAction(e-> {
-            //drawSceneController();
+            windowBuilder.drawSceneController(imageProcessor);
         });
 
 
