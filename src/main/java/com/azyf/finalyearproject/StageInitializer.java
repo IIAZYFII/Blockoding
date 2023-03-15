@@ -946,42 +946,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     }
 
 
-    private void drawSettings() {
-        Stage settingStage = new Stage();
-        HBox hBox = new HBox();
-        BorderPane setttingsRoot = new BorderPane();
-        setttingsRoot.setStyle("-fx-background-color: #FF5438;");
-        Button linkAppButton = new Button();
-        linkAppButton.setMinSize(100, 100);
-        linkAppButton.setText("Link App");
-        linkAppButton.setOnAction(e -> {
-            try {
-                generateQRCode();
-                hBox.getChildren().clear();
-                String path = FileController.getAbsolutePath() + "\\Cache\\qrcode.png";
-                System.out.println(path);
-                Image qrCode = new Image(path);
-                ImageView qrCodeViewer = new ImageView(qrCode);
-                qrCodeViewer.setFitHeight(120);
-                qrCodeViewer.setFitWidth(120);
-                hBox.getChildren().add(qrCodeViewer);
-
-            } catch (WriterException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        hBox.setPadding(new Insets(100, 0, 0, 120));
-        hBox.getChildren().add(linkAppButton);
-        setttingsRoot.getChildren().add(hBox);
-
-        settingStage.setResizable(false);
-        Scene scene = new Scene(setttingsRoot, 350, 350);
-        settingStage.setScene(scene);
-        settingStage.showAndWait();
-    }
 
     private void drawSceneController() {
         Stage sceneControllerStage = new Stage();
@@ -1187,29 +1151,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return variableManagerRoot.get();
     }
 
-    private void generateQRCode() throws WriterException, IOException {
-        String localIP = InetAddress.getLocalHost().getHostAddress();
-        System.out.println(localIP);
-        QRCodeWriter qrCodeGenerator = new QRCodeWriter();
-        BitMatrix bitMatrix =
-                qrCodeGenerator.encode(localIP, BarcodeFormat.QR_CODE, 100, 100);
-        WritableImage writableImage = new WritableImage(100, 100);
-        PixelWriter pixelWriter = writableImage.getPixelWriter();
-        System.out.println(bitMatrix.toString());
-        for (int j = 0; j < 100; j++) {
-            for (int i = 0; i < 100; i++) {
-                if (bitMatrix.get(i, j) == true) {
-                    pixelWriter.setColor(i, j, Color.color(0.0, 0.0, 0.0));
-                } else {
-                    pixelWriter.setColor(i, j, Color.color(1.0, 1.0, 1.0));
-                }
 
-            }
-        }
-        File saveImage = new File("Cache\\qrcode.png");
-        BufferedImage image = SwingFXUtils.fromFXImage(writableImage, null);
-        ImageIO.write(image, "png", saveImage);
-    }
 
     /**
      * Allows the User to change the label text.

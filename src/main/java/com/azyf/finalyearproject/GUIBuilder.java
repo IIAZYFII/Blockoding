@@ -21,8 +21,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class GUIBuilder {
     private ButtonCreator buttonCreator;
+    private WindowBuilder windowBuilder;
     public GUIBuilder() {
         buttonCreator = new ButtonCreator();
+        windowBuilder = new WindowBuilder();
     }
 
     public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor, Interpreter interpreter) {
@@ -108,7 +110,7 @@ public class GUIBuilder {
 
 
         settingButton.setOnAction(e -> {
-            //drawSettings();
+            windowBuilder.drawSettings();
         });
 
 
