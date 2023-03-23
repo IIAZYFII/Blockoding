@@ -22,13 +22,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class GUIBuilder {
     private ButtonCreator buttonCreator;
     private WindowBuilder windowBuilder;
+    private ProgramBoxBuilder programBoxBuilder;
+
     public GUIBuilder() {
         buttonCreator = new ButtonCreator();
         windowBuilder = new WindowBuilder();
+        programBoxBuilder = new ProgramBoxBuilder();
     }
 
     public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor,
-                             Interpreter interpreter, VariableManager variableManager) {
+                             Interpreter interpreter, VariableManager variableManager, SoundController soundController,
+                             SpriteController spriteController, SceneController sceneController) {
         HBox topBar = new HBox();
         topBar.setStyle("-fx-background-color: #FF4122;" + "-fx-border-style: solid inside;");
 
@@ -66,14 +70,18 @@ public class GUIBuilder {
 
         compileButton.setOnAction(e -> {
             Queue<Block> blocks = interpreter.textToBlocks(text.get());
-            //compiled = interpreter.checkSyntax(blocks);
+             StageInitializer.setCompiled(interpreter.checkSyntax(blocks));
             Queue<Block> programBlock = new LinkedList<>(blocks);
-            //drawProgramBox(programBlock);
+
+            VBox programBox =
+                    programBoxBuilder.drawProgramBox(programBlock, variableManager, soundController,
+                            spriteController, sceneController);
+
+            StageInitializer.setLeftPanel(buildLeftPane(programBox));
             System.out.println("-----------------------------------------");
-            /*
-            if (compiled == true) {
+            if (StageInitializer.getCompiled() == true) {
                 interpreter.loadBlocks(blocks);
-            }*/
+            }
             playButton.setDisable(false);
             e.consume();
         });
@@ -82,10 +90,13 @@ public class GUIBuilder {
             windowBuilder.drawVariableManager(variableManager);
             e.consume();
         });
+
+
+           /*
         playButton.setOnAction(e -> {
             playButton.setDisable(true);
             stopButton.setDisable(false);
-            /*
+
             if (compiled == true) {
                 interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
                         inputBoxes, variableManager, soundController, sceneController);
@@ -95,18 +106,19 @@ public class GUIBuilder {
 
             }
 
-             */
+
 
         });
-
+*/
         stopButton.setOnAction(e -> {
             StageInitializer.frameTimeline.stop();
-            //variableManager.resetToInitialValues();
-           // drawVariableBox();
+            variableManager.resetToInitialValues();
+           //drawVariableBox();
             playButton.setDisable(false);
             stopButton.setDisable(true);
-            //soundController.pressedStopButton();
-            //terminal.clear();
+            soundController.pressedStopButton();
+            TerminalComponent.getTerminal().clear();
+            e.consume();
         });
 
 
@@ -150,6 +162,18 @@ public class GUIBuilder {
         programBox.setStyle( "-fx-background-color: #FFFDD0;");
         programBox.getChildren().add(programText);
 
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(programBox);
+        LeftPane.getChildren().add(scrollPane);
+        LeftPane.setMargin(scrollPane, new Insets(50,0,0,50));
+        programBox.setPrefSize(300,650);
+
+
+        return LeftPane;
+    }
+
+    private VBox buildLeftPane(VBox programBox) {
+        VBox LeftPane = new VBox();
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(programBox);
         LeftPane.getChildren().add(scrollPane);

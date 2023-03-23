@@ -62,8 +62,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
     private ImageProcessor imageProcessor = new ImageProcessor();
-    private HashMap<String, String> inputBoxesValues = new HashMap<>();
-    private ArrayList<String> inputBoxes = new ArrayList<>();
+
     private HBox variableBox;
     private VariableManager variableManager = new VariableManager();
     private static TerminalComponent terminal;
@@ -74,8 +73,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private SoundController soundController = new SoundController();
     private double currentMouseXPos = 0;
     private double currentMouseYPos = 0;
-    private VBox programBox;
-    boolean compiled = false;
+    private static VBox leftPanel;
+    private static boolean compiled = false;
     private static Scene scene;
    // public static Button playButton = new Button();
    // public static Button stopButton = new Button();
@@ -140,7 +139,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         interpreter.setTerminated(false);
 
         drawScene();
-        drawVariableBox();
+        //drawVariableBox();
         frameCounter++;
 
     }
@@ -148,7 +147,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     /**
      * ALlows the user the drag a sprite around the canvas
-     *
      * @param scene
      */
     private void dragSpriteAroundCanvas(Scene scene) {
@@ -269,10 +267,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         });
 
 
-        HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter, variableManager);
+        HBox topBar = builder.createTopBar(imageProcessor, textExtractor, interpreter, variableManager,
+                soundController, spriteController, sceneController);
         root.setTop(topBar);
 
-        VBox leftPanel = builder.buildLeftPane();
+        leftPanel = builder.buildLeftPane();
         root.setLeft(leftPanel);
 
         HBox bottomPanel = builder.buildBottomPane(terminal);
@@ -436,514 +435,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 */
     }
 
-    private void drawProgramBox(Queue<Block> blocks) {
-        programBox.getChildren().clear();
-        programBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
 
 
-        while (blocks.size() > 0) {
-            Block block = blocks.remove();
-            String blockName = block.getName();
-            StackPane stackPane = new StackPane();
-            HBox hBox = null;
-            String secondBlockName = "";
-            String thirdBlockName = "";
-            switch (blockName) {
-                case "START":
-                case "END":
-                    stackPane = (StackPane) drawBlock(blockName, 0, 255, 0);
-                    programBox.getChildren().add(stackPane);
-                    break;
-                case "DO":
-                case "ONCE":
-                    stackPane = (StackPane) drawBlock(blockName, 255, 95, 31);
-                    programBox.getChildren().add(stackPane);
-                    break;
-                case "ROTATE":
-                case "MOVE":
-                    blocks.remove();
-                    block = blocks.remove();
-                    blocks.remove();
-                    secondBlockName = block.getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
 
-                case "CONDITION":
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "FLIP":
-                    blocks.remove();
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "PAUSE":
-                    block = blocks.remove();
-                    hBox = (HBox) drawBlock(blockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "TELPORT":
-                    blockName = "TELPORT";
-                    blocks.remove();
-                    blocks.remove();
-                    secondBlockName = blocks.remove().getName();
 
-
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    if (secondBlockName.equals("X")) {
-                        blocks.remove();
-                    }
-                    break;
-                case "WHENEVER":
-                    block = blocks.remove();
-                    secondBlockName = block.getName();
-                    if (secondBlockName.equals("PRESSES")) {
-                        blocks.remove();
-                    } else if (secondBlockName.equals("HOVERS")) {
-                        blocks.remove();
-                    } else if (secondBlockName.equals("CLICKS")) {
-                        blocks.remove();
-                    } else if (secondBlockName.equals("NOT")) {
-                        stackPane = (StackPane) drawBlock(secondBlockName, 192, 240, 22);
-                        secondBlockName = blocks.remove().getName();
-                        if (secondBlockName.equals("PRESSES") ||(secondBlockName.equals("CLICKS")
-                                || secondBlockName.equals("HOVERS"))) {
-                            blocks.remove();
-                        }
-                        thirdBlockName = blocks.remove().getName();
-                        hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
-                        hBox.getChildren().add(1,stackPane);
-                        programBox.getChildren().add(hBox);
-                        break;
-                    } else if (secondBlockName.equals("VARIABLE")) {
-                        String checkEquals = blocks.remove().getName();
-                        if(checkEquals.equals("EQUALS")) {
-                            thirdBlockName = blocks.remove().getName();
-
-                            String tmpBlockName = blocks.remove().getName();
-                            if(!(tmpBlockName.equals("THEN"))) {
-
-                                stackPane = (StackPane) drawBlock(tmpBlockName, 0, 255, 0);
-                                hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
-                                hBox.getChildren().add(4, stackPane);
-                                if(blocks.remove().getName().equals("NUMBER")) {
-                                    TextField textField = createTextField();
-                                    hBox.getChildren().add(5,textField);
-
-                                }
-
-                            } else {
-                                hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22);
-
-                            }
-
-                        } else {
-                            thirdBlockName = blocks.remove().getName();
-                            stackPane = (StackPane) drawBlock(thirdBlockName, 0, 255, 0);
-                            hBox = (HBox) drawBlock(blockName, secondBlockName,checkEquals , 192, 240, 22);
-                            hBox.getChildren().add(stackPane);
-                            if(blocks.remove().getName().equals("NUMBER")) {
-                                TextField textField = createTextField();
-                                hBox.getChildren().add(4,textField);
-
-                            }
-                            stackPane = (StackPane) drawBlock(blocks.remove().getName(), 0, 255, 0);
-                            hBox.getChildren().add(stackPane);
-                        }
-                        programBox.getChildren().add(hBox);
-                        break;
-
-                    }
-                    thirdBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "ELSE":
-                case "TERMINATE":
-                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
-                    programBox.getChildren().add(stackPane);
-                    break;
-                case "LOOP":
-                    stackPane = (StackPane) drawBlock(blockName, 192, 240, 22);
-                    hBox = new HBox();
-                    hBox.getChildren().add(stackPane);
-                    stackPane = (StackPane) drawBlock(blocks.remove().getName(), 192, 240, 22);
-                    hBox.getChildren().add(stackPane);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "HOVERS":
-                case "PRESSES":
-                case "CLICKS":
-                    blocks.remove();
-                    secondBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 192, 240, 22);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "SET":
-                    blocks.remove();
-                    secondBlockName = blocks.remove().getName();
-                    thirdBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "VARIABLE":
-                    stackPane = createStackPane(blocks.remove().getName(),255,255,255);
-                    secondBlockName = blocks.remove().getName();
-                    StackPane equalsStackPane = createStackPane(blocks.remove().getName(),255,255,255);
-                    thirdBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 255, 255);
-                    hBox.getChildren().add(1,stackPane);
-                    hBox.getChildren().add(3,equalsStackPane);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "SPEAK":
-                    secondBlockName = blocks.remove().getName();
-                    hBox = (HBox) drawBlock(blockName, secondBlockName, 19, 3, 252);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "PLAY":
-                case "LOOPS":
-                    hBox = (HBox) drawBlock(blockName, 252, 3, 136);
-                    programBox.getChildren().add(hBox);
-
-                    break;
-                case "INCREASE":
-                case "DECREASE":
-                    hBox = (HBox) drawBlock(blockName, blocks.remove().getName(), 252, 3, 136);
-                    programBox.getChildren().add(hBox);
-                    break;
-                case "CHANGE":
-                    hBox = (HBox) drawBlock(blockName, blocks.remove().getName(), 119, 3, 252);
-                    programBox.getChildren().add(hBox);
-                    break;
-                default:
-                    System.out.println("test");
-                    break;
-
-
-            }
-        }
-    }
-
-    private Node drawBlock(String blockName, int red, int green, int blue) {
-        StackPane stackPane = createStackPane(blockName, red, green, blue);
-        if (blockName.equals("PAUSE")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            TextField textField = createTextField();
-            hBox.getChildren().add(textField);
-
-            return hBox;
-        } else if (blockName.equals("PLAY") || blockName.equals("LOOPS")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-
-            ComboBox comboBox = createComboBox(soundController.getSoundFileNamesAsArray());
-            hBox.getChildren().add(comboBox);
-
-            return hBox;
-        }
-        return stackPane;
-    }
-
-    private Node drawBlock(String blockName, String secondBlockName, int red, int green, int blue) {
-        StackPane stackPane = createStackPane(blockName, red, green, blue);
-        if (blockName.equals("ROTATE")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
-
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-
-            String dropDown[] = {"90", "180", "270"};
-            comboBox = createComboBox(dropDown);
-            hBox.getChildren().add(comboBox);
-
-
-            return hBox;
-        } else if (blockName.equals("MOVE")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
-
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-          TextField textField = createTextField();
-            hBox.getChildren().add(textField);
-            return hBox;
-
-        } else if (blockName.equals("TELPORT")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            stackPane = createStackPane("TO", red, green, blue);
-            hBox.getChildren().add(stackPane);
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
-            if (secondBlockName.equals("X")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                TextField textField = createTextField();
-                hBox.getChildren().add(textField);
-
-                stackPane = createStackPane("Y", red, green, blue);
-                hBox.getChildren().add(stackPane);
-                textField = createTextField();
-                hBox.getChildren().add(textField);
-
-                return hBox;
-            } else if (secondBlockName.equals("MOUSE")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                return hBox;
-            } else if (secondBlockName.equals("SPRITE")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-                hBox.getChildren().add(comboBox);
-                return hBox;
-            } else if (secondBlockName.equals("RANDOM")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                return hBox;
-            }
-
-        } else if (blockName.equals("FLIP") ) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
-
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-            return hBox;
-
-        } else if(blockName.equals("CONDITION")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-            return hBox;
-
-        }else if (blockName.equals("PRESSES")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
-                    "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
-            ComboBox comboBox = createComboBox(keys);
-            hBox.getChildren().add(comboBox);
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-            return hBox;
-        } else if (blockName.equals("CLICKS") || blockName.equals("HOVERS")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-            ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-            hBox.getChildren().add(comboBox);
-
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-            return hBox;
-        } else if (blockName.equals("SPEAK")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            TextField textField = createTextField();
-            hBox.getChildren().add(textField);
-            return hBox;
-
-        } else if (blockName.equals("DECREASE") || blockName.equals("INCREASE")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-            stackPane = createStackPane(secondBlockName, red,green, blue);
-            hBox.getChildren().add(stackPane);
-            return  hBox;
-
-        } else if (blockName.equals("CHANGE")) {
-            HBox hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-            ComboBox comboBox = createComboBox(sceneController.getScenesAsList());
-            hBox.getChildren().add(comboBox);
-            return hBox;
-        }
-        return stackPane;
-    }
-
-    private Node drawBlock(String blockName, String secondBlockName, String thirdBlockName, int red, int green, int blue) {
-        StackPane stackPane = createStackPane(blockName, red, green, blue);
-        HBox hBox = null;
-        if (blockName.equals("WHENEVER")) {
-            if (secondBlockName.equals("PRESSES")) {
-                hBox = new HBox();
-                hBox.getChildren().add(stackPane);
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                String[] keys = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
-                        "UP", "DOWN", "LEFT", "RIGHT", "SPACE"};
-                ComboBox comboBox = createComboBox(keys);
-                hBox.getChildren().add(comboBox);
-            } else if (secondBlockName.equals("HOVERS") || secondBlockName.equals("CLICKS")) {
-                hBox = new HBox();
-                hBox.getChildren().add(stackPane);
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
-                ComboBox comboBox = createComboBox(spriteController.getSpriteNameAsArray());
-                hBox.getChildren().add(comboBox);
-
-            } else if (secondBlockName.equals("VARIABLE")){
-                hBox = new HBox();
-                hBox.getChildren().add(stackPane);
-
-                ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-                hBox.getChildren().add(comboBox);
-                if(!(thirdBlockName.equals("LESS") || thirdBlockName.equals("GREATER"))){
-                    stackPane = createStackPane("EQUALS", red, green, blue);
-                    hBox.getChildren().add(stackPane);
-                }
-
-
-                if (thirdBlockName.equals("NUMBER")) {
-                    TextField textField = createTextField();
-                    hBox.getChildren().add(textField);
-
-                    stackPane = createStackPane("THEN", red, green, blue);
-                    hBox.getChildren().add(stackPane);
-                    return  hBox;
-                }
-            }
-
-            stackPane = createStackPane(thirdBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-            return hBox;
-        } else if (blockName.equals("SET")) {
-            hBox = new HBox();
-            hBox.getChildren().add(stackPane);
-
-            ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-            hBox.getChildren().add(comboBox);
-
-            stackPane = createStackPane(secondBlockName, red, green, blue);
-            hBox.getChildren().add(stackPane);
-
-            if(thirdBlockName.equals("ASK")) {
-                stackPane = createStackPane(thirdBlockName,19, 3, 252);
-                hBox.getChildren().add(stackPane);
-
-                TextField textField = createTextField();
-                hBox.getChildren().add(textField);
-            } else if(thirdBlockName.equals("NUMBER")) {
-                    TextField textField = createTextField();
-                    hBox.getChildren().add(textField);
-                } else {
-                    comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-                    hBox.getChildren().add(comboBox);
-                }
-
-
-
-
-
-            return hBox;
-
-
-        } else if(blockName.equals("VARIABLE")) {
-            hBox = new HBox();
-            ComboBox comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-            hBox.getChildren().add(comboBox);
-
-            if(secondBlockName.equals("NUMBER")) {
-                TextField textField = createTextField();
-                hBox.getChildren().add(textField);
-            } else {
-                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-                hBox.getChildren().add(comboBox);
-            }
-
-            if(thirdBlockName.equals("NUMBER")) {
-                TextField textField = createTextField();
-                hBox.getChildren().add(textField);
-            } else {
-                comboBox = createComboBox(variableManager.getVariableNamesAsArray());
-                hBox.getChildren().add(comboBox);
-            }
-            return hBox;
-        }
-
-        return stackPane;
-    }
-
-
-
-
-    private StackPane createStackPane(String blockName, int red, int green, int blue) {
-        StackPane stackPane = new StackPane();
-        Rectangle blockBox = new Rectangle(70, 30);
-        blockBox.setFill(Color.rgb(red, green, blue));
-        Rectangle blockBorder = new Rectangle(80, 40);
-
-        Label blockText = new Label(blockName);
-        if(blockName.equals("SPEAK") || blockName.equals("ASK")) {
-            blockText.setTextFill(Color.color(1,1,1));
-        }
-
-        stackPane.getChildren().add(blockBorder);
-        stackPane.getChildren().add(blockBox);
-        stackPane.getChildren().add(blockText);
-        blockText.setFont(new Font("Arial", 15));
-        return stackPane;
-    }
-
-    private TextField createTextField() {
-        TextField textField = new TextField();
-        String textFieldAsString = textField.toString();
-        textField.setOnAction(e -> {
-            if (getInputBoxIndex(textFieldAsString) == -1) {
-                System.out.println(textField.getText());
-                inputBoxesValues.put(textFieldAsString, (String) textField.getText());
-                inputBoxes.add(textFieldAsString);
-            } else {
-                inputBoxesValues.remove(textFieldAsString);
-                inputBoxesValues.put(textFieldAsString, (String) textField.getText());
-            }
-        });
-        return textField;
-    }
-
-    private ComboBox createComboBox(String[] dropDown) {
-        ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown));
-        String comboBoxAsString = comboBox.toString();
-        comboBox.setOnAction(e -> {
-            if (getInputBoxIndex(comboBoxAsString) == -1) {
-                System.out.println(comboBox.getValue());
-                inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
-                inputBoxes.add(comboBoxAsString);
-            } else {
-                inputBoxesValues.remove(comboBoxAsString);
-                inputBoxesValues.put(comboBoxAsString, (String) comboBox.getValue());
-            }
-
-        });
-        return comboBox;
-    }
 
 
 
@@ -1032,11 +527,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                             gc.drawImage(sprite, x, y);
 
                             imageView.setOnDragDetected(null);
-                            programBox.getChildren().clear();
-                            Text programText = new Text();
-                            programText.setText(spriteName + "'s " + "Program Box");
-                            programBox.getChildren().add(programText);
-
 
                         event.consume();
                     }
@@ -1049,14 +539,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
-    private int getInputBoxIndex(String inputBox) {
-        for (int i = 0; i < inputBoxes.size(); i++) {
-            if (inputBoxes.get(i).equals(inputBox)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+
 
     public static KeyCode getCurrentKey() {
 
@@ -1110,6 +593,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         sceneBackground = scene;
     }
 
+/*
+
 
     private void drawVariableBox() {
         variableBox.getChildren().clear();
@@ -1117,8 +602,9 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             addVariableToCanvas(variableManager.getVariables().get(i));
         }
     }
+     */
 
-
+/*
     private void addVariableToCanvas(Variable variable) {
         VariableType variableType = variable.getType();
         String content = variable.getName() + " : ";
@@ -1133,6 +619,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     }
 
+ */
 
     private boolean checkNameExist(HBox spriteBox, String spriteName) {
         boolean alreadyExist = false;
@@ -1147,36 +634,17 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         return alreadyExist;
     }
 
-    /**
-
-    public static void setTerminalContent(String content) {
-        String appendContent = terminal.getText() + content + "\n";
-            terminal.setText(appendContent);
+    public static boolean getCompiled() {
+        return compiled;
     }
 
-    public static void askTerminalContent(String content) {
-        setTerminalContent(content);
-        String tmpContent = terminal.getText();
-        terminal.setOnMouseClicked(e -> {
-            terminal.clear();
-            terminal.setEditable(true);
-            e.consume();
-        });
-        terminal.setOnKeyPressed( e -> {
-            if(e.getCode() == KeyCode.ENTER) {
-                String userInput = terminal.getText();
-                terminal.clear();
-                terminal.setText(tmpContent + "\n" + userInput);
-                terminal.setEditable(false);
-                terminal.setOnMouseClicked(mouseEvent -> {mouseEvent.consume();});
-                terminal.setOnKeyPressed(keyEvent -> {keyEvent.consume();});
-
-                e.consume();
-
-            }
-
-        });
+    public static void setCompiled(boolean compile) {
+        compiled = compile;
     }
-*/
+
+    public static void setLeftPanel(VBox leftPane) {
+        leftPanel = leftPane;
+        root.setLeft(leftPanel);
+    }
 
 }
