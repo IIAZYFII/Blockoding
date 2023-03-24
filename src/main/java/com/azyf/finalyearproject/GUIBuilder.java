@@ -23,11 +23,14 @@ public class GUIBuilder {
     private ButtonCreator buttonCreator;
     private WindowBuilder windowBuilder;
     private ProgramBoxBuilder programBoxBuilder;
+    private SpriteBoxBuilder spriteBoxBuilder;
+    //  private static final  DEFAULT_SPRITE_PATH =
 
     public GUIBuilder() {
         buttonCreator = new ButtonCreator();
         windowBuilder = new WindowBuilder();
         programBoxBuilder = new ProgramBoxBuilder();
+        spriteBoxBuilder = new SpriteBoxBuilder();
     }
 
     public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor,
@@ -145,7 +148,7 @@ public class GUIBuilder {
         topBar.getChildren().add(playButton);
         topBar.getChildren().add(stopButton);
         topBar.setMargin(OCRButton, new Insets(0, 20, 0, 20));
-        topBar.setMargin(variableButton, new Insets(0, 20, 0, 20));;
+        topBar.setMargin(variableButton, new Insets(0, 20, 0, 20));
         topBar.setMargin(playButton, new Insets(0, 0, 0, 300));
 
 
@@ -184,9 +187,13 @@ public class GUIBuilder {
         return LeftPane;
     }
 
-    public VBox buildRightPane() {
+    public VBox buildRightPane(SpriteController spriteController) {
         VBox rightPane = new VBox();
         HBox spriteBox = new HBox();
+        ImageView imageView = new ImageView();
+        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
+        imageView.setImage(image);
+        spriteBox = spriteBoxBuilder.addSpriteToBox("Blocky Bro",imageView, spriteController,spriteBox);
 
         spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
         spriteBox.setPrefSize(400,200);
@@ -208,6 +215,7 @@ public class GUIBuilder {
 
         rightPane.setMargin(scrollSpritePane, new Insets(50,10,0,0));
         rightPane.setMargin(variableScrollPane, new Insets(50,10,0,0));
+
         return  rightPane;
     }
 
@@ -228,8 +236,15 @@ public class GUIBuilder {
 
     }
 
+    private HBox addDefaultSprite(SpriteController spriteController, HBox spriteBox) {
+
+        return spriteBox;
+    }
 
 
 
 
+    public ProgramBoxBuilder getProgramBoxBuilder() {
+        return programBoxBuilder;
+    }
 }

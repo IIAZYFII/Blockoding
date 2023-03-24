@@ -508,9 +508,7 @@ public class ProgramBoxBuilder {
     }
 
 
-
-
-
-
-
+    public InputBoxBuilder getInputBoxBuilder() {
+        return inputBoxBuilder;
+    }
 }

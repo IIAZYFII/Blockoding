@@ -57,8 +57,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class StageInitializer implements ApplicationListener<BlockApplication.StageReadyEvent> {
     private static final int NO_SPRITE_INDEX = -1;
-    private int currentSpriteIndex = NO_SPRITE_INDEX;
-    private Canvas canvas;
+    private static int currentSpriteIndex = NO_SPRITE_INDEX;
+    private static Canvas canvas;
     private Interpreter interpreter = new Interpreter();
     private TextExtractor textExtractor = new TextExtractor();
     private ImageProcessor imageProcessor = new ImageProcessor();
@@ -277,7 +277,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         HBox bottomPanel = builder.buildBottomPane(terminal);
         root.setBottom(bottomPanel);
 
-        VBox rightPanel = builder.buildRightPane();
+        VBox rightPanel = builder.buildRightPane(spriteController);
         root.setRight(rightPanel);
 
         root.setCenter(canvas);
@@ -426,11 +426,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-        VBox spriteContainer = createSpriteContainer("default", defaultSpriteViewer);
-        Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
-        String spriteName = spriteLabelName.getText();
-        spriteBox.getChildren().add(spriteContainer);
-        dragAndDrop(defaultSpriteViewer, defaultSprite, spriteName);
+
         return root;
 */
     }
@@ -448,44 +444,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-    /**
-     * Allows the User to change the label text.
-     *
-     * @param e               The current Event.
-     * @param spriteContainer The Container which contains the sprite label.
-     */
-    private void clickOnLabel(Event e, VBox spriteContainer) {
-        System.out.println("Detected Click");
-        Label currentLabel = (Label) spriteContainer.getChildren().get(1);
-
-        TextField enterSpriteNameField = new TextField(currentLabel.getText());
-        enterSpriteNameField.setPrefSize(50, 20);
-        enterSpriteNameField.setOnKeyPressed(event -> {
-            System.out.println(event.getCode());
-            String inputText = enterSpriteNameField.getText();
-            if (event.getCode() == KeyCode.ENTER && !(inputText.equals(""))) {
-                System.out.println("detected enter");
-
-                Label newSpriteLabel = new Label(inputText);
-                String oldName = currentLabel.getText();
-                System.out.println(oldName);
-
-                boolean changedName =
-                        spriteController.changeSpriteName(inputText, oldName);
-                if(changedName == true) {
-                    spriteContainer.getChildren().remove(1);
-                    spriteContainer.getChildren().add(newSpriteLabel);
-                    newSpriteLabel.setOnMouseClicked(labelEvent -> clickOnLabel(labelEvent, spriteContainer));
-
-                }
-
-
-            }
-            event.consume();
-        });
-        spriteContainer.getChildren().remove(1);
-        spriteContainer.getChildren().add(enterSpriteNameField);
-    }
 
 
     /**
@@ -495,7 +453,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      * @param sprite     The image of the sprite.
      * @param spriteName The name of the sprite.
      */
-    private void dragAndDrop(ImageView imageView, Image sprite, String spriteName) {
+    public static void dragAndDrop(ImageView imageView, Image sprite, String spriteName, SpriteController spriteController) {
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
@@ -572,22 +530,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         StageInitializer.emptyLoopBlocks =   new LinkedList<>(emptyLoopBlocks);
     }
 
-    private VBox createSpriteContainer(String spriteName, ImageView spriteViewer) {
-        VBox spriteContainer = new VBox();
-        Label spriteLabel = new Label(spriteName);
-
-        spriteLabel.setOnMouseClicked(e -> clickOnLabel(e, spriteContainer));
-
-
-        spriteContainer.getChildren().add(spriteViewer);
-        spriteContainer.getChildren().add(spriteLabel);
-        spriteContainer.setAlignment(Pos.CENTER);
-
-
-
-
-        return spriteContainer;
-    }
 
     public static void setSceneBackground(Image scene) {
         sceneBackground = scene;
