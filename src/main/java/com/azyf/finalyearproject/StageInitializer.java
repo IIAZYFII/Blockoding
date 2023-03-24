@@ -71,8 +71,8 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private SpriteController spriteController = new SpriteController();
 
     private SoundController soundController = new SoundController();
-    private double currentMouseXPos = 0;
-    private double currentMouseYPos = 0;
+    private static double currentMouseXPos = 0;
+    private static double currentMouseYPos = 0;
     private static VBox leftPanel;
     private static boolean compiled = false;
     private static Scene scene;
@@ -138,7 +138,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         interpreter.setInputBoxValueIndex(tempIndexValue);
         interpreter.setTerminated(false);
 
-        drawScene();
+        drawScene(sceneController, spriteController);
         //drawVariableBox();
         frameCounter++;
 
@@ -181,7 +181,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                     scene.setCursor(Cursor.DEFAULT);
                     spriteIndex.set(NO_SPRITE_INDEX);
 
-                    drawScene();
+                    drawScene(sceneController, spriteController);
                 } else if (e.getButton() == MouseButton.PRIMARY) {
                     double xPos = e.getX();
                     double yPos = e.getY();
@@ -200,7 +200,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     /**
      * Draws the scene for the canvas.
      */
-    private void drawScene() {
+    public static void drawScene(SceneController sceneController, SpriteController spriteController) {
         if(sceneController.getChangeSceneTo() != null || !(sceneController.getChangeSceneTo().equals("Default"))) {
             for(int i =0; i < sceneController.getScenes().size(); i++) {
                 if(sceneController.getScene(i).getName().equals(sceneController.getChangeSceneTo())) {
@@ -589,4 +589,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         root.setLeft(leftPanel);
     }
 
+    public static double getCurrentMouseXPos() {
+        return currentMouseXPos;
+    }
+
+    public static double getCurrentMouseYPos() {
+        return currentMouseYPos;
+    }
 }

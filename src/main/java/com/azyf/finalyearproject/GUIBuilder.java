@@ -95,24 +95,23 @@ public class GUIBuilder {
         });
 
 
-           /*
+
         playButton.setOnAction(e -> {
             playButton.setDisable(true);
             stopButton.setDisable(false);
 
-            if (compiled == true) {
-                interpreter.compileAndRun(spriteController, currentMouseXPos, currentMouseYPos, inputBoxesValues,
-                        inputBoxes, variableManager, soundController, sceneController);
-                drawScene();
-                drawVariableBox();
-                // System.out.println("Post " + variableManager.getVariables().get(0).getValue());
+            if (StageInitializer.getCompiled() == true) {
+                interpreter.compileAndRun(spriteController, StageInitializer.getCurrentMouseXPos(), StageInitializer.getCurrentMouseYPos(), programBoxBuilder.getInputBoxBuilder().getInputBoxesValues(),
+                        programBoxBuilder.getInputBoxBuilder().getInputBoxes(), variableManager, soundController, sceneController);
+                StageInitializer.drawScene(sceneController, spriteController);
+               // drawVariableBox();
 
             }
 
 
 
         });
-*/
+
         stopButton.setOnAction(e -> {
             StageInitializer.frameTimeline.stop();
             variableManager.resetToInitialValues();

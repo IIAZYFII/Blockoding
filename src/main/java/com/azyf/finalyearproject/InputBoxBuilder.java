@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InputBoxBuilder {
-    private ArrayList<String> inputBoxes;
-    private HashMap<String, String> inputBoxesValues;
+    private ArrayList<String> inputBoxes = new ArrayList<>();
+    private HashMap<String, String> inputBoxesValues  = new HashMap<>();
     public InputBoxBuilder(){
-        ArrayList<String> inputBoxes  = new ArrayList<>();
-        HashMap<String, String> inputBoxesValues = new HashMap<>();
+
     }
 
 
@@ -37,6 +36,7 @@ public class InputBoxBuilder {
                 inputBoxesValues.put(textFieldAsString, (String) textField.getText());
             }
         });
+        System.out.println(inputBoxes.size() + "Created  text field");
         return textField;
     }
 
@@ -54,6 +54,7 @@ public class InputBoxBuilder {
             }
 
         });
+        System.out.println(inputBoxes.size() + "Created  Combo box");
         return comboBox;
     }
 
