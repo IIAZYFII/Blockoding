@@ -1,16 +1,16 @@
 package com.azyf.finalyearproject;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 
@@ -186,19 +186,69 @@ public class GUIBuilder {
         return LeftPane;
     }
 
-    public VBox buildRightPane(SpriteController spriteController) {
+    public VBox buildRightPane(SpriteController spriteController, Stage stage) {
         VBox rightPane = new VBox();
-        HBox spriteBox = new HBox();
+        AtomicReference<HBox> spriteBox = new AtomicReference<>(new HBox());
         ImageView imageView = new ImageView();
         Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
         imageView.setImage(image);
-        spriteBox = spriteBoxBuilder.addSpriteToBox("Blocky Bro",imageView, spriteController,spriteBox);
+        spriteBox.set(spriteBoxBuilder.addSpriteToBox("Blocky Bro", imageView, spriteController, spriteBox.get()));
 
-        spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        spriteBox.setPrefSize(400,200);
+        spriteBox.get().setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
+        spriteBox.get().setPrefSize(400,200);
+
+        AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
+        HBox finalSpriteBox = spriteBox.get();
+        spriteBox.get().setOnMouseClicked(e -> {
+            if (contextMenu.get() != null) {
+                contextMenu.get().hide();
+                contextMenu.set(null);
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+
+                MenuItem menuItem1 = new MenuItem("Upload Sprite");
+                menuItem1.setOnAction(actionEvent -> {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Upload Sprite");
+                    FileChooser.ExtensionFilter extensionFilter =
+                            new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
+                    fileChooser.getExtensionFilters().add(extensionFilter);
+                    File file = fileChooser.showOpenDialog(stage);
+                    if (file != null) {
+                        Image createdSprite = new Image(file.getPath());
+                        String tmpSpriteName = file.getName();
+                        String spriteName = tmpSpriteName.substring(0, tmpSpriteName.lastIndexOf('.'));
+                        boolean nameExist = spriteBoxBuilder.checkNameExist(finalSpriteBox, spriteName);
+                        if(nameExist == false) {
+                            System.out.println(spriteName);
+                            ImageView newSpriteImageView = new ImageView();
+                            newSpriteImageView.setImage(createdSprite);
+                            spriteBox.set(spriteBoxBuilder.addSpriteToBox(spriteName, newSpriteImageView, spriteController, finalSpriteBox));
+
+                        }
+
+                    }
+
+                });
+                contextMenu.set(new ContextMenu());
+                contextMenu.get().getItems().add(menuItem1);
+
+                spriteBox.get().setOnContextMenuRequested(event -> {
+                    contextMenu.get().hide();
+                    event.consume();
+                });
+
+                spriteBox.get().setOnContextMenuRequested(event -> {
+                    contextMenu.get().show(spriteBox.get(), e.getScreenX(), e.getScreenY());
+                    event.consume();
+                });
+                e.consume();
+            }
+        });
+
 
         ScrollPane scrollSpritePane = new ScrollPane();
-        scrollSpritePane.setContent(spriteBox);
+        scrollSpritePane.setContent(spriteBox.get());
         rightPane.getChildren().add(scrollSpritePane);
 
         HBox variableBox = new HBox();

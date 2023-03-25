@@ -96,4 +96,17 @@ public class SpriteBoxBuilder {
         spriteContainer.getChildren().add(enterSpriteNameField);
     }
 
+    public boolean checkNameExist(HBox spriteBox, String spriteName) {
+        boolean alreadyExist = false;
+        for (int i =0; i < spriteBox.getChildren().size(); i++) {
+            VBox tmpSpriteContainer = (VBox) spriteBox.getChildren().get(i);
+            Label tmpSpriteName = (Label) tmpSpriteContainer.getChildren().get(1);
+            if(tmpSpriteName.getText().equals(spriteName)) {
+                alreadyExist = true;
+            }
+
+        }
+        return alreadyExist;
+    }
+
 }

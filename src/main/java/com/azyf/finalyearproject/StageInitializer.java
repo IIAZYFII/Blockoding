@@ -277,7 +277,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         HBox bottomPanel = builder.buildBottomPane(terminal);
         root.setBottom(bottomPanel);
 
-        VBox rightPanel = builder.buildRightPane(spriteController);
+        VBox rightPanel = builder.buildRightPane(spriteController, stage);
         root.setRight(rightPanel);
 
         root.setCenter(canvas);
@@ -293,30 +293,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         AnchorPane bottomBar = new AnchorPane();
         root.setBottom(bottomBar);
 
-        VBox ioBar = new VBox();
-        terminal = new TextArea();
-        terminal.setEditable(false);
-        terminal.setPrefSize(700, 100);
-        terminal.setMinHeight(Region.USE_COMPUTED_SIZE);
-        terminal.setMaxHeight(Region.USE_COMPUTED_SIZE);
-        terminal.setMinWidth(Region.USE_COMPUTED_SIZE);
-        terminal.setMaxWidth(Region.USE_COMPUTED_SIZE);
-        terminal.setStyle("-fx-border-color: black;" + "text-area-background: black;");
-        ioBar.setPadding(new Insets(0, 0, 100, 400));
-        ioBar.getChildren().add(terminal);
 
-        bottomBar.getChildren().add(ioBar);
-
-
-
-        VBox rightPane = new VBox();
-        HBox spriteBox = new HBox();
-
-        //rightPane.setPadding(new Insets(50, 10, 50, 0));
-        //rightPane.setSpacing(60);
-        spriteBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-
-        //spriteBox.setPadding(new Insets(0, 0, 200, 350));
 
  String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
         Image defaultSprite = new Image(pathDS);
@@ -324,31 +301,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         defaultSpriteViewer.setImage(defaultSprite);
 
 
-        rightPane.getChildren().add(spriteBox);
-        variableBox = new HBox();
-        Text variableText = new Text();
-        variableText.setText("Variables");
-        variableBox.getChildren().add(variableText);
-        variableBox.setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
-        //variableBox.setPadding(new Insets(0, 0, 200, 350));
-        rightPane.getChildren().add(variableBox);
-        root.setRight(rightPane);
-
-       VBox leftPane = new VBox();
-
-       ScrollPane programScroll = new ScrollPane();
-
-        programBox = new VBox();
-        Text programText = new Text();
-        programText.setText("Program Box");
-        programBox.setStyle( "-fx-background-color: #FFFDD0;");
-        programBox.getChildren().add(programText);
-        programBox.setPadding(new Insets(0, 100, 600, 100));
-        leftPane.setPadding(new Insets(50, 0, 10, 50));
-        programScroll.setContent(programBox);
-        leftPane.getChildren().add(programScroll);
-
-        root.setLeft(leftPane);
 
 
 
@@ -370,55 +322,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
 
 
-        AtomicReference<ContextMenu> contextMenu = new AtomicReference<>(new ContextMenu());
-        spriteBox.setOnMouseClicked(e -> {
-            if (contextMenu.get() != null) {
-                contextMenu.get().hide();
-                contextMenu.set(null);
-            }
-            if (e.getButton() == MouseButton.SECONDARY) {
 
-                MenuItem menuItem1 = new MenuItem("Upload Sprite");
-                menuItem1.setOnAction(actionEvent -> {
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle("Upload Sprite");
-                    FileChooser.ExtensionFilter extensionFilter =
-                            new FileChooser.ExtensionFilter("Image files (*.PNG, *.JPEG, *.JPG, )", "*.PNG", "*.JPEG", "*.JPG");
-                    fileChooser.getExtensionFilters().add(extensionFilter);
-                    File file = fileChooser.showOpenDialog(stage);
-                    if (file != null) {
-                        Image createdSprite = new Image(file.getPath());
-                        String tmpSpriteName = file.getName();
-                        String spriteName = tmpSpriteName.substring(0, tmpSpriteName.lastIndexOf('.'));
-                        boolean nameExist = checkNameExist(spriteBox, spriteName);
-                        if(nameExist == false) {
-                            System.out.println(spriteName);
-                            ImageView imageView = new ImageView();
-                            imageView.setImage(createdSprite);
-                            VBox tmpSpriteContainer = createSpriteContainer(spriteName, imageView);
-                            spriteBox.getChildren().add(tmpSpriteContainer);
-
-                            dragAndDrop(imageView, createdSprite, spriteName);
-                        }
-
-                    }
-
-                });
-                contextMenu.set(new ContextMenu());
-                contextMenu.get().getItems().add(menuItem1);
-
-                spriteBox.setOnContextMenuRequested(event -> {
-                    contextMenu.get().hide();
-                    event.consume();
-                });
-
-                spriteBox.setOnContextMenuRequested(event -> {
-                    contextMenu.get().show(spriteBox, e.getScreenX(), e.getScreenY());
-                    event.consume();
-                });
-                e.consume();
-            }
-        });
 
 
 
@@ -563,18 +467,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
  */
 
-    private boolean checkNameExist(HBox spriteBox, String spriteName) {
-        boolean alreadyExist = false;
-        for (int i =0; i < spriteBox.getChildren().size(); i++) {
-          VBox tmpSpriteContainer = (VBox) spriteBox.getChildren().get(i);
-           Label tmpSpriteName = (Label) tmpSpriteContainer.getChildren().get(1);
-           if(tmpSpriteName.getText().equals(spriteName)) {
-               alreadyExist = true;
-           }
 
-        }
-        return alreadyExist;
-    }
 
     public static boolean getCompiled() {
         return compiled;
