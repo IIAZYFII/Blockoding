@@ -230,7 +230,7 @@ public class GUIBuilder {
         tmp.setMaxWidth(Region.USE_COMPUTED_SIZE);
         terminalComponent.setTerminal(tmp);
         ioBar.getChildren().add(terminalComponent.getTerminal());
-        ioBar.setMargin(terminalComponent.getTerminal(), new Insets(0,0,50,600));
+        ioBar.setMargin(terminalComponent.getTerminal(), new Insets(0,0,50,400));
         return ioBar;
 
     }
