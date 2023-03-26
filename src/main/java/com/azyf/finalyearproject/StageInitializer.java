@@ -201,7 +201,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      * Draws the scene for the canvas.
      */
     public static void drawScene(SceneController sceneController, SpriteController spriteController) {
-        if(sceneController.getChangeSceneTo() != null || !(sceneController.getChangeSceneTo().equals("Default"))) {
+        if(sceneController.getChangeSceneTo() != null && !(sceneController.getChangeSceneTo().equals("Default"))) {
             for(int i =0; i < sceneController.getScenes().size(); i++) {
                 if(sceneController.getScene(i).getName().equals(sceneController.getChangeSceneTo())) {
                     sceneBackground = sceneController.getScene(i).getImage();
@@ -371,6 +371,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     public static void setSceneBackground(Image scene) {
         sceneBackground = scene;
+
     }
 
 

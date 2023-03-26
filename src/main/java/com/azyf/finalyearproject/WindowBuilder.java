@@ -98,7 +98,7 @@ public class WindowBuilder {
             int finalI = i;
             sceneBtn.setOnAction(e-> {
                 StageInitializer.setSceneBackground( new Image(FileController.getAbsolutePath() + "/Assets/Images/Scenes/" + files[finalI].getName()));
-               // drawScene();
+                StageInitializer.drawScene(sceneController, spriteController);
                 e.consume();
             });
             hBox.getChildren().add(sceneBtn);

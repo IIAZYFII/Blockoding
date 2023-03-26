@@ -12,15 +12,15 @@ public class SceneController {
   private  File[] files;
    private String dirPath;
     FileFilter imageFileFilter;
-    private  String changeSceneTo;
+    private static String changeSceneTo;
 
 
-    public String getChangeSceneTo() {
+    public static String getChangeSceneTo() {
         return changeSceneTo;
     }
 
-    public void setChangeSceneTo(String changeSceneTo) {
-        this.changeSceneTo = changeSceneTo;
+    public static void setChangeSceneTo(String changeScene) {
+        changeSceneTo = changeScene;
     }
 
 
