@@ -24,6 +24,7 @@ public class GUIBuilder {
     private WindowBuilder windowBuilder;
     private ProgramBoxBuilder programBoxBuilder;
     private SpriteBoxBuilder spriteBoxBuilder;
+    private VariableBoxBuilder variableBoxBuilder;
     //  private static final  DEFAULT_SPRITE_PATH =
 
     public GUIBuilder() {
@@ -31,6 +32,7 @@ public class GUIBuilder {
         windowBuilder = new WindowBuilder();
         programBoxBuilder = new ProgramBoxBuilder();
         spriteBoxBuilder = new SpriteBoxBuilder();
+        variableBoxBuilder = new VariableBoxBuilder();
     }
 
     public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor,
@@ -91,6 +93,7 @@ public class GUIBuilder {
 
         variableButton.setOnAction(e-> {
             windowBuilder.drawVariableManager(variableManager);
+            StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
             e.consume();
         });
 
@@ -104,7 +107,7 @@ public class GUIBuilder {
                 interpreter.compileAndRun(spriteController, StageInitializer.getCurrentMouseXPos(), StageInitializer.getCurrentMouseYPos(), programBoxBuilder.getInputBoxBuilder().getInputBoxesValues(),
                         programBoxBuilder.getInputBoxBuilder().getInputBoxes(), variableManager, soundController, sceneController);
                 StageInitializer.drawScene(sceneController, spriteController);
-               // drawVariableBox();
+                StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
 
             }
 
@@ -115,7 +118,7 @@ public class GUIBuilder {
         stopButton.setOnAction(e -> {
             StageInitializer.frameTimeline.stop();
             variableManager.resetToInitialValues();
-           //drawVariableBox();
+            StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
             playButton.setDisable(false);
             stopButton.setDisable(true);
             soundController.pressedStopButton();
@@ -295,5 +298,10 @@ public class GUIBuilder {
 
     public ProgramBoxBuilder getProgramBoxBuilder() {
         return programBoxBuilder;
+    }
+
+    public void drawVariableBox(VariableManager variableManager) {
+        StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
+
     }
 }

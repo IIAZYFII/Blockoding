@@ -74,10 +74,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static double currentMouseXPos = 0;
     private static double currentMouseYPos = 0;
     private static VBox leftPanel;
+    private static VBox rightPanel;
     private static boolean compiled = false;
     private static Scene scene;
-   // public static Button playButton = new Button();
-   // public static Button stopButton = new Button();
+    private GUIBuilder builder;
     public static Timeline frameTimeline;
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
@@ -139,7 +139,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         interpreter.setTerminated(false);
 
         drawScene(sceneController, spriteController);
-        //drawVariableBox();
+        builder.drawVariableBox(variableManager);
         frameCounter++;
 
     }
@@ -277,78 +277,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         HBox bottomPanel = builder.buildBottomPane(terminal);
         root.setBottom(bottomPanel);
 
-        VBox rightPanel = builder.buildRightPane(spriteController, stage);
+        rightPanel = builder.buildRightPane(spriteController, stage);
         root.setRight(rightPanel);
 
         root.setCenter(canvas);
         return  root;
-
-
-/*
-        HBox sceneBox = new HBox();
-        sceneBox.setStyle("-fx-background-color: #FFFDD0");
-        root.setLeft(sceneBox);
-
-
-        AnchorPane bottomBar = new AnchorPane();
-        root.setBottom(bottomBar);
-
-
-
- String pathDS = FileController.getAbsolutePath() + "/Assets/Images/Sprites/default.png";
-        Image defaultSprite = new Image(pathDS);
-        ImageView defaultSpriteViewer = new ImageView();
-        defaultSpriteViewer.setImage(defaultSprite);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return root;
-*/
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Allows the user to drag a sprite from the sprite box to the canvas.
@@ -439,35 +373,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         sceneBackground = scene;
     }
 
-/*
-
-
-    private void drawVariableBox() {
-        variableBox.getChildren().clear();
-        for(int i = 0; i < variableManager.getVariables().size(); i++) {
-            addVariableToCanvas(variableManager.getVariables().get(i));
-        }
-    }
-     */
-
-/*
-    private void addVariableToCanvas(Variable variable) {
-        VariableType variableType = variable.getType();
-        String content = variable.getName() + " : ";
-        if (variableType == VariableType.Integer) {
-            content = content +  variable.getValue();
-        } else if (variableType == VariableType.String) {
-            content = content +  variable.getContent();
-        }
-
-        StackPane stackPane =  createStackPane(content, 255, 84, 56);
-        variableBox.getChildren().add(stackPane);
-
-    }
-
- */
-
-
 
     public static boolean getCompiled() {
         return compiled;
@@ -480,6 +385,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static void setLeftPanel(VBox leftPane) {
         leftPanel = leftPane;
         root.setLeft(leftPanel);
+    }
+
+    public static HBox getVariableBox() {
+       ScrollPane scrollPane = (ScrollPane) rightPanel.getChildren().get(1);
+       return (HBox) scrollPane.getContent();
+    }
+
+    public static void setVariableBox(HBox variableBox){
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(variableBox);
+        rightPanel.getChildren().set(1, scrollPane);
+        root.setRight(rightPanel);
     }
 
     public static double getCurrentMouseXPos() {
