@@ -22,9 +22,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class WindowBuilder {
     QRCodeBuilder qrCodeBuilder;
+    private boolean alreadyExist;
 
     public WindowBuilder() {
         qrCodeBuilder = new QRCodeBuilder();
+        alreadyExist = false;
     }
 
     public void drawSettings() {
@@ -64,7 +66,8 @@ public class WindowBuilder {
         settingStage.showAndWait();
     }
 
-    public void drawSceneController(ImageProcessor imageProcessor) {
+    public void drawSceneController(ImageProcessor imageProcessor, SceneController sceneController,
+                                    SpriteController spriteController) {
         Stage sceneControllerStage = new Stage();
         sceneControllerStage.setResizable(false);
         ScrollPane basePane = new ScrollPane();
@@ -106,7 +109,7 @@ public class WindowBuilder {
         removeSceneBtn.setText("Remove scene");
         removeSceneBtn.setOnAction(e->{
            StageInitializer.setSceneBackground(null);
-           // drawScene();
+           StageInitializer.drawScene(sceneController, spriteController);
         });
 
         Button addSceneBtn = new Button();
@@ -130,7 +133,7 @@ public class WindowBuilder {
                 }
 
                 imageProcessor.produceImageThumbnails(image);
-                drawSceneController(imageProcessor);
+                drawSceneController(imageProcessor,sceneController ,spriteController);
                 sceneControllerStage.close();
             }
 
@@ -243,7 +246,7 @@ public class WindowBuilder {
                     System.out.println("Added Variable");
                     boolean alreadyExist = variableManager.addVariable(variable);
                     if(alreadyExist == false) {
-                       // addVariableToCanvas(variable);
+
                     }
 
                 }
@@ -267,5 +270,12 @@ public class WindowBuilder {
         variableManagerRoot.get().getChildren().add(content);
         return variableManagerRoot.get();
     }
+
+
+    public boolean getAlreadyExist(){
+        return alreadyExist;
+    }
+
+
 
 }

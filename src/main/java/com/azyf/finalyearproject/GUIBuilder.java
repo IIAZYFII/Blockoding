@@ -93,7 +93,9 @@ public class GUIBuilder {
 
         variableButton.setOnAction(e-> {
             windowBuilder.drawVariableManager(variableManager);
-            StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
+            if(windowBuilder.getAlreadyExist() == false) {
+                StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
+            }
             e.consume();
         });
 
@@ -135,7 +137,7 @@ public class GUIBuilder {
 
 
         sceneButton.setOnAction(e-> {
-            windowBuilder.drawSceneController(imageProcessor);
+            windowBuilder.drawSceneController(imageProcessor, sceneController, spriteController);
             e.consume();
         });
 
