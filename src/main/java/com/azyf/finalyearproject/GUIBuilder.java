@@ -76,14 +76,21 @@ public class GUIBuilder {
         compileButton.setOnAction(e -> {
             Queue<Block> blocks = interpreter.textToBlocks(text.get());
              StageInitializer.setCompiled(interpreter.checkSyntax(blocks));
-            Queue<Block> programBlock = new LinkedList<>(blocks);
+             System.out.println("is compiled " +  StageInitializer.getCompiled());
+             if(StageInitializer.getCompiled() == false) {
+                windowBuilder.drawSyntaxError();
+             } else {
+                 Queue<Block> programBlock = new LinkedList<>(blocks);
 
-            VBox programBox =
-                    programBoxBuilder.drawProgramBox(programBlock, variableManager, soundController,
-                            spriteController, sceneController);
+                 VBox programBox =
+                         programBoxBuilder.drawProgramBox(programBlock, variableManager, soundController,
+                                 spriteController, sceneController);
 
-            StageInitializer.setLeftPanel(buildLeftPane(programBox));
-            System.out.println("-----------------------------------------");
+                 StageInitializer.setLeftPanel(buildLeftPane(programBox));
+                 System.out.println("-----------------------------------------");
+             }
+
+
             if (StageInitializer.getCompiled() == true) {
                 interpreter.loadBlocks(blocks);
             }

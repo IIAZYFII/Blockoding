@@ -152,6 +152,16 @@ public class WindowBuilder {
 
     }
 
+    public void drawSyntaxError() {
+        Alert syntaxError = new Alert(Alert.AlertType.ERROR);
+        syntaxError.setTitle("Syntax Error");
+        syntaxError.setContentText("You have a SYNTAX ERROR. This means your code is wrong.");
+        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\SyntaxErrorIcon (1).png");
+        ImageView imageView = new ImageView(image);
+        syntaxError.setGraphic(imageView);
+        syntaxError.showAndWait();
+    }
+
 
     public void drawVariableManager(VariableManager variableManager) {
         Stage variableManagerStage = new Stage();

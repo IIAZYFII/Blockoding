@@ -6,6 +6,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.rmi.UnexpectedException;
 import java.util.*;
 
 
@@ -99,8 +100,12 @@ public class Interpreter {
              }
               */
 
+            try {
+                pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
+            } catch (NullPointerException ex) {
+                System.out.println("Block does not exist");
+            }
 
-             pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
              if( (boolean) pair.getValue() == false) {
                  return false;
              }
