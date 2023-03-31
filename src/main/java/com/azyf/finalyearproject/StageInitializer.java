@@ -1361,6 +1361,10 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      * @param spriteName The name of the sprite.
      */
     private void dragAndDrop(ImageView imageView, Image sprite, String spriteName) {
+        if(spriteName == "Default") {
+            sprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\Default.png");
+        }
+        Image finalSprite = sprite;
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
@@ -1379,17 +1383,18 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                 });
                 canvas.setOnDragDropped(new EventHandler<DragEvent>() {
                     public void handle(DragEvent event) {
-                        double x = event.getX() - sprite.getWidth() / 2.0;
-                        double y = event.getY() - sprite.getHeight() / 2.0;
+                        double x = event.getX() - finalSprite.getWidth() / 2.0;
+                        double y = event.getY() - finalSprite.getHeight() / 2.0;
 
                         String s = String.format("You dropped at (%f, %f) relative to the canvas.", x, y);
                         System.out.println(s);
                         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-                         spriteController.addSprite(spriteName, x, y, sprite);
+
+                         spriteController.addSprite(spriteName, x, y, finalSprite);
                             System.out.println("added sprite");
                             currentSpriteIndex = spriteController.size() - 1;
-                            gc.drawImage(sprite, x, y);
+                            gc.drawImage(finalSprite, x, y);
 
                             imageView.setOnDragDetected(null);
                             programBox.getChildren().clear();
