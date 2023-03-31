@@ -136,7 +136,10 @@ public class  ParseTree {
 
     public Pair<TreeNode, Boolean> compileProgram(Block block, TreeNode position) {
 
-
+    if(block == null) {
+        Pair pair = new Pair(root, false);
+        return pair;
+    }
 
         if(position.getNode().getName().equals(block.getName())) {
             System.out.println("correct position");

@@ -6,6 +6,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.rmi.UnexpectedException;
 import java.util.*;
 
 
@@ -99,8 +100,12 @@ public class Interpreter {
              }
               */
 
+            try {
+                pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
+            } catch (NullPointerException ex) {
+                System.out.println("Block does not exist");
+            }
 
-             pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
              if( (boolean) pair.getValue() == false) {
                  return false;
              }
@@ -138,8 +143,8 @@ public class Interpreter {
                 String blockName = block.getName();
                 spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
             }
-        StageInitializer.playButton.setDisable(true);
-        StageInitializer.stopButton.setDisable(false);
+       // StageInitializer.playButton.setDisable(true);
+       // StageInitializer.stopButton.setDisable(false);
     }
 
 
@@ -272,7 +277,7 @@ public class Interpreter {
                content = getContent();
                 if(blockName.equals("ASK")) {
                     blocks.remove();
-                    StageInitializer.askTerminalContent(content);
+                    TerminalComponent.askTerminalContent(content);
 
                 } else {
                     tmpVariable.setValue(Integer.parseInt(content));
@@ -293,7 +298,7 @@ public class Interpreter {
             case "SPEAK":
                 blocks.remove();
                 content = getContent();
-                StageInitializer.setTerminalContent(content);
+                TerminalComponent.setTerminalContent(content);
 
                 break;
             case "CONTINUE":
