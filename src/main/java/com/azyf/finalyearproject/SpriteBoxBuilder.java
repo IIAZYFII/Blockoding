@@ -2,12 +2,18 @@ package com.azyf.finalyearproject;
 
 import javafx.event.Event;
 import javafx.geometry.Pos;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.checkerframework.checker.units.qual.N;
+
+import javax.naming.Context;
 
 public class SpriteBoxBuilder {
 
@@ -23,10 +29,38 @@ public class SpriteBoxBuilder {
      * @param spriteBox
      * @return
      */
-    public HBox addSpriteToBox(String spriteName, ImageView spriteViewer, SpriteController spriteController, HBox spriteBox){
+    public HBox addSpriteToBox(String spriteName, ImageView spriteViewer, SceneController sceneController
+            ,SpriteController spriteController, WindowBuilder windowBuilder, HBox spriteBox){
         VBox spriteContainer = createSpriteContainer(spriteName, spriteViewer, spriteController);
         Label spriteLabelName = (Label) spriteContainer.getChildren().get(1);
         String spriteLabelText = spriteLabelName.getText();
+
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem removeSpriteMenuItem = new MenuItem("Remove Sprite From Canvas");
+        removeSpriteMenuItem.setOnAction(event->{
+            String name = ((Label) spriteContainer.getChildren().get(1)).getText();
+            boolean removeSprite = removeSpriteFromCanvas(name, spriteController);
+            if (removeSprite == false) {
+                System.out.println("oppie");
+                windowBuilder.drawSpriteNotOnCanvasError();
+            } else {
+                StageInitializer.drawScene(sceneController, spriteController);
+                StageInitializer.dragAndDrop(spriteViewer, spriteViewer.getImage(), spriteLabelText, spriteController);
+            }
+            event.consume();
+        });
+
+        contextMenu.getItems().add(removeSpriteMenuItem);
+
+        spriteContainer.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                System.out.println("a");
+                contextMenu.show(spriteContainer, e.getScreenX(), e.getScreenY());
+                e.consume();
+            }
+        }
+        );
         spriteBox.getChildren().add(spriteContainer);
         StageInitializer.dragAndDrop(spriteViewer, spriteViewer.getImage(), spriteLabelText, spriteController);
         return spriteBox;
@@ -108,5 +142,18 @@ public class SpriteBoxBuilder {
         }
         return alreadyExist;
     }
+    private boolean removeSpriteFromCanvas(String spriteName, SpriteController spriteController) {
+        int index = 0;
+        while( index < spriteController.size()) {
+            if(spriteController.getSprite(index).getSpriteName().equals(spriteName)) {
+                spriteController.removeSprite(index);
+                return true;
+            }
+            index++;
+        }
+        return  false;
+    }
+
+
 
 }

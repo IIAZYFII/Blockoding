@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
+/**
+ * Current Version of Word processor is redundant however this may be implemented again in future versions
+ */
 public class WordProcessor {
     PriorityQueue<Word> wordPriorityQueue;
     ArrayList<String> dictionary;

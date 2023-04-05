@@ -198,13 +198,14 @@ public class GUIBuilder {
         return LeftPane;
     }
 
-    public VBox buildRightPane(SpriteController spriteController, Stage stage) {
+    public VBox buildRightPane(SceneController sceneController, SpriteController spriteController, Stage stage) {
         VBox rightPane = new VBox();
         AtomicReference<HBox> spriteBox = new AtomicReference<>(new HBox());
         ImageView imageView = new ImageView();
         Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
         imageView.setImage(image);
-        spriteBox.set(spriteBoxBuilder.addSpriteToBox("Blocky Bro", imageView, spriteController, spriteBox.get()));
+        spriteBox.set(spriteBoxBuilder .addSpriteToBox("Blocky Bro", imageView, sceneController,
+                spriteController, windowBuilder,spriteBox.get()));
 
         spriteBox.get().setStyle("-fx-border-style: solid inside;" + "-fx-background-color: #FFFDD0;");
         spriteBox.get().setPrefSize(400,200);
@@ -218,8 +219,8 @@ public class GUIBuilder {
             }
             if (e.getButton() == MouseButton.SECONDARY) {
 
-                MenuItem menuItem1 = new MenuItem("Upload Sprite");
-                menuItem1.setOnAction(actionEvent -> {
+                MenuItem uploadSpriteMenuItem = new MenuItem("Upload Sprite");
+                uploadSpriteMenuItem.setOnAction(actionEvent -> {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Upload Sprite");
                     FileChooser.ExtensionFilter extensionFilter =
@@ -235,7 +236,8 @@ public class GUIBuilder {
                             System.out.println(spriteName);
                             ImageView newSpriteImageView = new ImageView();
                             newSpriteImageView.setImage(createdSprite);
-                            spriteBox.set(spriteBoxBuilder.addSpriteToBox(spriteName, newSpriteImageView, spriteController, finalSpriteBox));
+                            spriteBox.set(spriteBoxBuilder.addSpriteToBox(spriteName, newSpriteImageView, sceneController,
+                                    spriteController, windowBuilder ,finalSpriteBox));
 
                         }
 
@@ -243,7 +245,7 @@ public class GUIBuilder {
 
                 });
                 contextMenu.set(new ContextMenu());
-                contextMenu.get().getItems().add(menuItem1);
+                contextMenu.get().getItems().add(uploadSpriteMenuItem);
 
                 spriteBox.get().setOnContextMenuRequested(event -> {
                     contextMenu.get().hide();

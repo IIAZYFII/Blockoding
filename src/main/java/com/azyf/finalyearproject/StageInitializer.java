@@ -277,7 +277,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
         HBox bottomPanel = builder.buildBottomPane(terminal);
         root.setBottom(bottomPanel);
 
-        rightPanel = builder.buildRightPane(spriteController, stage);
+        rightPanel = builder.buildRightPane(sceneController, spriteController, stage);
         root.setRight(rightPanel);
 
         root.setCenter(canvas);

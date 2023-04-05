@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Extracts the text from an image and processes the image.
  * @author Hussain Asif
- * @version 1.0
+ * @version 3.0
  */
 public class TextExtractor {
     WordProcessor wordProcessor;

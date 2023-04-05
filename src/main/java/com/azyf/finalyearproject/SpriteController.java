@@ -30,6 +30,10 @@ public class SpriteController {
 
     }
 
+    public void removeSprite(int index) {
+        sprites.remove(index);
+    }
+
     public int findSprite(double xPos, double yPos) {
         for(int i = 0; i < sprites.size(); i++) {
            double x =  sprites.get(i).getXPos();

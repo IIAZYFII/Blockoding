@@ -151,15 +151,32 @@ public class WindowBuilder {
 
     }
 
+
+
     public void drawSyntaxError() {
-        Alert syntaxError = new Alert(Alert.AlertType.ERROR);
-        syntaxError.setTitle("Syntax Error");
-        syntaxError.setContentText("You have a SYNTAX ERROR. This means your code is wrong.");
+        String title = "Syntax Error";
+        String contentText = "You have a SYNTAX ERROR. This means your code is wrong.";
         Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\SyntaxErrorIcon (1).png");
-        ImageView imageView = new ImageView(image);
-        syntaxError.setGraphic(imageView);
-        syntaxError.showAndWait();
+        drawErrorWindow(title, contentText, image);
+
     }
+
+    public void drawSpriteNotOnCanvasError(){
+        String title = "Cannot Remove Sprite";
+        String contentText = "This sprite cannot be removed as it has not been placed on the canvas";
+        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\access-denied-icon.png");
+        drawErrorWindow(title, contentText, image);
+    }
+
+    private void drawErrorWindow(String title, String contentText, Image image) {
+        Alert  errorWindow = new Alert(Alert.AlertType.ERROR);
+        errorWindow.setTitle(title);
+        errorWindow.setContentText(contentText);
+        ImageView imageView = new ImageView(image);
+        errorWindow.setGraphic(imageView);
+        errorWindow.showAndWait();
+    }
+
 
 
     public void drawVariableManager(VariableManager variableManager) {
