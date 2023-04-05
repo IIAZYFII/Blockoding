@@ -286,15 +286,12 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
 
     /**
      * Allows the user to drag a sprite from the sprite box to the canvas.
-     *
-     * @param imageView  The imageview of the sprite.
+     *  @param imageView  The imageview of the sprite.
      * @param sprite     The image of the sprite.
      * @param spriteName The name of the sprite.
+     * @param spriteController
      */
-    private void dragAndDrop(ImageView imageView, Image sprite, String spriteName) {
-        if(spriteName == "Default") {
-            sprite = new Image("C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Cache\\Default.png");
-        }
+    public static void dragAndDrop(ImageView imageView, Image sprite, String spriteName, SpriteController spriteController) {
         Image finalSprite = sprite;
         imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -322,7 +319,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
                         GraphicsContext gc = canvas.getGraphicsContext2D();
 
 
-                         spriteController.addSprite(spriteName, x, y, finalSprite);
+                          spriteController.addSprite(spriteName, x, y, finalSprite);
                             System.out.println("added sprite");
                             currentSpriteIndex = spriteController.size() - 1;
                             gc.drawImage(finalSprite, x, y);

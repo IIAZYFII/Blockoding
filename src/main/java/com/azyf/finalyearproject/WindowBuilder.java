@@ -73,15 +73,12 @@ public class WindowBuilder {
         ScrollPane basePane = new ScrollPane();
         basePane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         basePane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        BorderPane sceneControllerRoot = new BorderPane();
-
-        basePane.setContent(sceneControllerRoot);
-        sceneControllerRoot.setPrefSize(350,350);
-        sceneControllerRoot.setStyle("-fx-background-color: #FF5438;");
-
         File dir = new File(FileController.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails");
         File[] files = dir.listFiles();
         VBox vBox = new VBox();
+        vBox.setPrefSize(350,350);
+        vBox.setMaxWidth(350);
+        vBox.setStyle("-fx-background-color: #FF5438;");
         for(int i = 0; i < files.length; i++) {
             Image image = new Image(files[i].getAbsolutePath());
             ImageView imageView = new ImageView(image);
@@ -139,11 +136,13 @@ public class WindowBuilder {
 
         });
         HBox hBox = new HBox();
+
         hBox.getChildren().add(removeSceneBtn);
+        hBox.setMargin(removeSceneBtn, new Insets(0,20,0,0));
         hBox.getChildren().add(addSceneBtn);
 
         vBox.getChildren().add(hBox);
-        sceneControllerRoot.getChildren().add(vBox);
+       basePane.setContent(vBox);
         Scene scene = new Scene(basePane, 350, 350);
 
 
