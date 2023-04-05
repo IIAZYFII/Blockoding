@@ -37,12 +37,11 @@ public class SpriteBoxBuilder {
 
 
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem removeSpriteMenuItem = new MenuItem("Remove Sprite From Canvas");
-        removeSpriteMenuItem.setOnAction(event->{
+        MenuItem removeSpriteMenuFromCanvasItem = new MenuItem("Remove Sprite From Canvas");
+        removeSpriteMenuFromCanvasItem.setOnAction( event -> {
             String name = ((Label) spriteContainer.getChildren().get(1)).getText();
             boolean removeSprite = removeSpriteFromCanvas(name, spriteController);
             if (removeSprite == false) {
-                System.out.println("oppie");
                 windowBuilder.drawSpriteNotOnCanvasError();
             } else {
                 StageInitializer.drawScene(sceneController, spriteController);
@@ -51,7 +50,20 @@ public class SpriteBoxBuilder {
             event.consume();
         });
 
-        contextMenu.getItems().add(removeSpriteMenuItem);
+        MenuItem removeSpriteFromBox = new MenuItem("Remove Sprite From Sprite Box");
+        removeSpriteFromBox.setOnAction(event -> {
+            String name = ((Label) spriteContainer.getChildren().get(1)).getText();
+            removeSpriteFromCanvas(name, spriteController);
+            StageInitializer.drawScene(sceneController, spriteController);
+            spriteBox.getChildren().remove(spriteContainer);
+            StageInitializer.setSpriteBox(spriteBox);
+
+
+
+        });
+
+        contextMenu.getItems().add(removeSpriteMenuFromCanvasItem);
+        contextMenu.getItems().add(removeSpriteFromBox);
 
         spriteContainer.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {

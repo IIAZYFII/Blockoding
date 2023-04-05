@@ -409,4 +409,11 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     public static double getCurrentMouseYPos() {
         return currentMouseYPos;
     }
+
+    public static void setSpriteBox(HBox spriteBox) {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(spriteBox);
+        rightPanel.getChildren().set(0, scrollPane);
+        root.setRight(rightPanel);
+    }
 }
