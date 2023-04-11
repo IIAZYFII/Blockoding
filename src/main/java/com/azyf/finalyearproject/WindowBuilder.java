@@ -171,6 +171,13 @@ public class WindowBuilder {
         drawErrorWindow(title, contentText, image);
     }
 
+    public void drawDeleteNullVariable() {
+        String title = "Cannot delete a non-selected variable";
+        String contentText = "There is no variable selected to be deleted.";
+        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\access-denied-icon.png");
+        drawErrorWindow(title, contentText, image);
+    }
+
     private void drawErrorWindow(String title, String contentText, Image image) {
         Alert  errorWindow = new Alert(Alert.AlertType.ERROR);
         errorWindow.setTitle(title);
@@ -335,9 +342,13 @@ public class WindowBuilder {
             deleteBtn.setText("Delete Variable");
             deleteBtn.setOnAction(event-> {
                String variableName = (String) comboBox.getValue();
-               variableManager.deleteVariable(variableName);
+               if(variableName == null) {
+                  drawDeleteNullVariable();
+               } else {
+                   variableManager.deleteVariable(variableName);
+                   variableManagerStage.close();
+               }
 
-               variableManagerStage.close();
                event.consume();
             });
             vbox.getChildren().add(deleteBtn);
