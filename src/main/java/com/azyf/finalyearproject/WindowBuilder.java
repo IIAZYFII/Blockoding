@@ -11,6 +11,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -195,14 +198,18 @@ public class WindowBuilder {
         variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
 
         VBox content = new VBox();
-        Button create = new Button();
-        create.setText("Create Variable");
-        create.setMinSize(200,50);
-        create.setOnAction(e-> {
+
+        Button createButton = new Button();
+        createButton.setText("Create Variable");
+        createButton.setMinSize(200,50);
+
+        createButton.setOnAction(e-> {
             content.getChildren().clear();
             Label variableName = new Label();
             variableName.setText("Name of Variable");
-            variableName.setMinSize(100,50);
+            variableName.setFont(Font.font("Sitka Display", FontWeight.BOLD,14));
+            variableName.setTextFill(Color.WHITESMOKE);
+            variableName.setMinSize(200,50);
             content.getChildren().add(variableName);
 
 
@@ -212,17 +219,25 @@ public class WindowBuilder {
 
             Label initialType = new Label();
             initialType.setText("Initial Type");
+            initialType.setFont(Font.font("Sitka Display", FontWeight.BOLD,14));
+            initialType.setTextFill(Color.WHITESMOKE);
             initialType.setMinSize(100,50);
             content.getChildren().add(initialType);
 
             String[] dropDown = {"Integer", "String"};
 
             ComboBox comboBox = new ComboBox(FXCollections.observableArrayList(dropDown));
+            comboBox.setMinWidth(100);
             content.getChildren().add(comboBox);
+
+            System.out.println(javafx.scene.text.Font.getFamilies().toString());
+
 
             Label initialValue = new Label();
             initialValue.setText("Initial Value");
+            initialValue.setTextFill(Color.WHITESMOKE);
             initialValue.setMinSize(100,50);
+            initialValue.setFont(Font.font("Sitka Display", FontWeight.BOLD,14));
             content.getChildren().add(initialValue);
 
             TextField enterInitialValue = new TextField();
@@ -237,6 +252,7 @@ public class WindowBuilder {
             cancelButton.setOnAction(event -> {
                 event.consume();
             });
+
             buttonsBox.getChildren().add(cancelButton);
 
             Button confirmButton = new Button();
@@ -285,13 +301,66 @@ public class WindowBuilder {
 
 
             buttonsBox.getChildren().add(confirmButton);
+            buttonsBox.setMargin(confirmButton, new Insets(0,0,0,10));
 
             content.getChildren().add(buttonsBox);
 
 
             e.consume();
         });
-        content.getChildren().add(create);
+        Button deleteButton = new Button();
+        deleteButton.setText("Delete Variable");
+        deleteButton.setMinSize(200,50);
+
+        deleteButton.setOnAction(e -> {
+            content.getChildren().clear();
+            Label variableLabel = new Label();
+            variableLabel.setText("List of Variables");
+            variableLabel.setFont(Font.font("Sitka Display", FontWeight.BOLD,14));
+            variableLabel.setTextFill(Color.WHITESMOKE);
+            variableLabel.setMinSize(200,50);
+
+            VBox vbox = new VBox();
+            vbox.getChildren().add(variableLabel);
+
+            ComboBox comboBox =
+                    new ComboBox(FXCollections.observableArrayList(variableManager.getVariableNamesAsArray()));
+
+            comboBox.setMinWidth(100);
+
+            vbox.getChildren().add(comboBox);
+
+            Button deleteBtn = new Button();
+            deleteBtn.setMinSize(100,50);
+            deleteBtn.setText("Delete Variable");
+            deleteBtn.setOnAction(event-> {
+               String variableName = (String) comboBox.getValue();
+               variableManager.deleteVariable(variableName);
+
+               variableManagerStage.close();
+               event.consume();
+            });
+            vbox.getChildren().add(deleteBtn);
+
+            vbox.setMargin(variableLabel, new Insets(20,0,0,110));
+            vbox.setMargin(comboBox, new Insets(40,0,0,120));
+            vbox.setMargin(deleteBtn, new Insets(40,0,0,120));
+
+
+            variableManagerRoot.get().getChildren().add(vbox);
+
+
+
+        });
+
+
+        content.getChildren().add(createButton);
+        content.getChildren().add(deleteButton);
+
+        content.setMargin(createButton, new Insets(50,0,0,70));
+
+       content.setMargin(deleteButton, new Insets(20,0,0,70));
+
         content.setPadding(new Insets(0,0,0,0));
         variableManagerRoot.get().getChildren().add(content);
         return variableManagerRoot.get();

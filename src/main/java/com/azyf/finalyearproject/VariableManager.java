@@ -12,8 +12,19 @@ public class VariableManager {
         initialValues = new ArrayList<>();
     }
 
+
+
     public ArrayList<Variable> getVariables() {
         return variables;
+    }
+
+    public void deleteVariable(String variableName) {
+        for(int i = 0; i < variables.size(); i++) {
+            if(variables.get(i).getName().equals(variableName)) {
+                variables.remove(i);
+                break;
+            }
+        }
     }
 
     public boolean addVariable(Variable variable) {
