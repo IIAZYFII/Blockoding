@@ -78,13 +78,14 @@ public class Interpreter {
      * @param blocks The blocks that are going to be checked.
      * @return A boolean value representing if the syntax is correct or not.
      */
-    public boolean checkSyntax(Queue<Block> blocks) {
+    public boolean checkSyntax(Queue<Block> blocks, WindowBuilder windowBuilder) {
         Queue<Block> syntaxBlocks = new LinkedList<>(blocks);
         int numberOfLoops = syntaxBlocks.size();
         TreeNode position = parseTree.root;
         Pair pair = new Pair(position, true);
          for(int i = 0; i < numberOfLoops; i++) {
              Block block = syntaxBlocks.remove();
+             String blockName = block.getName();
              /**
              if(block.getName().equals("WHENEVER")) {
                  numberOfConditionBlocks++;
@@ -100,6 +101,19 @@ public class Interpreter {
              }
               */
 
+             switch(blockName) {
+                 case "WHENEVER":
+                 case "THEN":
+                     numberOfConditionBlocks++;
+                     break;
+                 case "CONDITION":
+                 case  "FINISHED":
+                     numberOfConditionBlocks--;
+                     break;
+                 default:
+                     break;
+             }
+
             try {
                 pair = parseTree.compileProgram(block, (TreeNode) pair.getKey());
             } catch (NullPointerException ex) {
@@ -111,7 +125,7 @@ public class Interpreter {
              }
          }
          if(numberOfConditionBlocks != 0) {
-             System.out.println("Syntax Error Whenever and condition finished statemetn notmatchign");
+             windowBuilder.drawSyntaxError();
              return false;
          }
          return (boolean) pair.getValue();

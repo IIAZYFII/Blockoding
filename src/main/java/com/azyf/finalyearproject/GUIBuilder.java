@@ -75,7 +75,7 @@ public class GUIBuilder {
 
         compileButton.setOnAction(e -> {
             Queue<Block> blocks = interpreter.textToBlocks(text.get());
-             StageInitializer.setCompiled(interpreter.checkSyntax(blocks));
+             StageInitializer.setCompiled(interpreter.checkSyntax(blocks, windowBuilder));
              System.out.println("is compiled " +  StageInitializer.getCompiled());
              if(StageInitializer.getCompiled() == false) {
                 windowBuilder.drawSyntaxError();
