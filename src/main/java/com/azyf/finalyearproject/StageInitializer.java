@@ -77,7 +77,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
     private static VBox rightPanel;
     private static boolean compiled = false;
     private static Scene scene;
-    private GUIBuilder builder;
+    private GUIBuilder builder = new GUIBuilder();
     public static Timeline frameTimeline;
     private static Queue<Block> emptyLoopBlocks = new LinkedList<>();
     private static   BorderPane root;
@@ -244,7 +244,6 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
      */
     private Pane buildGUI(Stage stage) {
 
-        GUIBuilder builder = new GUIBuilder();
        BorderPane root = new BorderPane();
        root.setStyle("-fx-background-color: #FF5438; ");
 

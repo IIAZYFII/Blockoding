@@ -159,7 +159,7 @@ public class WindowBuilder {
     public void drawSyntaxError() {
         String title = "Syntax Error";
         String contentText = "You have a SYNTAX ERROR. This means your code is wrong.";
-        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\SyntaxErrorIcon (1).png");
+        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\DialogIcons\\SyntaxErrorIcon.png");
         drawErrorWindow(title, contentText, image);
 
     }
