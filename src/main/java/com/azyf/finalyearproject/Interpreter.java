@@ -110,6 +110,12 @@ public class Interpreter {
                  case  "FINISHED":
                      numberOfConditionBlocks--;
                      break;
+                 case "LOOP":
+                     numberOfWhileBlocks++;
+                     break;
+                 case "TERMINATE":
+                     numberOfWhileBlocks--;
+                     break;
                  default:
                      break;
              }
@@ -124,7 +130,7 @@ public class Interpreter {
                  return false;
              }
          }
-         if(numberOfConditionBlocks != 0) {
+         if(numberOfConditionBlocks != 0 || numberOfWhileBlocks != 0) {
              windowBuilder.drawSyntaxError();
              return false;
          }
