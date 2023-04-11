@@ -133,7 +133,8 @@ public class ProgramBoxBuilder {
 
                             }
 
-                        } else {
+                        }
+                        else {
                             thirdBlockName = blocks.remove().getName();
                             stackPane = (StackPane) drawBlock(thirdBlockName, 0, 255, 0, soundController);
                             hBox = (HBox) drawBlock(blockName, secondBlockName,checkEquals , 192, 240, 22, spriteController, variableManager);
@@ -149,6 +150,14 @@ public class ProgramBoxBuilder {
                         programBox.getChildren().add(hBox);
                         break;
 
+                    } else if(secondBlockName.equals("SPRITE")) {
+                        blocks.remove();
+                        thirdBlockName = blocks.remove().getName();
+                        hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 192, 240, 22, spriteController, variableManager);
+                        stackPane = createStackPane(blocks.remove().getName(), 192, 240, 22);
+                        hBox.getChildren().add(stackPane);
+                        programBox.getChildren().add(hBox);
+                        break;
                     }
                     thirdBlockName = blocks.remove().getName();
                     hBox = (HBox) drawBlock(blockName, secondBlockName, thirdBlockName, 255, 95, 31, spriteController, variableManager);
@@ -444,6 +453,25 @@ public class ProgramBoxBuilder {
                     hBox.getChildren().add(stackPane);
                     return  hBox;
                 }
+            } else if(secondBlockName.equals("SPRITE")) {
+                hBox = new HBox();
+                hBox.getChildren().add(stackPane);
+
+                ComboBox comboBox = inputBoxBuilder.createComboBox(spriteController.getSpriteNameAsArray());
+                hBox.getChildren().add(comboBox);
+
+                stackPane = createStackPane("TOUCHES", 192,240,22);
+
+                hBox.getChildren().add(stackPane);
+
+                if(thirdBlockName.equals("MOUSE")) {
+                    stackPane =  createStackPane(thirdBlockName, 192, 240, 22);
+                    hBox.getChildren().add(stackPane);
+                } else {
+                    comboBox = inputBoxBuilder.createComboBox(spriteController.getSpriteNameAsArray());
+                    hBox.getChildren().add(comboBox);
+                }
+                return hBox;
             }
 
             stackPane = createStackPane(thirdBlockName, red, green, blue);
