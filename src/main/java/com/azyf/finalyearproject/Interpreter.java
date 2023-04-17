@@ -504,6 +504,10 @@ public class Interpreter {
         String inputBoxAsString = "";
         String blockName = "";
         String content  = "";
+        double[] mousePosition;
+        boolean found;
+        int j;
+        Sprite tmpSprite;
         switch (condition) {
             case "NOT":
                 notActive = true;
@@ -538,7 +542,7 @@ public class Interpreter {
             case "HOVERS":
                 blocks.remove();
                 blockName = blocks.remove().getName();
-                double[] mousePosition = StageInitializer.getMousePosition();
+                mousePosition = StageInitializer.getMousePosition();
                 mouseX = mousePosition[0];
                 mouseY = mousePosition [1];
                 int spriteIndex = spriteController.findSprite(mouseX, mouseY);
@@ -574,9 +578,9 @@ public class Interpreter {
                 blockName = blocks.remove().getName();
                 spriteName = getContent();
 
-                Sprite tmpSprite = null;
-                boolean found = false;
-                int j = 0;
+                tmpSprite = null;
+                found = false;
+                j = 0;
                 while(found == false) {
                     if((spriteController.getSprite(j).getSpriteName().equals(spriteName))) {
                         tmpSprite = spriteController.getSprite(j);
@@ -749,6 +753,65 @@ public class Interpreter {
 
                }
 
+                break;
+            case "SPRITE":
+                spriteName = getContent();
+                tmpSprite = null;
+                found = false;
+                j = 0;
+                blocks.remove();
+                while(found == false) {
+                    if(spriteController.getSprite(j).getSpriteName().equals(spriteName)) {
+                        tmpSprite = spriteController.getSprite(j);
+                        blockName = blocks.remove().getName();
+                        if(blockName.equals("MOUSE")) {
+                            mousePosition = StageInitializer.getMousePosition();
+                            mouseX = mousePosition[0];
+                            mouseY = mousePosition [1];
+                            int index = spriteController.findSprite(mouseX, mouseY);
+                            if(tmpSprite.getSpriteName().equals(spriteController.getSprite(index).getSpriteName()) &&
+                                    notActive == false && index != -1) {
+                                if(blockName.equals("THEN")) {
+                                    blockName = blocks.remove().getName();
+                                    spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
+
+                                    spriteController.setSprite(j,tmpSprite);
+                                    return spriteController;
+                                } else if(blockName.equals("AND")){
+                                    spriteController = switchStatement(blockName, blocks,  spriteController, variableManager, soundController, sceneController);
+                                } else if (blockName.equals("OR")) {
+                                    spriteController = ORCondition(blocks, spriteController, variableManager, soundController, sceneController);
+                                }
+                                notActive = false;
+                                return spriteController;
+                            }
+                        } else if (blockName.equals("SPRITE")) {
+                            String secondSpriteName = getContent();
+                            boolean foundSecondSprite = false;
+                            int k = 0;
+                            while (foundSecondSprite == false) {
+                                if(spriteController.getSprite(k).getSpriteName().equals(secondSpriteName)
+                                        && notActive == false) {
+                                    if(blockName.equals("THEN")) {
+                                        blockName = blocks.remove().getName();
+                                        spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
+
+                                        spriteController.setSprite(j,tmpSprite);
+                                        return spriteController;
+                                    } else if(blockName.equals("AND")){
+                                        spriteController = switchStatement(blockName, blocks,  spriteController, variableManager, soundController, sceneController);
+                                    } else if (blockName.equals("OR")) {
+                                        spriteController = ORCondition(blocks, spriteController, variableManager, soundController, sceneController);
+                                    }
+                                    notActive = false;
+                                    return spriteController;
+                                }
+                                k++;
+                            }
+                        }
+                    }
+                    j++;
+                }
                 break;
             default:
                 System.out.println("something went wrong within condition");
@@ -925,6 +988,7 @@ public class Interpreter {
     }
 
     private String getContent() {
+        System.out.println("getcontent ss");
         String  inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
         String content = inputBoxesValues.get(inputBoxAsString);
         inputBoxValueIndex++;
