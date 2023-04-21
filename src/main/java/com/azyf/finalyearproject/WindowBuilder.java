@@ -1,4 +1,9 @@
 package com.azyf.finalyearproject;
+/**
+ * Builds the Window for the UI.
+ * @author Hussain Asif.
+ * @version 1/0
+ */
 
 import com.google.zxing.WriterException;
 import javafx.collections.FXCollections;
@@ -27,11 +32,18 @@ public class WindowBuilder {
     QRCodeBuilder qrCodeBuilder;
     private boolean alreadyExist;
 
+
+    /**
+     * Constructor for the window builder.
+     */
     public WindowBuilder() {
         qrCodeBuilder = new QRCodeBuilder();
         alreadyExist = false;
     }
 
+    /**
+     * Draws the settings window.
+     */
     public void drawSettings() {
         Stage settingStage = new Stage();
         HBox hBox = new HBox();
@@ -69,6 +81,12 @@ public class WindowBuilder {
         settingStage.showAndWait();
     }
 
+    /**
+     * Draws the window to set the background.
+     * @param imageProcessor Image processor for thumbnails.
+     * @param sceneController Controller for the scene background.
+     * @param spriteController Controller for the sprite.
+     */
     public void drawSceneController(ImageProcessor imageProcessor, SceneController sceneController,
                                     SpriteController spriteController) {
         Stage sceneControllerStage = new Stage();
@@ -155,7 +173,9 @@ public class WindowBuilder {
     }
 
 
-
+    /**
+     * Draws the syntax error window.
+     */
     public void drawSyntaxError() {
         String title = "Syntax Error";
         String contentText = "You have a SYNTAX ERROR. This means your code is wrong.";
@@ -164,6 +184,9 @@ public class WindowBuilder {
 
     }
 
+    /**
+     * Draws the error when the sprite is not on the canvas.
+     */
     public void drawSpriteNotOnCanvasError(){
         String title = "Cannot Remove Sprite";
         String contentText = "This sprite cannot be removed as it has not been placed on the canvas";
@@ -171,6 +194,10 @@ public class WindowBuilder {
         drawErrorWindow(title, contentText, image);
     }
 
+
+    /**
+     * Draws the null variable error.
+     */
     public void drawDeleteNullVariable() {
         String title = "Cannot delete a non-selected variable";
         String contentText = "There is no variable selected to be deleted.";
@@ -178,6 +205,12 @@ public class WindowBuilder {
         drawErrorWindow(title, contentText, image);
     }
 
+    /**
+     * Draws a generic window for the errors.
+     * @param title Title of the window.
+     * @param contentText The message that will be displayed.
+     * @param image
+     */
     private void drawErrorWindow(String title, String contentText, Image image) {
         Alert  errorWindow = new Alert(Alert.AlertType.ERROR);
         errorWindow.setTitle(title);
@@ -188,7 +221,10 @@ public class WindowBuilder {
     }
 
 
-
+    /**
+     * Draws the variable manager window.
+     * @param variableManager
+     */
     public void drawVariableManager(VariableManager variableManager) {
         Stage variableManagerStage = new Stage();
         variableManagerStage.setResizable(false);
@@ -200,6 +236,12 @@ public class WindowBuilder {
         variableManagerStage.showAndWait();
     }
 
+    /**
+     * Draws the contents inside the variable window.
+     * @param variableManagerStage Stage for variable manager.
+     * @param variableManager The manager for variable.
+     * @return A pane containing the contents of the variable manager windows.
+     */
     private BorderPane drawBaseVariableManager(Stage variableManagerStage, VariableManager variableManager) {
         AtomicReference<BorderPane> variableManagerRoot  = new AtomicReference<>(new BorderPane());
         variableManagerRoot.get().setStyle("-fx-background-color: #FF5438;");
@@ -378,6 +420,10 @@ public class WindowBuilder {
     }
 
 
+    /**
+     * Gets a boolean value of the variable already exist.
+     * @return Variable already exists or not.
+     */
     public boolean getAlreadyExist(){
         return alreadyExist;
     }

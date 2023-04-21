@@ -86,20 +86,7 @@ public class Interpreter {
          for(int i = 0; i < numberOfLoops; i++) {
              Block block = syntaxBlocks.remove();
              String blockName = block.getName();
-             /**
-             if(block.getName().equals("WHENEVER")) {
-                 numberOfConditionBlocks++;
-                 numberOfConditionBlocks++;
-             } else if (block.getName().equals("CONDITION")) {
-                 numberOfConditionBlocks--;
-             } else if(block.getName().equals("THEN")) {
-                 numberOfConditionBlocks--;
-             } else if (block.getName().equals("LOOP")) {
-                 numberOfLoops++;
-             } else if (block.getName().equals("TERMINATE")) {
-                 numberOfLoops--;
-             }
-              */
+
 
              switch(blockName) {
                  case "WHENEVER":
