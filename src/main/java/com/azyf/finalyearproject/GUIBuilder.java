@@ -1,3 +1,8 @@
+/**
+ * This class creates the entire GUI for the application.
+ * @author Hussain Asif.
+ * @version 1.0.
+ */
 package com.azyf.finalyearproject;
 
 import javafx.geometry.Insets;
@@ -25,8 +30,10 @@ public class GUIBuilder {
     private ProgramBoxBuilder programBoxBuilder;
     private SpriteBoxBuilder spriteBoxBuilder;
     private VariableBoxBuilder variableBoxBuilder;
-    //  private static final  DEFAULT_SPRITE_PATH =
 
+    /**
+     * The constructor for the GUIBuilder.
+     */
     public GUIBuilder() {
         buttonCreator = new ButtonCreator();
         windowBuilder = new WindowBuilder();
@@ -35,6 +42,17 @@ public class GUIBuilder {
         variableBoxBuilder = new VariableBoxBuilder();
     }
 
+    /**
+     * Creates the top bar for the GUI/
+     * @param imageProcessor - The image processor.
+     * @param textExtractor - The  text extractor.
+     * @param interpreter - The interpreter.
+     * @param variableManager - The manager for variable.
+     * @param soundController - The controller for sound.
+     * @param spriteController  - The controller for the sprite.
+     * @param sceneController - The controller for the scene.
+     * @return The top bar for the GUI.
+     */
     public HBox createTopBar(ImageProcessor imageProcessor, TextExtractor textExtractor,
                              Interpreter interpreter, VariableManager variableManager, SoundController soundController,
                              SpriteController spriteController, SceneController sceneController) {
@@ -166,26 +184,29 @@ public class GUIBuilder {
        return topBar;
     }
 
+
+    /**
+     * Creates the initial left pane with an empty program box for the GUI.
+     * @return the left pane.
+     */
     public VBox buildLeftPane() {
         VBox LeftPane = new VBox();
-
         VBox programBox = new VBox();
-        Text programText = new Text();
-
-        programText.setText("Program Box");
         programBox.setStyle( "-fx-background-color: #FFFDD0;");
-        programBox.getChildren().add(programText);
-
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(programBox);
         LeftPane.getChildren().add(scrollPane);
         LeftPane.setMargin(scrollPane, new Insets(50,0,0,50));
         programBox.setPrefSize(300,650);
 
-
         return LeftPane;
     }
 
+    /**
+     * An overridden method to create a left pane with a non-empty program box for the GUI.
+     * @param programBox The program box to set the left pane.
+     * @return A non-empty left pane.
+     */
     private VBox buildLeftPane(VBox programBox) {
         VBox LeftPane = new VBox();
         ScrollPane scrollPane = new ScrollPane();
@@ -198,11 +219,19 @@ public class GUIBuilder {
         return LeftPane;
     }
 
+    /**
+     * Builds the right pane for the GUI.
+     * @param sceneController The controller for the scene.
+     * @param spriteController The controller for the sprite.
+     * @param stage The stage of the scene.
+     * @return A right pane containing a sprite and variable box.
+     */
     public VBox buildRightPane(SceneController sceneController, SpriteController spriteController, Stage stage) {
         VBox rightPane = new VBox();
         AtomicReference<HBox> spriteBox = new AtomicReference<>(new HBox());
         ImageView imageView = new ImageView();
-        Image image = new Image("C:\\Users\\hussa\\Dropbox\\Computer Science\\Year 3\\Final Year Project\\FinalYearProject\\Assets\\Images\\Sprites\\default.png");
+
+        Image image = new Image( FileController.getAbsolutePath() +  "\\Assets\\Images\\Sprites\\default.png");
         imageView.setImage(image);
         spriteBox.set(spriteBoxBuilder .addSpriteToBox("Blocky Bro", imageView, sceneController,
                 spriteController, windowBuilder,spriteBox.get()));
@@ -282,6 +311,11 @@ public class GUIBuilder {
         return  rightPane;
     }
 
+    /**
+     * The bottom pane for the GUI.
+     * @param terminalComponent The terminal for the GUI.
+     * @return A bottom pane containing a terminal.
+     */
     public  HBox buildBottomPane(TerminalComponent terminalComponent) {
         HBox ioBar = new HBox();
 
@@ -299,18 +333,30 @@ public class GUIBuilder {
 
     }
 
+    /**
+     * Adds the default sprite to the sprite box.
+     * @param spriteController the controller for the sprites.
+     * @param spriteBox The box for sprites.
+     * @return
+     */
     private HBox addDefaultSprite(SpriteController spriteController, HBox spriteBox) {
 
         return spriteBox;
     }
 
 
-
-
+    /**
+     * Gets the program box builder.
+     * @return The program box builder.
+     */
     public ProgramBoxBuilder getProgramBoxBuilder() {
         return programBoxBuilder;
     }
 
+    /**
+     * Draws the variable box for the GUI.
+     * @param variableManager The variable manager.
+     */
     public void drawVariableBox(VariableManager variableManager) {
         StageInitializer.setVariableBox(variableBoxBuilder.drawVariableBox(StageInitializer.getVariableBox(), variableManager));
 

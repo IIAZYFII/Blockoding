@@ -333,8 +333,6 @@ public class ProgramBoxBuilder {
                 hBox.getChildren().add(stackPane);
                 return hBox;
             } else if (secondBlockName.equals("SPRITE")) {
-                stackPane = createStackPane(secondBlockName, red, green, blue);
-                hBox.getChildren().add(stackPane);
                 comboBox = inputBoxBuilder.createComboBox(spriteController.getSpriteNameAsArray());
                 hBox.getChildren().add(comboBox);
                 return hBox;

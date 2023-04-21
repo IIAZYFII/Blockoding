@@ -1,24 +1,32 @@
+/**
+ * This class deals with the file system and external files within the operating system.
+ * @author  Hussain Asif.
+ * @version 1.0
+ */
 package com.azyf.finalyearproject;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import org.opencv.imgcodecs.Imgcodecs;
-
-
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
+
+
 
 public class FileController {
     private final static String defaultSpritePath =  getAbsolutePath() + "/Assets/Images/Sprites/Default.png";
     private final static String newDefaultSpritePath = getAbsolutePath() + "/Cache/Default.png";
 
+    /**
+     * An empty constructor for the FileController.
+     */
     public FileController() {}
 
+    /**
+     * Sets up the default sprite.
+     * @throws IOException
+     */
     public void setupSprite() throws IOException {
         Image image = new Image(defaultSpritePath);
         String spriteName = "Default";
@@ -28,7 +36,10 @@ public class FileController {
         ImageIO.write(bufferedImage, "png", tmp);
     }
 
-
+    /**
+     * Gets the absolute path of the program.
+     * @return The absolute path as a String.
+     */
     public static String getAbsolutePath() {
         File path = new File("");
         String systemPath = path.getAbsolutePath();

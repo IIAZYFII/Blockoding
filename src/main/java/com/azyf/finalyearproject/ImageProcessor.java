@@ -1,3 +1,11 @@
+/**
+ * This is responsible for a multitude of functionalities. These include pre-processing the image and rotating the image
+ * for OCR. This class also deals with sprite images and rotates or flips them. Furthermore, the class also generates
+ * thumbnails for the background of the scenes.
+ * @auhtor Hussain Asif.
+ * @version 2.0
+ */
+
 package com.azyf.finalyearproject;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -18,7 +26,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class ImageProcessor {
+    private static final int RESOLUTION_HEIGHT = 1050;
+    private static final int RESOLUTION_WIDTH = 1024;
 
+    /**
+     * The constructor for the image processor. The constructor loads the OpenCV2 library.
+     */
     public ImageProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         System.out.println(Core.VERSION);
@@ -33,17 +46,25 @@ public class ImageProcessor {
         return imageFile;
     }
 
+
+    /**
+     * Converts the image to grayscale.
+     * @param imageFile The image that will be converted to grayscale.
+     * @throws IOException
+     */
     private void convertToGrayScale(File imageFile) throws IOException {
+
+
         javafx.scene.image.Image editImage = new javafx.scene.image.Image(new FileInputStream(imageFile));
         PixelReader pixelReader = editImage.getPixelReader();
         int height = (int) editImage.getHeight();
         int width = (int) editImage.getWidth();
-        BufferedImage image = SwingFXUtils.fromFXImage(editImage, null);
-        double d =
-                image.getRGB(image.getTileWidth() / 2, image.getTileHeight() / 2);
-        System.out.println("The d is" + d);
+
         WritableImage grayScaleImage = new WritableImage(width, height);
         PixelWriter pixelWriter = grayScaleImage.getPixelWriter();
+
+
+
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
                 double redVal = pixelReader.getColor(i, j).getRed();
@@ -55,7 +76,7 @@ public class ImageProcessor {
             }
         }
         File saveImage = new File("Cache\\imgGrayScale.png");
-        image = SwingFXUtils.fromFXImage(grayScaleImage, null);
+        BufferedImage image = SwingFXUtils.fromFXImage(grayScaleImage, null);
         ImageIO.write(image, "png", saveImage);
 
         if(grayScaleImage.getWidth() > grayScaleImage.getHeight()) {
@@ -66,14 +87,26 @@ public class ImageProcessor {
     }
 
 
+    /**
+     * Zooms and stretches the image using.
+     * @param fileLocation The location of the image.
+     * @return the image with the changed resolution.
+     * @throws IOException
+     */
     private File zoomImage(String fileLocation) throws IOException {
-        javafx.scene.image.Image image = new javafx.scene.image.Image(fileLocation, 1050, 1024, false, false);
+        javafx.scene.image.Image image = new javafx.scene.image.Image(fileLocation,
+                RESOLUTION_HEIGHT, RESOLUTION_WIDTH, false, false);
         File saveImage = new File("Cache\\zoomimg.png");
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(bufferedImage, "png", saveImage);
         return saveImage;
     }
 
+    /**
+     * Rotating the orientation
+     * @param imageFile
+     * @throws IOException
+     */
     public static void rotateImage(File imageFile) throws IOException {
         javafx.scene.image.Image rotateImage =  new javafx.scene.image.Image(new FileInputStream(imageFile));
         double yB = rotateImage.getWidth(); //rotated height
@@ -139,6 +172,10 @@ public class ImageProcessor {
         return sprite;
     }
 
+    /**
+     * Produces a thumbnail for the backgorund .
+     * @param image
+     */
     public static void produceImageThumbnails(Image image) {
        Mat srcImage = Imgcodecs.imread(image.getUrl());
        Mat dstThumbnail = new Mat();
@@ -147,7 +184,6 @@ public class ImageProcessor {
         String imagePath  = image.getUrl();
         String fileName = imagePath.substring(imagePath.lastIndexOf('\\'));
         String path = FileController.getAbsolutePath() + "/Assets/Images/Scenes/Thumbnails/" + fileName;
-        //String path = "C:\\Users\\hussa\\Documents\\Projects\\FinalYearProject\\Assets\\Images\\Scenes\\Thumbnails\\test.png";
        Imgcodecs.imwrite(path, dstThumbnail);
     }
 }
