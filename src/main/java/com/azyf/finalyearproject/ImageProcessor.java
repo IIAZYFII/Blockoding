@@ -30,7 +30,7 @@ public class ImageProcessor {
     private static final int RESOLUTION_WIDTH = 1024;
 
     /**
-     * The constructor for the image processor. The constructor loads the OpenCV2 library.
+     * The constructor for the image processor. The constructor loads the OpenCV library.
      */
     public ImageProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -103,26 +103,27 @@ public class ImageProcessor {
     }
 
     /**
-     * Rotating the orientation
+     * Rotating the orientation of the OCR image manually.
      * @param imageFile
      * @throws IOException
      */
     public static void rotateImage(File imageFile) throws IOException {
         javafx.scene.image.Image rotateImage =  new javafx.scene.image.Image(new FileInputStream(imageFile));
-        double yB = rotateImage.getWidth(); //rotated height
-        double xB = rotateImage.getHeight(); //rotated width
-        double xA = rotateImage.getWidth();
-        double yA = rotateImage.getHeight();
+        double rotatedHeight = rotateImage.getWidth(); //rotated height
+        double rotatedWidth = rotateImage.getHeight(); //rotated width
+        double originalWidth = rotateImage.getWidth();
+        double originalHeight = rotateImage.getHeight();
 
-        WritableImage rotatedImage = new WritableImage((int)xB, (int)yB);
+        WritableImage rotatedImage = new WritableImage((int)rotatedWidth, (int)rotatedHeight);
         PixelReader pixelReader = rotateImage.getPixelReader();
 
-        for(int j = 0; j <= yB - 1; j++) {
-            for(int i = 0; i <= xB -1; i++) {
+        for(int j = 0; j <= rotatedHeight - 1; j++) {
+            for(int i = 0; i <= rotatedWidth -1; i++) {
 
-
-                    double val = pixelReader.getColor(j,(int)(yA - i - 1)).getRed();
+                    //gets the red value only as the image is already in grayscale.
+                    double val = pixelReader.getColor(j,(int)(originalHeight - i - 1)).getRed();
                     Color color=Color.color(val,val,val);
+
                     PixelWriter image_writer = rotatedImage.getPixelWriter();
                     image_writer.setColor((int) i, (int)j, color);
 
@@ -133,6 +134,12 @@ public class ImageProcessor {
         ImageIO.write(bufferedImage, "png", saveImage);
     }
 
+    /**
+     * Flips the image using OpenCV.
+     * @param sprite The sprite that is going to be flipped.
+     * @param direction The direction in which the sprite is going to be flipped in.
+     * @return the image flipped in the direction.
+     */
     public static Image flipImage(Image sprite, String direction) {
         Mat src = Imgcodecs.imread(sprite.getUrl());
         Mat newSprite = new Mat();
@@ -147,6 +154,13 @@ public class ImageProcessor {
         return sprite;
     }
 
+    /**
+     * The sprite that will be rotated in a specific direction using Open CV library.
+     * @param sprite The sprite that will be rotated
+     * @param direction The direction the sprite will be rotated in.
+     * @param amount The amount the sprite will be rotated by.
+     * @return The rotated sprite.
+     */
     public static Image rotateImage(Image sprite, String direction, String amount) {
         Mat src = Imgcodecs.imread(sprite.getUrl());
         Mat newSprite = new Mat(src.rows(), src.cols(), src.type());
@@ -173,7 +187,7 @@ public class ImageProcessor {
     }
 
     /**
-     * Produces a thumbnail for the backgorund .
+     * Produces a thumbnail for the background.
      * @param image
      */
     public static void produceImageThumbnails(Image image) {
