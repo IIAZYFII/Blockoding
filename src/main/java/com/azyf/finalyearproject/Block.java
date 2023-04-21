@@ -43,4 +43,14 @@ public class Block {
     public String toString() {
         return "block: " + name + " category: " + category;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Block blockOne = (Block) this;
+        Block blockTwo = (Block) obj;
+       if(blockOne.getName().equals(blockTwo.getName()) && blockOne.getCategory() == blockTwo.getCategory()) {
+           return true;
+       }
+       return false;
+    }
 }
