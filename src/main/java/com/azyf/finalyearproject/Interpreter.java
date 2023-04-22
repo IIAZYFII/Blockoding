@@ -1,5 +1,6 @@
 package com.azyf.finalyearproject;
 
+import com.google.common.annotations.VisibleForTesting;
 import javafx.scene.input.KeyCode;
 import javafx.util.Pair;
 
@@ -938,7 +939,7 @@ public class Interpreter {
 
     private Pair<Sprite, Integer> getSprite(SpriteController spriteController) {
        String inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
-        String spriteName = inputBoxesValues.get(inputBoxAsString);
+       String spriteName = inputBoxesValues.get(inputBoxAsString);
         inputBoxValueIndex++;
         Sprite tmpSprite = null;
         boolean found = false;
