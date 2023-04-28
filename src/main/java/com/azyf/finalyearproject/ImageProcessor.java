@@ -30,7 +30,8 @@ public class ImageProcessor {
     private static final int RESOLUTION_WIDTH = 1024;
 
     /**
-     * The constructor for the image processor. The constructor loads the OpenCV library.
+     * The constructor for the image processor. The constructor loads the OpenCV library. Here is the reference to the library
+     *  -> https://opencv-java-tutorials.readthedocs.io/en/latest/
      */
     public ImageProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -139,6 +140,7 @@ public class ImageProcessor {
      * @param sprite The sprite that is going to be flipped.
      * @param direction The direction in which the sprite is going to be flipped in.
      * @return the image flipped in the direction.
+     * This was coded by understanding how OpenCV flip functions using a Geeks4Geeks Tutorial. Here is the reference -> https://www.geeksforgeeks.org/rotating-images-using-opencv-in-java/
      */
     public static Image flipImage(Image sprite, String direction) {
         Mat src = Imgcodecs.imread(sprite.getUrl());
@@ -160,6 +162,7 @@ public class ImageProcessor {
      * @param direction The direction the sprite will be rotated in.
      * @param amount The amount the sprite will be rotated by.
      * @return The rotated sprite.
+     * This was coded by understanding how OpenCV rotate functions using a Geeks4Geeks Tutorial. Here is the reference -> https://www.geeksforgeeks.org/rotating-images-using-opencv-in-java/
      */
     public static Image rotateImage(Image sprite, String direction, String amount) {
         Mat src = Imgcodecs.imread(sprite.getUrl());
@@ -188,7 +191,8 @@ public class ImageProcessor {
 
     /**
      * Produces a thumbnail for the background.
-     * @param image
+     * @param image that will be resized.
+     * This was coded by understanding how OpenCV rotate functions using a Geeks4Geeks Tutorial. Here is the reference -> https://www.geeksforgeeks.org/scaling-images-using-opencv-in-java/
      */
     public static void produceImageThumbnails(Image image) {
        Mat srcImage = Imgcodecs.imread(image.getUrl());

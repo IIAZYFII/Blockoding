@@ -130,6 +130,10 @@ public class  ParseTree {
         }
     }
 
+    /**
+     * Returns the block as a hashmap.
+     * @return The block as a hashmap.
+     */
     public HashMap<String, Block> getBlocks() {
         return Blocks;
     }

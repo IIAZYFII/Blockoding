@@ -1,3 +1,8 @@
+/**
+ * Builder for the sprite box GUI.
+ * @author Hussain Asif
+ * @version 1.0.
+ */
 package com.azyf.finalyearproject;
 
 import javafx.event.Event;
@@ -17,6 +22,9 @@ import javax.naming.Context;
 
 public class SpriteBoxBuilder {
 
+    /**
+     * An empty constructor for the sprite box builder.
+     */
     public SpriteBoxBuilder() {
 
     }
@@ -142,6 +150,12 @@ public class SpriteBoxBuilder {
         spriteContainer.getChildren().add(enterSpriteNameField);
     }
 
+    /**
+     * Checks if the name of the sprite already exists.
+     * @param spriteBox The sprite box that contains the sprites.
+     * @param spriteName The name of the current sprite.
+     * @return True if the name exist otherwise it is false.
+     */
     public boolean checkNameExist(HBox spriteBox, String spriteName) {
         boolean alreadyExist = false;
         for (int i =0; i < spriteBox.getChildren().size(); i++) {
@@ -154,6 +168,13 @@ public class SpriteBoxBuilder {
         }
         return alreadyExist;
     }
+
+    /**
+     * Removes the sprite from the canvas.
+     * @param spriteName The name of the sprite.
+     * @param spriteController The controller for the sprite.
+     * @return True if the sprite was removed, otherwise it is false.
+     */
     private boolean removeSpriteFromCanvas(String spriteName, SpriteController spriteController) {
         int index = 0;
         while( index < spriteController.size()) {

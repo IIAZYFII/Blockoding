@@ -7,6 +7,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
+/**
+ * The official IntelliJ Idea tutorial was followed to set up a JavaFx with SpringBoot. This class was part of the set up.
+ * Reference -> https://www.youtube.com/watch?v=u0dEf-QN-90
+ */
 public class BlockApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;

@@ -1,3 +1,6 @@
+/**
+ * The controller for all the sounds. This all stores the sounds as well.
+ */
 package com.azyf.finalyearproject;
 
 import javafx.scene.media.Media;
@@ -19,7 +22,9 @@ public class SoundController {
 
        private double volumeLevel;
 
-
+    /**
+     * The constructor for the sound controller.
+     */
     public SoundController() {
         sounds = new ArrayList<>();
         String filePath = FileController.getAbsolutePath() + "/Assets/Sounds";
@@ -34,6 +39,10 @@ public class SoundController {
 
     }
 
+    /**
+     * Gets an array of the sounds stored in controller.
+     * @return An array list of the sounds.
+     */
     public String[] getSoundFileNamesAsArray() {
         String[] soundFileNames = new String[this.sounds.size()];
         for (int i = 0; i < this.sounds.size(); i++) {
@@ -42,12 +51,19 @@ public class SoundController {
         return soundFileNames;
     }
 
+    /**
+     * Plays the specified sound.
+     * @param soundName The name of the sound.
+     */
     public void playSound(String soundName) {
          player = new MediaPlayer(getMedia(soundName));
          player.play();
     }
 
-
+    /**
+     * Loops the specified sound.
+     * @param soundName The name of the sound.
+     */
     public void loopSound(String soundName) {
 
         loopSound = new MediaPlayer(getMedia(soundName));
@@ -64,6 +80,9 @@ public class SoundController {
 
     }
 
+    /**
+     * Stops playing the sound.
+     */
     public void pressedStopButton() {
         if(loopSound != null) {
             loopSound.stop();
@@ -76,6 +95,11 @@ public class SoundController {
     }
 
 
+    /**
+     * Gets the sound to play.
+     * @param soundName The name of the sound.
+     * @return The sound as Media objecy.
+     */
     private Media getMedia(String soundName) {
         File soundFile = null;
         for(int i = 0; i < files.length; i++) {
@@ -89,16 +113,25 @@ public class SoundController {
         return  sound;
     }
 
+    /**
+     * Increase the volume of the sound controller.
+     */
     public void increaseVolume() {
         volumeLevel = volumeLevel + 0.1;
         setVolumeLevel();
     }
 
+    /**
+     * Decrease the volume of the sound controller.
+     */
     public void decreaseVolume() {
         volumeLevel = volumeLevel - 0.1;
        setVolumeLevel();
     }
 
+    /**
+     * Sets the volume level.
+     */
     private void setVolumeLevel() {
         if(loopSound != null) {
             loopSound.setVolume(volumeLevel);

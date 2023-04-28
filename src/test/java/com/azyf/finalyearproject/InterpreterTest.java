@@ -561,6 +561,77 @@ class InterpreterTest {
         Block end = new Block("END", Category.Commands);
         testBlocks.add(end);
 
+        interpreter.loadBlocks(testBlocks);
+
+        interpreter.compileAndRun(spriteController,mouseX, mouseY, inputBoxValues, inputBoxes, variableManager,
+                soundController, null);
+
+        assertEquals(255, spriteController.getSprite(0).getXPos());
+        assertEquals(450, spriteController.getSprite(0).getYPos());
+
+    }
+
+
+    @Test
+    void checkMoveSpriteTeleportWheneverToXY() throws FileNotFoundException, NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException, UnsupportedEncodingException {
+        Interpreter interpreter = new Interpreter();
+        WritableImage image = new WritableImage(50,50);
+
+        SpriteController spriteController = new SpriteController();
+        spriteController.addSprite("test", 50.0,50.0, image);
+
+        SoundController soundController = new SoundController();
+        VariableManager variableManager = new VariableManager();
+
+
+
+        double mouseX = 700;
+        double mouseY = 700;
+
+        HashMap<String, String> inputBoxValues = new HashMap<>();
+        inputBoxValues.put("spritename", "test");
+        inputBoxValues.put("spritename2", "test");
+        inputBoxValues.put("spritename3", "test");
+        inputBoxValues.put("x", "255");
+        inputBoxValues.put("y", "450");
+        ArrayList<String> inputBoxes = new ArrayList<>();
+        inputBoxes.add("spritename");
+        inputBoxes.add("spritename2");
+        inputBoxes.add("spritename3");
+        inputBoxes.add("x");
+        inputBoxes.add("y");
+        interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
+
+        Queue<Block> testBlocks = new LinkedList<>();
+        Block start = new Block("START", Category.Commands);
+        testBlocks.add(start);
+        Block whenever = new Block("WHENEVER",Category.Conditions);
+        testBlocks.add(whenever);
+        Block sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block equal = new Block("EQUALS", Category.Maths);
+        testBlocks.add(equal);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block then = new Block("THEN", Category.Conditions);
+        testBlocks.add(then);
+        Block telport = new Block("TELPORT", Category.Actions);
+        testBlocks.add(telport);
+        Block to = new Block("TO", Category.Actions);
+        testBlocks.add(to);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block x = new Block("X", Category.Misc);
+        testBlocks.add(x);
+        Block y = new Block("Y", Category.Actions);
+        testBlocks.add(y);
+        Block condition = new Block("CONDITION", Category.Conditions);
+        testBlocks.add(condition);
+        Block finished = new Block("FINISHED", Category.Conditions);
+        testBlocks.add(finished);
+        Block end = new Block("END", Category.Commands);
+        testBlocks.add(end);
 
         interpreter.loadBlocks(testBlocks);
 
@@ -571,6 +642,166 @@ class InterpreterTest {
         assertEquals(450, spriteController.getSprite(0).getYPos());
 
     }
+
+
+
+
+    @Test
+    void checkMoveSpriteTeleportWheneverNotToXY() throws FileNotFoundException, NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException, UnsupportedEncodingException {
+        Interpreter interpreter = new Interpreter();
+        WritableImage image = new WritableImage(50,50);
+
+        SpriteController spriteController = new SpriteController();
+        spriteController.addSprite("test", 50.0,50.0, image);
+
+        SoundController soundController = new SoundController();
+        VariableManager variableManager = new VariableManager();
+
+
+
+        double mouseX = 700;
+        double mouseY = 700;
+
+        HashMap<String, String> inputBoxValues = new HashMap<>();
+        inputBoxValues.put("spritename", "test");
+        inputBoxValues.put("spritename2", "test");
+        inputBoxValues.put("spritename3", "test");
+        inputBoxValues.put("x", "255");
+        inputBoxValues.put("y", "450");
+        ArrayList<String> inputBoxes = new ArrayList<>();
+        inputBoxes.add("spritename");
+        inputBoxes.add("spritename2");
+        inputBoxes.add("spritename3");
+        inputBoxes.add("x");
+        inputBoxes.add("y");
+        interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
+
+        Queue<Block> testBlocks = new LinkedList<>();
+        Block start = new Block("START", Category.Commands);
+        testBlocks.add(start);
+        Block whenever = new Block("WHENEVER",Category.Conditions);
+        testBlocks.add(whenever);
+        Block not = new Block("NOT", Category.Misc);
+        testBlocks.add(not);
+        Block sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block equal = new Block("EQUALS", Category.Maths);
+        testBlocks.add(equal);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block then = new Block("THEN", Category.Conditions);
+        testBlocks.add(then);
+        Block telport = new Block("TELPORT", Category.Actions);
+        testBlocks.add(telport);
+        Block to = new Block("TO", Category.Actions);
+        testBlocks.add(to);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block x = new Block("X", Category.Misc);
+        testBlocks.add(x);
+        Block y = new Block("Y", Category.Actions);
+        testBlocks.add(y);
+        Block condition = new Block("CONDITION", Category.Conditions);
+        testBlocks.add(condition);
+        Block finished = new Block("FINISHED", Category.Conditions);
+        testBlocks.add(finished);
+        Block end = new Block("END", Category.Commands);
+        testBlocks.add(end);
+
+        interpreter.loadBlocks(testBlocks);
+
+        interpreter.compileAndRun(spriteController,mouseX, mouseY, inputBoxValues, inputBoxes, variableManager,
+                soundController, null);
+
+        assertNotEquals(255, spriteController.getSprite(0).getXPos());
+        assertNotEquals(450, spriteController.getSprite(0).getYPos());
+
+    }
+
+
+    @Test
+    void checkMoveSpriteTeleportWheneverNotEqualsToXY() throws FileNotFoundException, NoSuchMethodException, InvocationTargetException,
+            IllegalAccessException, UnsupportedEncodingException {
+        Interpreter interpreter = new Interpreter();
+        WritableImage image = new WritableImage(50,50);
+
+        SpriteController spriteController = new SpriteController();
+        spriteController.addSprite("test", 50.0,50.0, image);
+        spriteController.addSprite("test2", 50.0,50.0, image);
+
+        SoundController soundController = new SoundController();
+        VariableManager variableManager = new VariableManager();
+
+
+
+        double mouseX = 700;
+        double mouseY = 700;
+
+        HashMap<String, String> inputBoxValues = new HashMap<>();
+        inputBoxValues.put("spritename", "test");
+        inputBoxValues.put("spritename2", "test2");
+        inputBoxValues.put("spritename3", "test");
+        inputBoxValues.put("x", "255");
+        inputBoxValues.put("y", "450");
+        ArrayList<String> inputBoxes = new ArrayList<>();
+        inputBoxes.add("spritename");
+        inputBoxes.add("spritename2");
+        inputBoxes.add("spritename3");
+        inputBoxes.add("x");
+        inputBoxes.add("y");
+        interpreter.loadTree(new File("Assets\\Blocks\\parseTree.txt"));
+
+        Queue<Block> testBlocks = new LinkedList<>();
+        Block start = new Block("START", Category.Commands);
+        testBlocks.add(start);
+        Block whenever = new Block("WHENEVER",Category.Conditions);
+        testBlocks.add(whenever);
+        Block not = new Block("NOT", Category.Misc);
+        testBlocks.add(not);
+        Block sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block equal = new Block("EQUALS", Category.Maths);
+        testBlocks.add(equal);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block then = new Block("THEN", Category.Conditions);
+        testBlocks.add(then);
+        Block telport = new Block("TELPORT", Category.Actions);
+        testBlocks.add(telport);
+        Block to = new Block("TO", Category.Actions);
+        testBlocks.add(to);
+        sprite = new Block("SPRITE", Category.Misc);
+        testBlocks.add(sprite);
+        Block x = new Block("X", Category.Misc);
+        testBlocks.add(x);
+        Block y = new Block("Y", Category.Actions);
+        testBlocks.add(y);
+        Block condition = new Block("CONDITION", Category.Conditions);
+        testBlocks.add(condition);
+        Block finished = new Block("FINISHED", Category.Conditions);
+        testBlocks.add(finished);
+        Block end = new Block("END", Category.Commands);
+        testBlocks.add(end);
+
+        interpreter.loadBlocks(testBlocks);
+
+        interpreter.compileAndRun(spriteController,mouseX, mouseY, inputBoxValues, inputBoxes, variableManager,
+                soundController, null);
+
+        assertEquals(255, spriteController.getSprite(0).getXPos());
+        assertEquals(450, spriteController.getSprite(0).getYPos());
+
+    }
+
+
+
+
+
+
+
+
+
 
 
 

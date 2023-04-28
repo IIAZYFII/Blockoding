@@ -361,7 +361,13 @@ public class Interpreter {
     }
 
 
-
+    /**
+     * Moves the sprite.
+     * @param sprite The sprite you want to move.
+     * @param direction The direction you want to move.
+     * @param number The amount of steps that the sprite will move.
+     * @return The sprite with the new coordinates.
+     */
     private static Sprite moveSprite(Sprite sprite, String direction, String number) {
         int steps = Integer.parseInt(number);
         if(direction.equals("RIGHT")) {
@@ -459,8 +465,12 @@ public class Interpreter {
         return sprite;
     }
 
-    //add teleport to spirte
-
+    /**
+     * Teleports the sprite to another sprite.
+     * @param sprite The sprite that will be teleported.
+     * @param sprite2 The location that the sprite will be.
+     * @return The sprite with new coordinates
+     */
     private Sprite teleportSprite(Sprite sprite, Sprite sprite2) {
         double xPos = sprite2.getXPos();
         double yPos = sprite2.getYPos();
@@ -484,6 +494,15 @@ public class Interpreter {
 
     }
 
+    /**
+     * The switch statement for whenever conditional statements.
+     * @param blocks The program.
+     * @param spriteController Controller for the sprite.
+     * @param variableManager Manager for the variable.
+     * @param soundController Controller for the sound.
+     * @param sceneController Controller for the scene.
+     * @return The SpriteController with the changed sprites.
+     */
     private SpriteController wheneverStatement(Queue<Block> blocks, SpriteController spriteController,
                                                VariableManager variableManager, SoundController soundController,
                                                SceneController sceneController) {
@@ -778,8 +797,10 @@ public class Interpreter {
                             boolean foundSecondSprite = false;
                             int k = 0;
                             while (foundSecondSprite == false) {
+
                                 if(spriteController.getSprite(k).getSpriteName().equals(secondSpriteName)
                                         && notActive == false) {
+                                    blockName = blocks.remove().getName();
                                     if(blockName.equals("THEN")) {
                                         blockName = blocks.remove().getName();
                                         spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
@@ -795,6 +816,16 @@ public class Interpreter {
                                     return spriteController;
                                 }
                                 k++;
+                               try {
+                                   spriteController.getSprites().get(k);
+                               } catch (IndexOutOfBoundsException exception) {
+                                   blockName = blocks.remove().getName();
+                                   spriteController = switchStatement(blockName, blocks, spriteController, variableManager, soundController, sceneController);
+
+                                   spriteController.setSprite(j,tmpSprite);
+                                   return spriteController;
+                               }
+
                             }
                         }
                     }
@@ -809,6 +840,16 @@ public class Interpreter {
         return  spriteController;
     }
 
+
+    /**
+     * Checks the conditional operators for the whenever statement.
+     * @param blocks The program itself.
+     * @param spriteController The controller for the sprites.
+     * @param variableManager The manager for the variables.
+     * @param soundController The controller for sounds.
+     * @param sceneController The controller for the scenes.
+     * @return The sprite controller with new sprites.
+     */
     private SpriteController performWheneverStatement(Queue<Block> blocks, SpriteController spriteController, VariableManager variableManager, SoundController soundController, SceneController sceneController) {
         String blockName;
         blockName = blocks.remove().getName();
@@ -864,6 +905,10 @@ public class Interpreter {
         return  finalNumber;
     }
 
+    /**
+     * Looks for the ending for conditional statement.
+     * @param blocks The program.
+     */
     private void checkConditionFinished(Queue<Block> blocks) {
         String blockName = "";
         while ((!(blockName.equals("FINISHED"))) && (!(blockName.equals("ELSE"))) ) {
@@ -875,6 +920,16 @@ public class Interpreter {
 
     }
 
+
+    /**
+     * Executes the or condition.
+     * @param blocks The program.
+     * @param spriteController The controller of sprite.
+     * @param variableManager The manager for the variable.
+     * @param soundController The controller for sounds.
+     * @param sceneController The controller for the scene.
+     * @return The sprite controller with new sprites.
+     */
     private SpriteController ORCondition(Queue<Block> blocks, SpriteController spriteController, VariableManager variableManager , SoundController soundController, SceneController sceneController) {
        String blockName = "PRESSES";
         while(blockName.equals("PRESSES") || blockName.equals("KEY") || blockName.equals("CLICKS")
@@ -888,6 +943,10 @@ public class Interpreter {
         return spriteController;
     }
 
+    /**
+     * Skips a piece of code.
+     * @param blocks The program.
+     */
     private void skipOnce(Queue<Block> blocks) {
         boolean skipped = false;
         while (!skipped) {
@@ -898,15 +957,27 @@ public class Interpreter {
     }
 
 
-
+    /**
+     * Returns if the program has been terminated.
+     * @return true if the program is terminated else it false.
+     */
     public boolean isTerminated() {
         return terminated;
     }
 
+    /**
+     * Sets the terminated value.
+     * @param terminated The terminated value.
+     */
     public void setTerminated(boolean terminated) {
         this.terminated = terminated;
     }
 
+    /**
+     * Loops a set of blocks
+     * @param blocks The program that will be loop.
+     * @return The looped blocks.
+     */
     private Queue<Block> getLoopBlocks(Queue<Block> blocks) {
         String blockName = "";
         Queue<Block> loopBlocks = new LinkedList<>();
@@ -919,24 +990,46 @@ public class Interpreter {
         return loopBlocks;
     }
 
+    /**
+     * Enters the loop of the program.
+     * @param blocks The program.
+     */
     private void enterLoop(Queue<Block> blocks) {
         while(!blocks.isEmpty()) {
             blocks.remove();
         }
     }
 
+    /**
+     * Returns the index of the input box.
+     * @return
+     */
     public int getInputBoxValueIndex() {
         return inputBoxValueIndex;
     }
 
+    /**
+     * Sets the input box index.
+     * @param inputBoxValueIndex The index of the input.
+     */
     public void setInputBoxValueIndex(int inputBoxValueIndex) {
         this.inputBoxValueIndex = inputBoxValueIndex;
     }
 
+    /**
+     * Loads the blocks into the interpreter.
+     * @param storedBlocks The blocks that will be stored in the interpretr.
+     */
     public void loadBlocks(Queue<Block> storedBlocks) {
         this.storedBlocks = storedBlocks;
     }
 
+
+    /**
+     * Gets the sprite.
+     * @param spriteController The controller for the sprite.
+     * @return the sprite from the input,
+     */
     private Pair<Sprite, Integer> getSprite(SpriteController spriteController) {
        String inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
        String spriteName = inputBoxesValues.get(inputBoxAsString);
@@ -956,6 +1049,11 @@ public class Interpreter {
         return spriteIntegerPair;
     }
 
+    /**
+     * gets the variable.
+     * @param variableManager The manager for variable.
+     * @return the variable.
+     */
     private Pair<Variable, Integer> getVariable(VariableManager variableManager) {
         String inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
         String variableName = inputBoxesValues.get(inputBoxAsString);
@@ -975,8 +1073,12 @@ public class Interpreter {
         return variableIntegerPair;
     }
 
+
+    /**
+     * Gets the content from the input box.
+     * @return
+     */
     private String getContent() {
-        System.out.println("getcontent ss");
         String  inputBoxAsString = inputBoxes.get(inputBoxValueIndex);
         String content = inputBoxesValues.get(inputBoxAsString);
         inputBoxValueIndex++;

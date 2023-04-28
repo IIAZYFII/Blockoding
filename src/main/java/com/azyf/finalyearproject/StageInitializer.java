@@ -296,7 +296,7 @@ public class StageInitializer implements ApplicationListener<BlockApplication.St
             public void handle(MouseEvent event) {
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-                content.putString("Hello");
+                content.putString("test");
                 db.setContent(content);
                 event.consume();
 

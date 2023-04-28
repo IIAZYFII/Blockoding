@@ -1,3 +1,6 @@
+/**
+ * Builds the program box for the GUI.
+ */
 package com.azyf.finalyearproject;
 
 import javafx.collections.FXCollections;
@@ -17,12 +20,23 @@ import java.util.Queue;
 public class ProgramBoxBuilder {
     private InputBoxBuilder inputBoxBuilder;
 
+    /**
+     * The empty constructor for the program box builder.
+     */
     public ProgramBoxBuilder() {
         inputBoxBuilder = new InputBoxBuilder();
     }
 
 
-
+    /**
+     * Draws the program box.
+     * @param blocks The program.
+     * @param variableManager The manager for the variables.
+     * @param soundController The controller for the sound.
+     * @param spriteController The controller for the sprite.
+     * @param sceneController The controller for the scene.
+     * @return The VBox with a virtual version of the program.
+     */
     public VBox drawProgramBox(Queue<Block> blocks, VariableManager variableManager, SoundController soundController,
                                 SpriteController spriteController, SceneController sceneController)  {
 
@@ -232,6 +246,15 @@ public class ProgramBoxBuilder {
         return programBox;
     }
 
+
+    /**
+     * Creates a stack pane for the VBOX.
+     * @param blockName The name of block.
+     * @param red Colour Red.
+     * @param green Colour Green.
+     * @param blue Color Blue.
+     * @return a stack pane containing the blocks.
+     */
     private StackPane createStackPane(String blockName, int red, int green, int blue) {
         StackPane stackPane = new StackPane();
         Rectangle blockBox = new Rectangle(70, 30);
@@ -251,7 +274,15 @@ public class ProgramBoxBuilder {
     }
 
 
-
+    /**
+     * Draws multiple blocks in one row.
+     * @param blockName The name of the block.
+     * @param red Colour Red.
+     * @param green Colour Green.
+     * @param blue Colour Blue.
+     * @param soundController Controller for the sound
+     * @return A row of multiple blocks.
+     */
     private Node drawBlock(String blockName, int red, int green, int blue, SoundController soundController) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
         if (blockName.equals("PAUSE")) {
@@ -274,6 +305,18 @@ public class ProgramBoxBuilder {
         return stackPane;
     }
 
+
+    /**
+     * Draws multiple blocks in one row.
+     * @param blockName The name of the block.
+     * @param  secondBlockName The name of the second block.
+     * @param red Colour Red.
+     * @param green Colour Green.
+     * @param blue Colour Blue.
+     * @param  spriteController The controller for the sprites.
+     * @param sceneController  The controller for the scene.
+     * @return A row of multiple blocks.
+     */
     private Node drawBlock(String blockName, String secondBlockName, int red, int green, int blue, SpriteController spriteController,
                            SceneController sceneController) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
@@ -409,6 +452,17 @@ public class ProgramBoxBuilder {
 
 
 
+    /**
+     * Draws multiple blocks in one row.
+     * @param blockName The name of the block.
+     * @param  secondBlockName The name of the second block.
+     * @param red Colour Red.
+     * @param green Colour Green.
+     * @param blue Colour Blue.
+     * @param  spriteController The controller for the sprites.
+     * @param variableManager The manager for the variable.
+     * @return A row of multiple blocks.
+     */
     private Node drawBlock(String blockName, String secondBlockName, String thirdBlockName, int red, int green, int blue,
                            SpriteController spriteController, VariableManager variableManager) {
         StackPane stackPane = createStackPane(blockName, red, green, blue);
@@ -533,7 +587,10 @@ public class ProgramBoxBuilder {
         return stackPane;
     }
 
-
+    /**
+     * Gets the input box builder.
+     * @return The input box builder.
+     */
     public InputBoxBuilder getInputBoxBuilder() {
         return inputBoxBuilder;
     }

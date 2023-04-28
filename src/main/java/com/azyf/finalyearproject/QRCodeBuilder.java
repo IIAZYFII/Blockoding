@@ -1,3 +1,6 @@
+/**
+ * A builder for the QR. Used to generate QR code.
+ */
 package com.azyf.finalyearproject;
 
 import com.google.zxing.BarcodeFormat;
@@ -16,17 +19,24 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 public class QRCodeBuilder {
-
+    /**
+     * An empty constructor for QR the builder.
+     */
     public  QRCodeBuilder() {
 
     }
 
+    /**
+     * Generates a QR code and saves it to the cache.
+     * This uses the Zebra crossing library. Here is the reference -> (https://github.com/zxing/zxing)
+     * @throws WriterException
+     * @throws IOException
+     */
     public void generateQRCode() throws WriterException, IOException {
         String localIP = InetAddress.getLocalHost().getHostAddress();
         System.out.println(localIP);
         QRCodeWriter qrCodeGenerator = new QRCodeWriter();
-        BitMatrix bitMatrix =
-                qrCodeGenerator.encode(localIP, BarcodeFormat.QR_CODE, 100, 100);
+        BitMatrix bitMatrix = qrCodeGenerator.encode(localIP, BarcodeFormat.QR_CODE, 100, 100);
         WritableImage writableImage = new WritableImage(100, 100);
         PixelWriter pixelWriter = writableImage.getPixelWriter();
         System.out.println(bitMatrix.toString());

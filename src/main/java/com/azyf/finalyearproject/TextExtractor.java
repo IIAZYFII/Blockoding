@@ -22,16 +22,24 @@ import java.util.List;
  * @version 3.0
  */
 public class TextExtractor {
-    WordProcessor wordProcessor;
+
     String continueText = "";
 
 
+    /**
+     * Constructor for text extractor.
+     */
     public TextExtractor() {
 
-        wordProcessor = new WordProcessor();
-        wordProcessor.addWordsToDictionary(new File("Assets\\Words\\default.txt"));
 
     }
+
+    /**
+     * Extracts the text fromm an image.
+     * @param imageFile The image as a file
+     * @return A string extracted text.
+     * @throws IOException
+     */
     public String extractText(File imageFile) throws IOException {
         String extractedText = performOCR(imageFile.getPath());
         String lastBlock = extractedText.substring(extractedText.lastIndexOf("\n") + 1);
@@ -44,11 +52,16 @@ public class TextExtractor {
         }
         System.out.println(extractedText);
         return extractedText;
-      //wordProcessor.processWord(extractedText);
 
     }
 
-
+    /**
+     * Performs OCR using Google's Library. The Google's Cloud Vision to understand and help code and use the library/
+     * Here is the reference -> https://cloud.google.com/vision.
+     * @param imageFilePath
+     * @return
+     * @throws IOException
+     */
     private static String performOCR(String imageFilePath) throws IOException {
         System.out.println("Extracting text");
 

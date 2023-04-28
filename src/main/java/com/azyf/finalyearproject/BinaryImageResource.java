@@ -26,17 +26,9 @@ public class BinaryImageResource {
     @PostMapping(value = "sendImage", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public void receiveBinaryImage(@RequestBody BinaryImage binaryImage) throws IOException {
         if (binaryImage != null) {
-
-            //Converts image into bytes from string
             byte[] imageBytes = java.util.Base64.getDecoder().decode(binaryImage.getImageContent());
-
-            //Creates a stream so bytes are readable
             ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
-
-            //Reads the bytes from the input stream and sets it to the image
             BufferedImage imageFromBytes = ImageIO.read(inputStream);
-
-            //Saves the image
             File saveImage = new File("Cache\\img.png");
             ImageIO.write(imageFromBytes, "png", saveImage);
             System.out.println("Completed");
