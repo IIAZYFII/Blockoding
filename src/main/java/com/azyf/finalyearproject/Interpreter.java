@@ -101,6 +101,10 @@ public class Interpreter {
                  case "LOOP":
                      numberOfWhileBlocks++;
                      break;
+                 case "ELSE":
+                     numberOfConditionBlocks--;
+                     numberOfConditionBlocks--;
+                     break;
                  case "TERMINATE":
                      numberOfWhileBlocks--;
                      break;
